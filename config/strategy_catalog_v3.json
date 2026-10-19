@@ -1,0 +1,124 @@
+{
+  "catalog_version": "v3.0.0",
+  "policy_version": "v1.0.0",
+  "supported_strategies": [
+    "latency_first",
+    "cost_first",
+    "random_baseline",
+    "round_robin",
+    "fastest_first",
+    "cheapest_first",
+    "reliability_first",
+    "weighted_v1",
+    "confidence_aware_v2",
+    "confidence_aware_v3"
+  ],
+  "strategies": {
+    "latency_first": {
+      "type": "versioned_weighted_score",
+      "strategy_version": "latency-first-v2.0.0",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["final_score_ascending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better",
+      "configuration_source": "config/decision_policy_v2.json",
+      "policy_strategy_id": "latency_first",
+      "legacy_alias": false
+    },
+    "cost_first": {
+      "type": "versioned_weighted_score",
+      "strategy_version": "cost-first-v2.0.0",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["final_score_ascending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better",
+      "configuration_source": "config/decision_policy_v2.json",
+      "policy_strategy_id": "cost_first",
+      "legacy_alias": false
+    },
+    "random_baseline": {
+      "type": "baseline",
+      "requires_seed": true,
+      "requires_request_index": false,
+      "sort_fields": ["seeded_random_order"],
+      "score_direction": "not_applicable"
+    },
+    "round_robin": {
+      "type": "baseline",
+      "requires_seed": false,
+      "requires_request_index": true,
+      "sort_fields": ["priority_ascending", "channel_id_ascending"],
+      "score_direction": "cyclic_position"
+    },
+    "fastest_first": {
+      "type": "deterministic_ranking",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["latency_ms_ascending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better"
+    },
+    "cheapest_first": {
+      "type": "deterministic_ranking",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["estimated_cost_ascending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better"
+    },
+    "reliability_first": {
+      "type": "deterministic_ranking",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["raw_failure_risk_ascending", "sample_size_descending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better"
+    },
+    "weighted_v1": {
+      "type": "weighted_score",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["final_score_ascending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better",
+      "configuration_source": "config/decision_policy_v2.json",
+      "default_substrategy": "latency_first",
+      "supported_substrategies": ["latency_first", "cost_first"]
+    },
+    "confidence_aware_v2": {
+      "type": "bayesian_weighted_score",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["final_score_ascending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better",
+      "beta_prior": {"alpha": 1.0, "beta": 1.0},
+      "weights": {"latency": 0.4, "cost": 0.3, "failure_risk": 0.3},
+      "weight_set_id": "experimental_default_001",
+      "weight_status": "experimental_default",
+      "weight_source": "manual_hypothesis",
+      "optimization_status": "not_tuned",
+      "validation_scope": "offline_simulation_only",
+      "applies_legacy_evidence_penalties": false
+    },
+    "confidence_aware_v3": {
+      "type": "weighted_wilson_confidence_score",
+      "requires_seed": false,
+      "requires_request_index": false,
+      "sort_fields": ["final_score_ascending", "priority_ascending", "channel_id_ascending"],
+      "score_direction": "lower_is_better",
+      "beta_prior": {"alpha": 1.0, "beta": 1.0},
+      "weights": {"latency": 0.4, "cost": 0.3, "failure_risk": 0.3},
+      "weight_set_id": "experimental_confidence_v3_001",
+      "weight_status": "governance_default",
+      "weight_source": "manual_hypothesis",
+      "optimization_status": "not_tuned",
+      "validation_scope": "offline_local_evidence_only",
+      "required_confidence_version": "weighted_wilson_v1",
+      "notes": "Uses the conservative Wilson-adjusted failure risk from an explicitly versioned confidence snapshot. It does not alter confidence_aware_v2."
+    }
+  },
+  "tie_breakers": ["priority_ascending", "channel_id_ascending"],
+  "data_boundary": {
+    "offline_only": true,
+    "sample_output_is_mock_evaluation": true,
+    "mock_results_are_not_real_channel_performance": true,
+    "expected_fields_must_not_affect_selection": true,
+    "real_evidence_is_not_copied_into_this_catalog": true
+  }
+}

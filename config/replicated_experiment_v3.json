@@ -1,0 +1,23 @@
+{
+  "replicated_config_version": "v4.0.0",
+  "experiment_id": "EXP-W3-V4-8C-REPLICATED-001",
+  "base_simulation_config": "config/simulation_experiment_v2.json",
+  "simulation_seeds": [20260701, 20260702, 20260703, 20260704, 20260705, 20260706, 20260707, 20260708, 20260709, 20260710, 20260711, 20260712, 20260713, 20260714, 20260715, 20260716, 20260717, 20260718, 20260719, 20260720],
+  "requests_per_seed": 5000,
+  "strategy_count": 7,
+  "expected_total_decisions": 700000,
+  "ci_level": 0.95,
+  "ci_method": "two_sided_t_interval_across_20_seed_level_estimates",
+  "paired_comparison_unit": "request_within_simulation_seed",
+  "common_random_numbers_within_seed": true,
+  "save_full_decisions": false,
+  "audit_sample_requests_per_seed": 3,
+  "data_boundary": {
+    "is_mock": true,
+    "is_mock_evaluation": true,
+    "data_source": "offline_simulation_v3",
+    "parameters_are_simulation_assumptions": true,
+    "not_real_platform_metrics": true,
+    "real_api_calls_allowed": false
+  }
+}

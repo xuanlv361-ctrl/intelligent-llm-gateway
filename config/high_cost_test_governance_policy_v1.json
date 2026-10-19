@@ -1,0 +1,18 @@
+{
+  "policy_version": "high_cost_test_governance_policy_v1",
+  "enabled": false,
+  "real_execution_allowed": false,
+  "maximum_approval_ttl_seconds": 3600,
+  "known_currencies": ["CNY", "USD"],
+  "limits": {
+    "global": {"CNY": 1000.0, "USD": 100.0},
+    "environment": {"CNY": 500.0, "USD": 50.0},
+    "model": {"CNY": 200.0, "USD": 20.0}
+  },
+  "roles": {
+    "proposer": ["proposer", "admin"],
+    "approver": ["approver", "admin"],
+    "operator": ["operator", "admin"],
+    "emergency": ["emergency", "admin"]
+  }
+}

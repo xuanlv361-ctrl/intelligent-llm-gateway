@@ -1,0 +1,80 @@
+{
+  "config_version": "measurement-execution-capabilities-v2.1.0",
+  "execution_tool": "uat_management_console_manual",
+  "confirmation_scope": "uat_manual_measurement_only",
+  "scheduler_real_execution_authorized": false,
+  "automatic_routing_authorized": false,
+  "capabilities": {
+    "supports_target_channel": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    },
+    "supports_custom_prompt": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    },
+    "supports_max_tokens": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    },
+    "supports_stream": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    },
+    "exposes_http_status": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    },
+    "exposes_request_id": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    },
+    "exposes_actual_model": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    },
+    "exposes_ttft": {
+      "value": true,
+      "confirmation_status": "confirmed",
+      "confirmation_source": "manual_uat_tool_verification",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-07-23T12:27:46+08:00",
+      "scope": "uat_manual_measurement_only"
+    }
+  },
+  "policy": {
+    "pending_confirmation_is_ready": false,
+    "unsupported_required_capability_status": "blocked_capability",
+    "unknown_required_capability_status": "pending_confirmation",
+    "temperature": "omit_if_unsupported",
+    "streaming": "transport_parameter_stream_true_required; prompt_text_does_not_enable_streaming"
+  }
+}

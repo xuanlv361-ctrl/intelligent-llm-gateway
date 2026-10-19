@@ -1,0 +1,14 @@
+{
+  "shadow_version": "real-shadow-v1.0.0",
+  "mode": "shadow",
+  "catalog_path": "data/channel_catalog_real_v1.csv",
+  "request_path": "data/real_shadow_requests_v1.csv",
+  "recommendation_scope": "offline_shadow_recommendation_only",
+  "execution_attempted": false,
+  "routing_allowed": false,
+  "latency_field_for_strategy": "latency_mean_ms",
+  "shadow_admission_field": "shadow_eligible",
+  "routing_admission_field": "routing_eligible",
+  "compatibility_priority": 100,
+  "notes": "Compatibility priority is equal for every shadow candidate, so existing channel_id tie-breaking remains authoritative. No real execution is permitted."
+}

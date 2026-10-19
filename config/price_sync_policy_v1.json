@@ -1,0 +1,30 @@
+{
+  "policy_version": "price_sync_policy_v1",
+  "catalog_schema_version": "price_catalog_v1",
+  "network_enabled_default": false,
+  "timeout_seconds": 3,
+  "maximum_attempts": 1,
+  "scheduled_sync": {
+    "enabled_default": false,
+    "interval_seconds": 86400,
+    "minimum_interval_seconds": 3600,
+    "failure_backoff_seconds": [300, 900, 3600],
+    "lease_seconds": 30,
+    "maximum_relative_change_without_alert": "0.50"
+  },
+  "stale_after_seconds": 86400,
+  "expire_after_seconds": 604800,
+  "allowed_billing_units": ["per_1m_tokens"],
+  "allowed_sources": {
+    "contract_mock": {
+      "adapter": "injected_transport_v1",
+      "network_required": false,
+      "approved": true
+    },
+    "approved_price_api": {
+      "adapter": "injected_transport_v1",
+      "network_required": true,
+      "approved": true
+    }
+  }
+}

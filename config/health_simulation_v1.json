@@ -1,0 +1,118 @@
+{
+  "simulation_version": "health-simulation-v1.0.0",
+  "metrics_version": "simulation-v1.0.0",
+  "source_type": "offline_simulation",
+  "validation_type": "offline simulation based health validation",
+  "updated_at": "2026-07-24T12:00:00+08:00",
+  "channels": 8,
+  "default_sample_count": 5000,
+  "metric_generation_rules": {
+    "method": "deterministic_configured_scenarios",
+    "random_sampling": false,
+    "success_rate_range": [0.0, 1.0],
+    "latency_unit": "milliseconds",
+    "cost_unit": "configured_cost_per_reference_request",
+    "p95_must_be_at_least_average": true
+  },
+  "health_policy_overrides": {
+    "confidence": {
+      "sample_threshold": 5000
+    }
+  },
+  "channel_scenarios": [
+    {
+      "channel_id": "SIM-HEALTHY-001",
+      "condition": "healthy",
+      "expected_status": "healthy",
+      "metrics": {
+        "success_rate": 0.99,
+        "avg_latency_ms": 500,
+        "p95_latency_ms": 900,
+        "avg_cost": 0.001
+      }
+    },
+    {
+      "channel_id": "SIM-HIGH-LATENCY-001",
+      "condition": "high_latency",
+      "expected_status": "warning",
+      "metrics": {
+        "success_rate": 0.98,
+        "avg_latency_ms": 2500,
+        "p95_latency_ms": 2900,
+        "avg_cost": 0.002
+      }
+    },
+    {
+      "channel_id": "SIM-LOW-RELIABILITY-001",
+      "condition": "low_reliability",
+      "expected_status": "warning",
+      "metrics": {
+        "success_rate": 0.90,
+        "avg_latency_ms": 1000,
+        "p95_latency_ms": 1600,
+        "avg_cost": 0.003
+      }
+    },
+    {
+      "channel_id": "SIM-EXPENSIVE-001",
+      "condition": "expensive",
+      "expected_status": "warning",
+      "metrics": {
+        "success_rate": 0.98,
+        "avg_latency_ms": 700,
+        "p95_latency_ms": 1200,
+        "avg_cost": 0.009
+      }
+    },
+    {
+      "channel_id": "SIM-SMALL-001",
+      "condition": "small_sample_optimistic",
+      "expected_status": "warning",
+      "sample_count": 5,
+      "metrics": {
+        "success_rate": 1.0,
+        "avg_latency_ms": 500,
+        "p95_latency_ms": 800,
+        "avg_cost": 0.001
+      }
+    },
+    {
+      "channel_id": "SIM-BALANCED-001",
+      "condition": "balanced",
+      "expected_status": "warning",
+      "metrics": {
+        "success_rate": 0.95,
+        "avg_latency_ms": 1000,
+        "p95_latency_ms": 1500,
+        "avg_cost": 0.003
+      }
+    },
+    {
+      "channel_id": "SIM-DEGRADED-001",
+      "condition": "combined_degradation",
+      "expected_status": "degraded",
+      "metrics": {
+        "success_rate": 0.65,
+        "avg_latency_ms": 2600,
+        "p95_latency_ms": 2950,
+        "avg_cost": 0.008
+      }
+    },
+    {
+      "channel_id": "SIM-HEALTHY-002",
+      "condition": "healthy_alternative",
+      "expected_status": "healthy",
+      "metrics": {
+        "success_rate": 0.995,
+        "avg_latency_ms": 800,
+        "p95_latency_ms": 1300,
+        "avg_cost": 0.0015
+      }
+    }
+  ],
+  "limitations": [
+    "All channel conditions are deterministic engineering assumptions.",
+    "No real API calls or production measurements are used.",
+    "Expected statuses validate configured mechanics, not channel performance."
+  ]
+}

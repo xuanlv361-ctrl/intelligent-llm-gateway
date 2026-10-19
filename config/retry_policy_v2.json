@@ -1,0 +1,14 @@
+{
+  "policy_version": "retry-v2.0.0",
+  "max_attempts": 2,
+  "per_attempt_timeout_seconds": 10,
+  "total_deadline_seconds": 20,
+  "max_retry_after_seconds": 2,
+  "retryable_errors": ["timeout", "attempt_timeout", "429", "502", "503", "rate_limited", "temporary_server_error", "upstream_timeout", "upstream_5xx"],
+  "confirmed_transient_errors": ["timeout", "attempt_timeout", "429", "502", "503", "rate_limited", "temporary_server_error", "upstream_timeout", "upstream_5xx"],
+  "non_retryable_errors": ["invalid_request", "authentication_failed", "invalid_parameters", "user_authentication_failure", "cancelled", "sse_incomplete", "sse_malformed_json"],
+  "retry_same_channel": false,
+  "cross_channel_after_output_started": false,
+  "automatic_real_execution_authorized": false,
+  "validation_scope": "offline_mock_recovery_only"
+}

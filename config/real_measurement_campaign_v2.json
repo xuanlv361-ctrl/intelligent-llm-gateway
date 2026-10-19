@@ -1,0 +1,20 @@
+{
+  "campaign_version": "real-measurement-v2.0.0",
+  "requested_model": "deepseek-v4-flash",
+  "record_type": "measurement_plan",
+  "source_type": "planned_uat",
+  "execution_status": "not_executed",
+  "channels": [
+    {"channel_id": "19", "channel_name": "test-Ryker-deepseek"},
+    {"channel_id": "27", "channel_name": "阿里云ADB-DeepSeek-Test"},
+    {"channel_id": "45", "channel_name": "玖琪-多模型测试"},
+    {"channel_id": "48", "channel_name": "Test-Duan-DeepSeek测试"},
+    {"channel_id": "50", "channel_name": "北京云鸽未来-Deepseek"}
+  ],
+  "sessions": [
+    {"session_id": "SESSION-D1-MORNING", "session_sequence": 1, "day_label": "D1", "time_window": "09:00-11:00", "rotation_direction": "forward", "channel_order": ["19", "27", "45", "48", "50"]},
+    {"session_id": "SESSION-D2-AFTERNOON", "session_sequence": 2, "day_label": "D2", "time_window": "14:00-17:00", "rotation_direction": "reverse", "channel_order": ["50", "48", "45", "27", "19"]},
+    {"session_id": "SESSION-D3-EVENING", "session_sequence": 3, "day_label": "D3", "time_window": "19:00-22:00", "rotation_direction": "rotated", "channel_order": ["27", "19", "50", "48", "45"]}
+  ],
+  "profile_order": ["P01", "P02", "P03", "P04"]
+}

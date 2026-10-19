@@ -1,0 +1,28 @@
+{
+  "policy_version": "model-cost-policy-v1.0.0",
+  "default_objective": "balanced",
+  "objectives": {
+    "quality_first": {
+      "weights": {"capability": 0.75, "cost": 0.10, "latency": 0.15}
+    },
+    "cost_first": {
+      "weights": {"capability": 0.25, "cost": 0.60, "latency": 0.15}
+    },
+    "balanced": {
+      "weights": {"capability": 0.50, "cost": 0.30, "latency": 0.20}
+    }
+  },
+  "price_normalization": {
+    "input_reference": 10.0,
+    "output_reference": 30.0,
+    "input_share": 0.5,
+    "output_share": 0.5
+  },
+  "latency_level_scores": {
+    "low": 0.95,
+    "medium": 0.65,
+    "high": 0.35
+  },
+  "score_direction": "higher_is_better",
+  "validation_scope": "offline_demonstration_only"
+}

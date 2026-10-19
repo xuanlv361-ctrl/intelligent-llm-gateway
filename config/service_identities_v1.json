@@ -1,0 +1,14 @@
+{
+  "registry_version": "enterprise_service_identities_v1",
+  "maximum_ttl_seconds": 3600,
+  "credential_source": "environment_or_external_secret_manager",
+  "external_secret_manager_status": "pending_external_configuration",
+  "service_identities": [
+    {"service_name": "scheduler", "roles": ["scheduler_service"], "allowed_audiences": ["scheduler-api", "worker-api"]},
+    {"service_name": "collector", "roles": ["collector_service"], "allowed_audiences": ["collector-api", "worker-api"]},
+    {"service_name": "metrics", "roles": ["metrics_service"], "allowed_audiences": ["metrics-api", "worker-api"]},
+    {"service_name": "price_sync", "roles": ["price_sync_service"], "allowed_audiences": ["price-api", "worker-api"]},
+    {"service_name": "worker", "roles": ["worker_service"], "allowed_audiences": ["worker-api"]},
+    {"service_name": "monitoring", "roles": ["monitoring_service"], "allowed_audiences": ["monitoring-api"]}
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "policy_version": "sticky-routing-policy-v1",
+  "configuration_version": "sticky-routing-config-v1",
+  "enabled": false,
+  "ttl_seconds": 900,
+  "maximum_total_duration_seconds": 3600,
+  "route_key_derivation_version": "hmac-sha256-v1",
+  "route_key_secret_env": "STICKY_ROUTE_KEY_SECRET",
+  "route_key_id_env": "STICKY_ROUTE_KEY_ID",
+  "capability_scope_version": "sticky-capability-scope-v1",
+  "maximum_evidence_ids": 100,
+  "miss_authorization_seconds": 60,
+  "allowed_modes": [
+    "simulation",
+    "mock_execute",
+    "real_shadow"
+  ],
+  "required_gate_order": [
+    "security_authorization",
+    "capability",
+    "environment",
+    "budget",
+    "health",
+    "statistical_confidence",
+    "freshness",
+    "circuit_breaker"
+  ],
+  "interruption_error_categories": [
+    "rate_limited",
+    "upstream_timeout",
+    "upstream_5xx",
+    "gateway_timeout",
+    "network_transport_error",
+    "http_429",
+    "http_5xx",
+    "timeout",
+    "model_mapping_invalid",
+    "retry_requires_reassignment",
+    "fallback_requires_reassignment",
+    "security_denied",
+    "authorization_denied",
+    "circuit_open"
+  ],
+  "invalidation_confirmation_text": "我确认使此粘性路由绑定失效"
+}

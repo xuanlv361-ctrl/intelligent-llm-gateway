@@ -1,0 +1,12 @@
+{
+  "window_version": "v1.0.0",
+  "window_size": 100,
+  "max_age_seconds": 3600,
+  "ordering_policy": "non_decreasing_timestamp",
+  "aggregation": {
+    "success_rate": "successful_observations / sample_count",
+    "avg_latency_ms": "arithmetic_mean_all_completed_observations",
+    "p95_latency_ms": "nearest_rank",
+    "avg_cost": "arithmetic_mean_all_completed_observations"
+  }
+}

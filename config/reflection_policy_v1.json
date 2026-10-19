@@ -1,0 +1,8 @@
+{
+  "policy_version": "reflection_policy_v1",
+  "max_reflection_rounds": 2,
+  "accept_threshold": 0.8,
+  "retry_enabled": true,
+  "execution_mode": "offline_deterministic_rules",
+  "real_model_calls_allowed": false
+}

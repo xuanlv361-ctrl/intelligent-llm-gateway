@@ -1,0 +1,14 @@
+{
+  "policy_version": "traffic_change_governance_policy_v1",
+  "enabled": true,
+  "real_adapter_enabled": false,
+  "maximum_rollout_percent": 25,
+  "maximum_ttl_seconds": 3600,
+  "required_gates": ["health", "confidence", "budget", "circuit"],
+  "roles": {
+    "proposer": ["proposer", "admin"],
+    "approver": ["approver", "admin"],
+    "operator": ["operator", "admin"],
+    "emergency": ["emergency", "admin"]
+  }
+}

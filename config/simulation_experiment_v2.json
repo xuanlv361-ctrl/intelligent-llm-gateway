@@ -1,0 +1,71 @@
+{
+  "simulation_config_version": "v3.0.0",
+  "experiment_id": "EXP-W3-V3-8C-001",
+  "simulation_seed": 20260722,
+  "total_requests": 5000,
+  "candidate_count": 8,
+  "regime_request_counts": {"normal": 834, "peak_load": 834, "price_spike": 833, "channel_degradation": 833, "cold_start": 833, "candidate_failure": 833},
+  "generated_at": "2026-07-22T00:00:00Z",
+  "candidate_snapshot_version": "mock_channel_catalog_v3+simulation_overlay_v3",
+  "strategy_random_seed": 42,
+  "latent_success_model": {
+    "method": "configured_beta_draw_per_simulation_seed",
+    "description": "These are offline Mock simulation parameters, not observed or real platform metrics. A deterministic Beta draw supplies hidden success truth for each candidate and seed; strategy code cannot access the draw.",
+    "candidate_beta_parameters": {
+      "REAL-DS-48": {"alpha": 2.0, "beta": 1.0, "basis": "weak Beta posterior for one observed success; not latent truth 1.0"},
+      "MOCK-DS-FAST": {"alpha": 98.0, "beta": 4.0, "basis": "configured Mock simulation prior"},
+      "MOCK-DS-CHEAP": {"alpha": 100.0, "beta": 2.0, "basis": "configured Mock simulation prior"}
+      ,"MOCK-GPT-TURBO": {"alpha": 95.0, "beta": 7.0, "basis": "configured Mock simulation assumption"}
+      ,"MOCK-GPT-STABLE": {"alpha": 198.0, "beta": 4.0, "basis": "configured Mock simulation assumption"}
+      ,"MOCK-CLAUDE-FAST": {"alpha": 116.0, "beta": 6.0, "basis": "configured Mock simulation assumption"}
+      ,"MOCK-QWEN-COST": {"alpha": 107.0, "beta": 5.0, "basis": "configured Mock simulation assumption"}
+      ,"MOCK-DEEPSEEK-BACKUP": {"alpha": 129.0, "beta": 4.0, "basis": "configured Mock simulation assumption"}
+    },
+    "parameters_are_simulation_assumptions": true,
+    "not_real_platform_metrics": true
+  },
+  "ranking_epsilon": 1e-9,
+  "regimes": {
+    "normal": {
+      "latency_multiplier": 1.0, "price_multiplier": 1.0, "success_rate_delta": 0.0,
+      "availability_probability": 0.995, "input_tokens": [200, 2400], "output_tokens": [100, 900],
+      "stream_probability": 0.2, "budget_cny": [0.001, 0.012], "timeout_ms": [1200, 4000], "sla_latency_ms": 2000
+    },
+    "peak_load": {
+      "latency_multiplier": 1.8, "price_multiplier": 1.0, "success_rate_delta": -0.02,
+      "availability_probability": 0.97, "input_tokens": [500, 4000], "output_tokens": [200, 1500],
+      "stream_probability": 0.4, "budget_cny": [0.002, 0.018], "timeout_ms": [1800, 6000], "sla_latency_ms": 2800
+    },
+    "price_spike": {
+      "latency_multiplier": 1.05, "price_multiplier": 2.0, "success_rate_delta": -0.01,
+      "availability_probability": 0.99, "input_tokens": [300, 3000], "output_tokens": [100, 1200],
+      "stream_probability": 0.25, "budget_cny": [0.001, 0.020], "timeout_ms": [1400, 4500], "sla_latency_ms": 2200
+    },
+    "channel_degradation": {
+      "latency_multiplier": 1.35, "price_multiplier": 1.0, "success_rate_delta": -0.08,
+      "availability_probability": 0.88, "input_tokens": [300, 3200], "output_tokens": [150, 1300],
+      "stream_probability": 0.3, "budget_cny": [0.002, 0.015], "timeout_ms": [1600, 5200], "sla_latency_ms": 2500,
+      "candidate_overrides": {"MOCK-DS-FAST": {"latency_multiplier": 1.8, "success_rate_delta": -0.08, "availability_probability": 0.82}}
+    },
+    "cold_start": {
+      "latency_multiplier": 1.6, "price_multiplier": 1.0, "success_rate_delta": -0.05,
+      "availability_probability": 0.92, "input_tokens": [100, 1800], "output_tokens": [50, 700],
+      "stream_probability": 0.15, "budget_cny": [0.001, 0.010], "timeout_ms": [1500, 5000], "sla_latency_ms": 2600
+    },
+    "candidate_failure": {
+      "latency_multiplier": 1.2, "price_multiplier": 1.0, "success_rate_delta": -0.03,
+      "availability_probability": 0.96, "input_tokens": [250, 3000], "output_tokens": [100, 1100],
+      "stream_probability": 0.3, "budget_cny": [0.001, 0.016], "timeout_ms": [1500, 5200], "sla_latency_ms": 2400,
+      "simulation_parameter": true,
+      "description": "Offline Mock candidate-failure assumption; not a real channel incident or metric.",
+      "candidate_overrides": {"MOCK-GPT-STABLE": {"latency_multiplier": 3.0, "success_rate_delta": -0.50, "availability_probability": 0.0}}
+    }
+  },
+  "data_boundary": {
+    "is_mock": true,
+    "is_mock_evaluation": true,
+    "data_source": "offline_simulation_v3",
+    "parameters_are_simulation_assumptions": true,
+    "not_real_platform_metrics": true
+  }
+}

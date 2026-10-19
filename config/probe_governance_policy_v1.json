@@ -1,0 +1,15 @@
+{
+  "policy_version": "probe_governance_policy_v1",
+  "enabled": true,
+  "live_worker_authorized": false,
+  "maximum_approval_ttl_seconds": 3600,
+  "lease_ttl_seconds": 60,
+  "limits": {
+    "global": {"requests": 100, "cost": 10.0, "rate_per_minute": 20, "burst": 5, "concurrency": 2},
+    "environment": {"requests": 50, "cost": 5.0, "rate_per_minute": 10, "burst": 3, "concurrency": 2},
+    "channel": {"requests": 20, "cost": 2.0, "rate_per_minute": 5, "burst": 2, "concurrency": 1},
+    "model": {"requests": 20, "cost": 2.0, "rate_per_minute": 5, "burst": 2, "concurrency": 1}
+  },
+  "backoff": {"base_seconds": 5, "maximum_seconds": 300, "jitter_fraction": 0.2},
+  "stop": {"maximum_consecutive_failures": 3, "maximum_failure_rate": 0.5, "minimum_samples": 4}
+}

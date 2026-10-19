@@ -1,0 +1,42 @@
+{
+  "policy_version": "statistical_confidence_policy_v1",
+  "method": "weighted_wilson_v1",
+  "confidence_level": 0.95,
+  "minimum_effective_sample_size": 5.0,
+  "required_fields": [
+    "environment_id",
+    "model",
+    "channel",
+    "stream",
+    "request_profile_id",
+    "success",
+    "latency_ms",
+    "http_status"
+  ],
+  "freshness_half_life_seconds_by_window": {
+    "5m": 300,
+    "1h": 3600,
+    "24h": 86400
+  },
+  "confidence_width_thresholds": {
+    "high": 0.1,
+    "medium": 0.2
+  },
+  "source_reliability": {
+    "measured_unified_uat": 1.0,
+    "measured_uat": 1.0,
+    "measured_uat_browser_collector": 0.95,
+    "backend_log_export": 0.9,
+    "confirmed_import": 0.85,
+    "integration_test_fixture": 0.5,
+    "demo_mock": 0.0
+  },
+  "unknown_source_action": "block",
+  "allow_quality_adjustment_to_improve_raw_score": false,
+  "assumptions": [
+    "weighted Wilson is an approximation",
+    "observations may be correlated",
+    "channel behavior may be nonstationary",
+    "source reliability values are governance inputs, not empirically calibrated probabilities"
+  ]
+}

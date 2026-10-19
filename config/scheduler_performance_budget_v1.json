@@ -1,0 +1,15 @@
+{
+  "policy_version": "scheduler_performance_budget_v1",
+  "measurement_scope": "scheduler_compute_and_local_persistence_only",
+  "minimum_total_samples": 30,
+  "stages": {
+    "candidate_loading": {"p95_ms": 10, "p99_ms": 20},
+    "metric_lookup": {"p95_ms": 15, "p99_ms": 30},
+    "eligibility_and_scoring": {"p95_ms": 15, "p99_ms": 30},
+    "decision_persistence": {"p95_ms": 10, "p99_ms": 20},
+    "audit_emission": {"p95_ms": 10, "p99_ms": 20},
+    "scheduler_total": {"p95_ms": 40, "p99_ms": 75}
+  },
+  "cold_start_reported_separately": true,
+  "provider_latency_must_be_excluded": true
+}

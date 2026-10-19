@@ -1,0 +1,12 @@
+{
+  "runtime_version": "v1.1.0",
+  "real_execution_enabled": false,
+  "network_access_enabled": false,
+  "real_api_adapter_enabled": false,
+  "max_attempts": 2,
+  "fallback_enabled": true,
+  "decision_log_enabled": true,
+  "redact_sensitive_fields": true,
+  "mock_execution_budget": {"max_cost_cny": 1.0},
+  "human_real_execution_authorization": false
+}

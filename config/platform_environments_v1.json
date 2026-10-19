@@ -1,0 +1,54 @@
+{
+  "config_version": "v1.0.0",
+  "environments": {
+    "china_uat": {
+      "display_name": "国内 UAT",
+      "console_base_url": "https://uat.weimeta.cn",
+      "api_base_url": "https://api-uat.weimeta.cn",
+      "models_path": "/v1/models",
+      "chat_completions_path": "/v1/chat/completions",
+      "logs_page_url": "https://uat.weimeta.cn/console/billing/logs",
+      "allowed_api_hosts": [
+        "api-uat.weimeta.cn"
+      ],
+      "allowed_console_hosts": [
+        "uat.weimeta.cn",
+        "admin-uat.weimeta.cn"
+      ],
+      "currency": "CNY",
+      "configuration_status": "confirmed",
+      "models_endpoint_status": "read_only_validated",
+      "completion_endpoint_status": "execution_validated",
+      "log_page_status": "read_only_validated",
+      "currency_status": "confirmed",
+      "api_protocol": "openai_compatible",
+      "documentation_source": null,
+      "documentation_checked_at": null,
+      "real_execution_supported": true
+    },
+    "overseas": {
+      "display_name": "海外站",
+      "console_base_url": "https://weimeta.ai",
+      "api_base_url": "https://api.weimeta.ai",
+      "models_path": "/v1/models",
+      "chat_completions_path": "/v1/chat/completions",
+      "logs_page_url": null,
+      "allowed_api_hosts": [
+        "api.weimeta.ai"
+      ],
+      "allowed_console_hosts": [
+        "weimeta.ai"
+      ],
+      "currency": null,
+      "configuration_status": "documented_pending_live_validation",
+      "models_endpoint_status": "pending_key_validation",
+      "completion_endpoint_status": "not_validated",
+      "log_page_status": "pending_confirmation",
+      "currency_status": "pending_confirmation",
+      "api_protocol": "openai_compatible",
+      "documentation_source": "https://docs.weimeta.ai/",
+      "documentation_checked_at": "2026-07-28T10:47:24+08:00",
+      "real_execution_supported": false
+    }
+  }
+}

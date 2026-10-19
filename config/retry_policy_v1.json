@@ -1,0 +1,21 @@
+{
+  "policy_version": "retry-v1.0.0",
+  "max_attempts": 2,
+  "retryable_errors": [
+    "timeout",
+    "429",
+    "502",
+    "503",
+    "rate_limited",
+    "temporary_server_error"
+  ],
+  "non_retryable_errors": [
+    "invalid_request",
+    "authentication_failed",
+    "invalid_parameters",
+    "user_authentication_failure"
+  ],
+  "retry_same_channel": false,
+  "automatic_real_execution_authorized": false,
+  "validation_scope": "offline_mock_recovery_only"
+}
