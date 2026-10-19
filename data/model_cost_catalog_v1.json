@@ -1,52 +1,396 @@
 {
-  "catalog_version": "model-cost-v1.0.0",
-  "source_type": "offline_configured_cost_latency_assumptions",
-  "price_unit": "assumed_currency_per_1m_tokens",
+  "catalog_version": "model-cost-v1.1.0",
+  "source_type": "provider_published_list_prices",
+  "is_mock": false,
+  "verified_at": "2026-10-19T00:00:00Z",
+  "freshness_max_age_days": 7,
+  "price_unit": "currency_per_1m_tokens",
+  "currency": "USD",
+  "routing_bindings": {
+    "claude-sonnet": "claude-sonnet-5-5",
+    "deepseek-reasoner": "deepseek-v4.1-flash-1017",
+    "gpt-4o-4-1": "gpt-4.1-2025-04-14",
+    "gemini-flash": "gemini-3.8-flash",
+    "qwen": "qwen3.7-plus-2026-05-26"
+  },
+  "routing_binding_note": "Explicit representative model bindings for the existing heuristic capability router. GPT-4o and GPT-4.1 are distinct offers; their combined legacy selector is not an upstream model ID. DeepSeek Reasoner is a legacy preference, not an R1 identity.",
   "models": [
     {
-      "model_id": "claude-sonnet",
-      "input_price": 3.0,
-      "output_price": 15.0,
+      "model_id": "claude-sonnet-5-5",
+      "model_name": "Claude Sonnet 5.5",
+      "reference_channel_id": "ANTHROPIC-DIRECT-SONNET-5-5",
+      "input_price": "2.00",
+      "output_price": "10.00",
+      "cached_input_price": "0.10",
       "currency": "USD",
       "cost_level": "high",
-      "latency_level": "medium"
+      "latency_level": null,
+      "price_source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "verified_at": "2026-10-19T00:00:00Z"
     },
     {
-      "model_id": "deepseek-reasoner",
-      "input_price": 0.7,
-      "output_price": 2.1,
+      "model_id": "deepseek-v4.1-flash-1017",
+      "model_name": "DeepSeek V4.1 Flash 1017",
+      "reference_channel_id": "DEEPSEEK-DIRECT-FLASH",
+      "input_price": "0.30",
+      "output_price": "1.20",
+      "cached_input_price": "0.006",
       "currency": "USD",
       "cost_level": "low",
-      "latency_level": "medium"
+      "latency_level": null,
+      "price_source_url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "verified_at": "2026-10-19T00:00:00Z"
     },
     {
-      "model_id": "gpt-4o-4-1",
-      "input_price": 5.0,
-      "output_price": 15.0,
+      "model_id": "gpt-4.1-2025-04-14",
+      "model_name": "GPT-4.1 (2025-04-14)",
+      "reference_channel_id": "OPENAI-DIRECT-GPT-4.1",
+      "input_price": "2.00",
+      "output_price": "8.00",
+      "cached_input_price": "0.50",
       "currency": "USD",
       "cost_level": "high",
-      "latency_level": "medium"
+      "latency_level": null,
+      "price_source_url": "https://developers.openai.com/api/docs/models/gpt-4.1",
+      "verified_at": "2026-10-19T00:00:00Z"
     },
     {
-      "model_id": "gemini-flash",
-      "input_price": 0.35,
-      "output_price": 0.6,
+      "model_id": "gpt-4o-2024-11-20",
+      "model_name": "GPT-4o (2024-11-20)",
+      "reference_channel_id": "OPENAI-DIRECT-GPT-4O",
+      "input_price": "2.50",
+      "output_price": "10.00",
+      "cached_input_price": "1.25",
       "currency": "USD",
-      "cost_level": "low",
-      "latency_level": "low"
+      "cost_level": "high",
+      "latency_level": null,
+      "price_source_url": "https://developers.openai.com/api/docs/models/gpt-4o",
+      "verified_at": "2026-10-19T00:00:00Z"
     },
     {
-      "model_id": "qwen",
-      "input_price": 0.4,
-      "output_price": 1.2,
+      "model_id": "gemini-3.8-flash",
+      "model_name": "Gemini 3.8 Flash",
+      "reference_channel_id": "GOOGLE-DIRECT-GEMINI-3.8-FLASH",
+      "input_price": "0.75",
+      "output_price": "3.75",
+      "cached_input_price": "0.075",
       "currency": "USD",
       "cost_level": "low",
-      "latency_level": "low"
+      "latency_level": null,
+      "price_source_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "verified_at": "2026-10-19T00:00:00Z"
+    },
+    {
+      "model_id": "qwen3.7-plus-2026-05-26",
+      "model_name": "Qwen3.7 Plus (2026-05-26), Singapore",
+      "reference_channel_id": "ALIBABA-SG-QWEN3.7-PLUS",
+      "input_price": "0.40",
+      "output_price": "1.60",
+      "cached_input_price": "0.08",
+      "currency": "USD",
+      "cost_level": "low",
+      "latency_level": null,
+      "price_source_url": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "verified_at": "2026-10-19T00:00:00Z"
+    }
+  ],
+  "channel_prices": [
+    {
+      "channel_id": "ANTHROPIC-DIRECT-SONNET-5-5",
+      "model_id": "claude-sonnet-5-5",
+      "provider_model_id": "claude-sonnet-5-5",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "2.00",
+      "output_price": "10.00",
+      "cached_input_price": "0.10",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://platform.claude.com/docs/en/about-claude/pricing"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "standard",
+          "input_tokens_min": 0,
+          "input_tokens_max": 1000000,
+          "valid_from": null,
+          "valid_until": null,
+          "input_price": "2.00",
+          "output_price": "10.00",
+          "cached_input_price": "0.10",
+          "conditions": "Global Standard text inference. US-only inference has a 1.1 multiplier."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens.",
+        "Minimum cacheable prompt is 512 tokens. Global Standard price; geographic premiums excluded."
+      ],
+      "cache_write_price_5m": "2.50",
+      "cache_write_price_1h": "4.00"
+    },
+    {
+      "channel_id": "DEEPSEEK-DIRECT-FLASH",
+      "model_id": "deepseek-v4.1-flash-1017",
+      "provider_model_id": "deepseek-flash",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "0.30",
+      "output_price": "1.20",
+      "cached_input_price": "0.006",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://api-docs.deepseek.com/quick_start/pricing/",
+        "https://api-docs.deepseek.com/guides/kv_cache/"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "conservative_peak_rate",
+          "input_tokens_min": 0,
+          "input_tokens_max": 1000000,
+          "valid_from": null,
+          "valid_until": null,
+          "input_price": "0.30",
+          "output_price": "1.20",
+          "cached_input_price": "0.006",
+          "conditions": "Conservative peak-rate estimate. Discounts depend on provider calendar and execution time."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens.",
+        "A holiday calendar is not configured; estimates use peak rates. Cache is best effort; default cached tokens to zero.",
+        "The provider model is a rolling alias; reverify its checkpoint."
+      ],
+      "off_peak_prices": {
+        "input_price": "0.15",
+        "output_price": "0.60",
+        "cached_input_price": "0.003"
+      },
+      "peak_schedule_utc": "Monday-Friday 01:00-04:00 and 06:00-10:00, excluding Chinese public holidays. Other times off-peak."
+    },
+    {
+      "channel_id": "TOGETHER-DEEPSEEK-V4.1-FLASH-1017",
+      "model_id": "deepseek-v4.1-flash-1017",
+      "provider_model_id": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "0.30",
+      "output_price": "1.20",
+      "cached_input_price": "0.006",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://www.together.ai/models/deepseek-v4-1-flash-1017"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "standard",
+          "input_tokens_min": 0,
+          "input_tokens_max": 1000000,
+          "valid_from": null,
+          "valid_until": null,
+          "input_price": "0.30",
+          "output_price": "1.20",
+          "cached_input_price": "0.006",
+          "conditions": "Published Standard token rates; same checkpoint does not establish identical serving behaviour."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens."
+      ]
+    },
+    {
+      "channel_id": "FIREWORKS-DEEPSEEK-V4.1-FLASH-1017",
+      "model_id": "deepseek-v4.1-flash-1017",
+      "provider_model_id": "accounts/fireworks/models/deepseek-v4p1-flash-1017",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "0.30",
+      "output_price": "1.20",
+      "cached_input_price": "0.006",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash-1017",
+        "https://docs.fireworks.ai/serverless/pricing"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "standard",
+          "input_tokens_min": 0,
+          "input_tokens_max": 1000000,
+          "valid_from": null,
+          "valid_until": null,
+          "input_price": "0.30",
+          "output_price": "1.20",
+          "cached_input_price": "0.006",
+          "conditions": "Standard serverless rates. Priority is a separately priced service."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens."
+      ],
+      "priority_prices": {
+        "input_price": "0.375",
+        "output_price": "1.50",
+        "cached_input_price": "0.0075"
+      }
+    },
+    {
+      "channel_id": "OPENAI-DIRECT-GPT-4.1",
+      "model_id": "gpt-4.1-2025-04-14",
+      "provider_model_id": "gpt-4.1-2025-04-14",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "2.00",
+      "output_price": "8.00",
+      "cached_input_price": "0.50",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-4.1",
+        "https://developers.openai.com/api/docs/deprecations"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "standard",
+          "input_tokens_min": 0,
+          "input_tokens_max": 1047576,
+          "valid_from": null,
+          "valid_until": "2027-01-14T00:00:00Z",
+          "input_price": "2.00",
+          "output_price": "8.00",
+          "cached_input_price": "0.50",
+          "conditions": "Standard text tokens, not Batch. Shutdown January 14, 2027."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens.",
+        "Image tokenisation and non-standard processing are outside this estimate. Input plus output must fit context; this is a quote, not execution validation."
+      ]
+    },
+    {
+      "channel_id": "OPENAI-DIRECT-GPT-4O",
+      "model_id": "gpt-4o-2024-11-20",
+      "provider_model_id": "gpt-4o-2024-11-20",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "2.50",
+      "output_price": "10.00",
+      "cached_input_price": "1.25",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/models/gpt-4o",
+        "https://developers.openai.com/api/docs/deprecations"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "standard",
+          "input_tokens_min": 0,
+          "input_tokens_max": 128000,
+          "valid_from": null,
+          "valid_until": "2027-01-14T00:00:00Z",
+          "input_price": "2.50",
+          "output_price": "10.00",
+          "cached_input_price": "1.25",
+          "conditions": "Standard text tokens, not Batch. Shutdown January 14, 2027."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens.",
+        "Image tokenisation and non-standard processing are outside this estimate. Input plus output must fit context; this is a quote, not execution validation."
+      ]
+    },
+    {
+      "channel_id": "GOOGLE-DIRECT-GEMINI-3.8-FLASH",
+      "model_id": "gemini-3.8-flash",
+      "provider_model_id": "gemini-3.8-flash",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "0.75",
+      "output_price": "3.75",
+      "cached_input_price": "0.075",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://ai.google.dev/gemini-api/docs/pricing"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "paid_standard_2026",
+          "input_tokens_min": 0,
+          "input_tokens_max": 1048576,
+          "valid_from": null,
+          "valid_until": "2027-01-01T00:00:00Z",
+          "input_price": "0.75",
+          "output_price": "3.75",
+          "cached_input_price": "0.075",
+          "conditions": "Paid Standard text/image/video input through December 31, 2026. Audio excluded."
+        },
+        {
+          "tier_id": "paid_standard_2027",
+          "input_tokens_min": 0,
+          "input_tokens_max": 1048576,
+          "valid_from": "2027-01-01T00:00:00Z",
+          "valid_until": null,
+          "input_price": "1.50",
+          "output_price": "7.50",
+          "cached_input_price": "0.15",
+          "conditions": "Published Paid Standard rate from January 1, 2027; audio excluded."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens.",
+        "No free-tier, Batch or grounding discount is assumed."
+      ],
+      "cache_storage_per_1m_tokens_hour_2026": "0.50",
+      "cache_storage_per_1m_tokens_hour_2027": "1.00"
+    },
+    {
+      "channel_id": "ALIBABA-SG-QWEN3.7-PLUS",
+      "model_id": "qwen3.7-plus-2026-05-26",
+      "provider_model_id": "qwen3.7-plus-2026-05-26",
+      "currency": "USD",
+      "price_unit": "currency_per_1m_tokens",
+      "input_price": "0.40",
+      "output_price": "1.60",
+      "cached_input_price": "0.08",
+      "verified_at": "2026-10-19T00:00:00Z",
+      "source_urls": [
+        "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+        "https://www.alibabacloud.com/help/en/model-studio/context-cache"
+      ],
+      "pricing_tiers": [
+        {
+          "tier_id": "singapore_up_to_256k",
+          "input_tokens_min": 0,
+          "input_tokens_max": 256000,
+          "valid_from": null,
+          "valid_until": null,
+          "input_price": "0.40",
+          "output_price": "1.60",
+          "cached_input_price": "0.08",
+          "conditions": "International/Singapore standard snapshot rate. Input tier applies to all tokens. Implicit cache read is 20% of input rate."
+        },
+        {
+          "tier_id": "singapore_over_256k",
+          "input_tokens_min": 256001,
+          "input_tokens_max": 1000000,
+          "valid_from": null,
+          "valid_until": null,
+          "input_price": "1.20",
+          "output_price": "4.80",
+          "cached_input_price": "0.24",
+          "conditions": "Input >256K: selected tier applies to all tokens. Total context remains bounded."
+        }
+      ],
+      "notes": [
+        "Token estimates exclude taxes, tools, cache creation/storage and other separate charges. Output count must include all billable output, including reasoning tokens.",
+        "Explicit cache pricing and cache creation differ and are excluded.",
+        "Do not apply China-region prices or undated alias promotions to this dated Singapore snapshot."
+      ],
+      "cache_price_basis": "implicit_cache_read_20_percent_of_input"
     }
   ],
   "limitations": [
-    "All prices and latency levels are configurable engineering assumptions.",
-    "Values are not verified production prices or service-level measurements.",
-    "No live provider API or pricing endpoint is queried."
+    "Public provider list prices, not invented assumptions. Actual invoices may include taxes, contract discounts, tools, cache creation/storage and regional premiums.",
+    "USD token prices only; no unverified GBP/CNY conversion is applied.",
+    "Latency and reliability are unknown until measured. Scores in the separate capability catalog remain application heuristics, not market benchmarks.",
+    "Source documents are not polling feeds. Reverify after seven days; stale quotes must not be presented as current."
   ]
 }

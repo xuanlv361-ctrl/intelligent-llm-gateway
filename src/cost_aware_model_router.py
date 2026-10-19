@@ -1,10 +1,13 @@
-"""Offline model selection combining capability, assumed cost, and latency."""
+"""Model selection using documented prices and explicit capability preferences."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
+from datetime import datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -14,6 +17,7 @@ from model_capability_router import (
     load_catalog,
 )
 from task_classifier import build_task_profile
+from model_market_catalog import compare_model_channels
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,8 +46,9 @@ def validate_cost_catalog(catalog: Mapping[str, Any]) -> None:
         }
         if required - set(model):
             raise CostAwareModelError("cost catalog model is missing required fields")
-        if float(model["input_price"]) < 0 or float(model["output_price"]) < 0:
-            raise CostAwareModelError("model prices must be non-negative")
+        if any(not math.isfinite(float(model[key])) or float(model[key]) < 0
+               for key in ("input_price", "output_price")):
+            raise CostAwareModelError("model prices must be finite and non-negative")
         identifiers.append(model["model_id"])
     if not models or len(identifiers) != len(set(identifiers)):
         raise CostAwareModelError("cost catalog model_id must be non-empty and unique")
@@ -89,6 +94,7 @@ def select_model(
     policy: Mapping[str, Any] | None = None,
     *,
     objective: str | None = None,
+    now: datetime | None = None,
 ) -> dict[str, Any]:
     capability_catalog = capability_catalog or load_catalog(DEFAULT_CATALOG_PATH)
     cost_catalog = cost_catalog or load_json(DEFAULT_COST_CATALOG)
@@ -102,61 +108,114 @@ def select_model(
     if not requirements:
         raise CostAwareModelError("task_profile requires requirements")
     cost_by_id = {row["model_id"]: row for row in cost_catalog["models"]}
+    bindings = cost_catalog.get("routing_bindings", {})
     capability_ids = {row["model_id"] for row in capability_catalog["models"]}
-    if capability_ids != set(cost_by_id):
-        raise CostAwareModelError("capability and cost catalogs must cover identical models")
+    if any(bindings.get(key, key) not in cost_by_id for key in capability_ids):
+        raise CostAwareModelError("every capability model needs an explicit priced model binding")
     weights = policy["objectives"][objective]["weights"]
     requirement_total = sum(float(value) for value in requirements.values())
+    if not math.isfinite(requirement_total) or requirement_total <= 0:
+        raise CostAwareModelError("requirements must have positive total weight")
     ranking = []
+    excluded = []
+    # One unmeasured candidate must not gain or lose points through an invented
+    # latency level. Omit that component for the whole comparison consistently.
+    latency_available = all(cost_by_id[bindings.get(key, key)].get("latency_level")
+                            in policy["latency_level_scores"] for key in capability_ids)
+    used_components = COMPONENTS if latency_available else ("capability", "cost")
+    total_weight = sum(float(weights[key]) for key in used_components)
+    if total_weight <= 0:
+        raise CostAwareModelError("no weight remains for measured/available components")
+    effective_weights = {key: float(weights[key]) / total_weight if key in used_components else 0.0
+                         for key in COMPONENTS}
     for model in capability_catalog["models"]:
         raw_capability, capability_explanation = compatibility_score(
             requirements, model
         )
         capability = raw_capability / requirement_total
-        cost_model = cost_by_id[model["model_id"]]
+        cost_model = cost_by_id[bindings.get(model["model_id"], model["model_id"])]
+        price_evidence = None
+        if cost_catalog.get("source_type") == "provider_published_list_prices":
+            comparison = compare_model_channels(
+                cost_model["model_id"], task_profile.get("input_tokens", 1000),
+                task_profile.get("output_tokens", 500),
+                task_profile.get("cached_input_tokens", 0),
+                cost_catalog=cost_catalog, now=now)
+            price_evidence = next((row for row in comparison["offers"]
+                if row["channel_id"] == cost_model["reference_channel_id"]), None)
+            if price_evidence is None or price_evidence["quote_status"] != "documented_estimate":
+                excluded.append({"model": model["model_id"], "market_model_id": cost_model["model_id"],
+                                 "reason": price_evidence["quote_status"] if price_evidence else "missing_reference_offer"})
+                continue
+            cost_model = {**cost_model, **price_evidence["price_breakdown"]}
         cost = _cost_score(cost_model, policy)
-        latency = float(
-            policy["latency_level_scores"][cost_model["latency_level"]]
-        )
+        if price_evidence is not None:
+            breakdown = price_evidence["price_breakdown"]
+            reference = (
+                Decimal(breakdown["input_tokens"]) * Decimal(str(policy["price_normalization"]["input_reference"]))
+                + Decimal(breakdown["output_tokens"]) * Decimal(str(policy["price_normalization"]["output_reference"]))
+            ) / Decimal(1000000)
+            cost = (float(max(Decimal(0), Decimal(1) - min(
+                Decimal(price_evidence["estimated_cost"]) / reference, Decimal(1))))
+                if reference else 1.0)
+        latency = (float(policy["latency_level_scores"][cost_model["latency_level"]])
+                   if latency_available else None)
         total = (
-            float(weights["capability"]) * capability
-            + float(weights["cost"]) * cost
-            + float(weights["latency"]) * latency
+            effective_weights["capability"] * capability
+            + effective_weights["cost"] * cost
+            + effective_weights["latency"] * (latency or 0.0)
         )
         ranking.append({
-            "model": model["model_id"],
+            "model": cost_model["model_id"],
+            "model_preference": model["model_id"],
+            "market_model_id": cost_model["model_id"],
             "score": round(total, 6),
             "score_breakdown": {
                 "capability_score": round(capability, 6),
                 "cost_score": round(cost, 6),
-                "latency_score": round(latency, 6),
-                "weighted_capability": round(float(weights["capability"]) * capability, 6),
-                "weighted_cost": round(float(weights["cost"]) * cost, 6),
-                "weighted_latency": round(float(weights["latency"]) * latency, 6),
+                "latency_score": round(latency, 6) if latency is not None else None,
+                "weighted_capability": round(effective_weights["capability"] * capability, 6),
+                "weighted_cost": round(effective_weights["cost"] * cost, 6),
+                "weighted_latency": round(effective_weights["latency"] * (latency or 0.0), 6),
             },
             "capability_explanation": capability_explanation,
-            "assumed_input_price": cost_model["input_price"],
-            "assumed_output_price": cost_model["output_price"],
+            "input_price": cost_model["input_price"],
+            "output_price": cost_model["output_price"],
             "currency": cost_model["currency"],
+            "price_source_url": cost_model.get("price_source_url"),
+            "reference_channel_id": cost_model.get("reference_channel_id"),
+            "price_verified_at": cost_model.get("verified_at"),
+            "price_tier": price_evidence["applicable_tier"] if price_evidence else None,
+            "estimated_request_cost": price_evidence["estimated_cost"] if price_evidence else None,
+            "request_price_breakdown": price_evidence["price_breakdown"] if price_evidence else None,
         })
+    if not ranking:
+        raise CostAwareModelError("no current documented prices available for model selection")
     ranking.sort(key=lambda row: (-row["score"], row["model"]))
     selected = ranking[0]
     return {
         "selected_model": selected["model"],
+        "selected_model_preference": selected["model_preference"],
+        "selected_market_model": selected["market_model_id"],
         "ranking": ranking,
+        "excluded_models": excluded,
+        "effective_weights": effective_weights,
+        "unavailable_components": [] if latency_available else ["latency"],
         "score_breakdown": selected["score_breakdown"],
         "explanation": (
             f"{objective}: capability={selected['score_breakdown']['capability_score']}, "
             f"cost={selected['score_breakdown']['cost_score']}, "
-            f"latency={selected['score_breakdown']['latency_score']}"
+            f"latency={selected['score_breakdown']['latency_score']}; "
+            "capability scores are application preferences, not measured benchmarks"
         ),
         "objective": objective,
         "policy_version": policy["policy_version"],
-        "source_type": "offline_configured_model_selection",
+        "source_type": cost_catalog.get("source_type", "configured_model_selection"),
+        "real_api_called": False,
     }
 
 
-def build_demo() -> dict[str, Any]:
+def build_demo(*, now: datetime | None = None) -> dict[str, Any]:
     scenarios = [
         ("coding_request", "Implement Python code and debug this function", "quality_first"),
         ("simple_question", "What is a transformer?", "balanced"),
@@ -169,15 +228,15 @@ def build_demo() -> dict[str, Any]:
             "scenario_id": scenario_id,
             "request_text": text,
             "task": profile,
-            **select_model(profile, objective=objective),
+            **select_model(profile, objective=objective, now=now),
         })
     return {
         "demonstration_type": "offline_only",
         "real_api_calls_performed": 0,
         "scenarios": rows,
         "limitations": [
-            "Capability, price, and latency values are engineering assumptions.",
-            "Selections do not represent real benchmark or production results."
+            "Prices are source-backed public list prices. Capability scores remain application heuristics.",
+            "No unmeasured latency values are invented; this module performs selection without inference calls."
         ],
     }
 

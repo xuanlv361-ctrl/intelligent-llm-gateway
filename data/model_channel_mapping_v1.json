@@ -1,27 +1,323 @@
 {
-  "mapping_version": "model-channel-mapping-v1.0.0",
-  "source_type": "offline_configured_mapping",
-  "models": {
-    "claude-sonnet": [
-      {"candidate_id": "MOCK-CLAUDE-001", "channel_id": "MOCK-CLAUDE-001", "priority": 10, "availability_status": "available", "is_mock": true},
-      {"candidate_id": "MOCK-CLAUDE-002", "channel_id": "MOCK-CLAUDE-002", "priority": 20, "availability_status": "available", "is_mock": true}
-    ],
-    "deepseek-reasoner": [
-      {"candidate_id": "MOCK-DEEPSEEK-001", "channel_id": "MOCK-DEEPSEEK-001", "priority": 10, "availability_status": "available", "is_mock": true},
-      {"candidate_id": "MOCK-DEEPSEEK-002", "channel_id": "MOCK-DEEPSEEK-002", "priority": 20, "availability_status": "available", "is_mock": true}
-    ],
+  "mapping_version": "model-channel-mapping-v1.1.0",
+  "source_type": "provider_documentation",
+  "is_mock": false,
+  "channel_id_namespace": "application_offer_id",
+  "verified_at": "2026-10-19T00:00:00Z",
+  "freshness_max_age_days": 7,
+  "model_aliases": {
+    "claude-sonnet": "claude-sonnet-5-5",
+    "deepseek-reasoner": "deepseek-v4.1-flash-1017",
+    "deepseek-flash": "deepseek-v4.1-flash-1017",
+    "gpt-4.1": "gpt-4.1-2025-04-14",
+    "gpt-4o": "gpt-4o-2024-11-20",
+    "gemini-flash": "gemini-3.8-flash",
+    "qwen": "qwen3.7-plus-2026-05-26"
+  },
+  "ambiguous_model_aliases": {
     "gpt-4o-4-1": [
-      {"candidate_id": "MOCK-GPT-001", "channel_id": "MOCK-GPT-001", "priority": 10, "availability_status": "available", "is_mock": true}
+      "gpt-4o-2024-11-20",
+      "gpt-4.1-2025-04-14"
+    ]
+  },
+  "alias_notes": {
+    "deepseek-reasoner": "Legacy application preference explicitly bound to V4.1 Flash. This is not DeepSeek R1.",
+    "claude-sonnet": "Family preference bound to Sonnet 5.5.",
+    "gemini-flash": "Family preference bound to Gemini 3.8 Flash.",
+    "qwen": "Family preference bound to the dated Singapore Qwen3.7 Plus snapshot."
+  },
+  "models": {
+    "claude-sonnet-5-5": [
+      {
+        "candidate_id": "ANTHROPIC-DIRECT-SONNET-5-5",
+        "channel_id": "ANTHROPIC-DIRECT-SONNET-5-5",
+        "provider": "Anthropic",
+        "provider_model_id": "claude-sonnet-5-5",
+        "api_base": "https://api.anthropic.com",
+        "api_path": "/v1/messages",
+        "api_format": "anthropic_messages",
+        "priority": 10,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {},
+        "required_configuration": [
+          "Anthropic account access",
+          "ANTHROPIC_API_KEY",
+          "Anthropic Messages adapter"
+        ],
+        "source_urls": [
+          "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
+          "https://platform.claude.com/docs/en/api/messages/create"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        },
+        "parameter_notes": [
+          "Do not send non-default temperature, top_p or top_k; the model rejects them."
+        ]
+      }
     ],
-    "gemini-flash": [
-      {"candidate_id": "MOCK-GEMINI-001", "channel_id": "MOCK-GEMINI-001", "priority": 10, "availability_status": "available", "is_mock": true}
+    "deepseek-v4.1-flash-1017": [
+      {
+        "candidate_id": "DEEPSEEK-DIRECT-FLASH",
+        "channel_id": "DEEPSEEK-DIRECT-FLASH",
+        "provider": "DeepSeek",
+        "provider_model_id": "deepseek-flash",
+        "api_base": "https://api.deepseek.com",
+        "api_path": "/chat/completions",
+        "api_format": "openai_chat_completions",
+        "priority": 10,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high"
+        },
+        "required_configuration": [
+          "DeepSeek account access",
+          "DEEPSEEK_API_KEY",
+          "Provider adapter and execution approval"
+        ],
+        "source_urls": [
+          "https://api-docs.deepseek.com/quick_start/pricing/",
+          "https://api-docs.deepseek.com/guides/thinking_mode/"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        },
+        "model_id_kind": "rolling_alias",
+        "resolved_version_at_verification": "DeepSeek-V4.1-Flash-1017"
+      },
+      {
+        "candidate_id": "TOGETHER-DEEPSEEK-V4.1-FLASH-1017",
+        "channel_id": "TOGETHER-DEEPSEEK-V4.1-FLASH-1017",
+        "provider": "Together AI",
+        "provider_model_id": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        "api_base": "https://api.together.ai/v1",
+        "api_path": "/chat/completions",
+        "api_format": "openai_chat_completions",
+        "priority": 20,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {},
+        "required_configuration": [
+          "Together AI account access",
+          "TOGETHER_API_KEY",
+          "Provider adapter and execution approval"
+        ],
+        "source_urls": [
+          "https://www.together.ai/models/deepseek-v4-1-flash-1017",
+          "https://docs.together.ai/docs/inference/openai-compatibility"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        },
+        "model_id_kind": "versioned"
+      },
+      {
+        "candidate_id": "FIREWORKS-DEEPSEEK-V4.1-FLASH-1017",
+        "channel_id": "FIREWORKS-DEEPSEEK-V4.1-FLASH-1017",
+        "provider": "Fireworks AI",
+        "provider_model_id": "accounts/fireworks/models/deepseek-v4p1-flash-1017",
+        "api_base": "https://api.fireworks.ai/inference/v1",
+        "api_path": "/chat/completions",
+        "api_format": "openai_chat_completions",
+        "priority": 30,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {},
+        "required_configuration": [
+          "Fireworks AI account access",
+          "FIREWORKS_API_KEY",
+          "Provider adapter and execution approval"
+        ],
+        "source_urls": [
+          "https://fireworks.ai/models/deepseek-ai/deepseek-v4p1-flash-1017",
+          "https://docs.fireworks.ai/tools-sdks/openai-compatibility"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        },
+        "model_id_kind": "versioned"
+      }
     ],
-    "qwen": [
-      {"candidate_id": "MOCK-QWEN-001", "channel_id": "MOCK-QWEN-001", "priority": 10, "availability_status": "available", "is_mock": true}
+    "gpt-4.1-2025-04-14": [
+      {
+        "candidate_id": "OPENAI-DIRECT-GPT-4.1",
+        "channel_id": "OPENAI-DIRECT-GPT-4.1",
+        "provider": "OpenAI",
+        "provider_model_id": "gpt-4.1-2025-04-14",
+        "api_base": "https://api.openai.com/v1",
+        "api_path": "/chat/completions",
+        "api_format": "openai_chat_completions",
+        "priority": 10,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {},
+        "required_configuration": [
+          "OpenAI account model access",
+          "OPENAI_API_KEY",
+          "Provider adapter and execution approval"
+        ],
+        "source_urls": [
+          "https://developers.openai.com/api/docs/models/gpt-4.1",
+          "https://developers.openai.com/api/docs/deprecations"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        },
+        "sunset_at": "2027-01-14T00:00:00Z",
+        "lifecycle_status": "deprecated"
+      }
+    ],
+    "gpt-4o-2024-11-20": [
+      {
+        "candidate_id": "OPENAI-DIRECT-GPT-4O",
+        "channel_id": "OPENAI-DIRECT-GPT-4O",
+        "provider": "OpenAI",
+        "provider_model_id": "gpt-4o-2024-11-20",
+        "api_base": "https://api.openai.com/v1",
+        "api_path": "/chat/completions",
+        "api_format": "openai_chat_completions",
+        "priority": 10,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {},
+        "required_configuration": [
+          "OpenAI account model access",
+          "OPENAI_API_KEY",
+          "Provider adapter and execution approval"
+        ],
+        "source_urls": [
+          "https://developers.openai.com/api/docs/models/gpt-4o",
+          "https://developers.openai.com/api/docs/deprecations"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        },
+        "sunset_at": "2027-01-14T00:00:00Z",
+        "lifecycle_status": "deprecated"
+      }
+    ],
+    "gemini-3.8-flash": [
+      {
+        "candidate_id": "GOOGLE-DIRECT-GEMINI-3.8-FLASH",
+        "channel_id": "GOOGLE-DIRECT-GEMINI-3.8-FLASH",
+        "provider": "Google Gemini Developer API",
+        "provider_model_id": "gemini-3.8-flash",
+        "api_base": "https://generativelanguage.googleapis.com/v1beta/openai",
+        "api_path": "/chat/completions",
+        "api_format": "openai_chat_completions_beta",
+        "priority": 10,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {},
+        "required_configuration": [
+          "Google paid API project access",
+          "GEMINI_API_KEY",
+          "Provider adapter and execution approval"
+        ],
+        "source_urls": [
+          "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash",
+          "https://ai.google.dev/gemini-api/docs/openai"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        }
+      }
+    ],
+    "qwen3.7-plus-2026-05-26": [
+      {
+        "candidate_id": "ALIBABA-SG-QWEN3.7-PLUS",
+        "channel_id": "ALIBABA-SG-QWEN3.7-PLUS",
+        "provider": "Alibaba Cloud Model Studio",
+        "provider_model_id": "qwen3.7-plus-2026-05-26",
+        "api_base": "https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "api_path": "/chat/completions",
+        "api_format": "openai_chat_completions",
+        "priority": 10,
+        "is_mock": false,
+        "availability_status": "documented",
+        "verification_status": "provider_documented",
+        "verified_at": "2026-10-19T00:00:00Z",
+        "execution_enabled": false,
+        "request_parameters": {},
+        "required_configuration": [
+          "Singapore Model Studio workspace access",
+          "WorkspaceId",
+          "DASHSCOPE_API_KEY for Singapore",
+          "Provider adapter and execution approval"
+        ],
+        "source_urls": [
+          "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "https://www.alibabacloud.com/help/en/model-studio/compatibility-of-openai-with-dashscope"
+        ],
+        "health": {
+          "sample_count": 0,
+          "success_rate": null,
+          "p95_latency_ms": null,
+          "ttft_ms": null,
+          "status": "unmeasured"
+        },
+        "region": "ap-southeast-1"
+      }
     ]
   },
   "limitations": [
-    "Mappings are offline demonstration candidates and do not represent live provider routes.",
-    "No entry authorizes real channel execution."
+    "Real provider offerings verified from public documentation. No inference calls or account access checks were performed.",
+    "Documented availability does not establish current account eligibility, measured uptime, latency or returned model identity.",
+    "Direct DeepSeek uses a rolling alias; reverify its resolved checkpoint before cross-provider comparisons.",
+    "Catalog entries do not enable any execution adapter or bypass the execution guard."
   ]
 }

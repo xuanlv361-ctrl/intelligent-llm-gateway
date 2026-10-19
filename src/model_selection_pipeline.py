@@ -5,11 +5,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from model_capability_router import route_model
-from model_channel_resolver import resolve_model_channels
+from model_channel_resolver import ModelChannelResolutionError, load_mapping, resolve_model_channels
 from task_classifier import build_task_profile
 
 
@@ -17,13 +18,24 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_LOG = ROOT / "output" / "model_selection_decisions_v1.jsonl"
 
 
-def select_for_request(request_id: str, text: str) -> dict[str, Any]:
+def select_for_request(request_id: str, text: str, *, requested_model: str | None = None,
+                       now: datetime | None = None) -> dict[str, Any]:
     profile = build_task_profile(text)
     model_result = route_model(profile)
-    channels = resolve_model_channels(model_result["selected_model"])
+    mapping = load_mapping()
+    preference = requested_model or model_result["selected_model"]
+    market_model = mapping.get("model_aliases", {}).get(preference, preference)
+    resolution_reason = None
+    try:
+        channels = resolve_model_channels(preference, mapping, now=now)
+    except ModelChannelResolutionError as exc:
+        if preference not in mapping.get("ambiguous_model_aliases", {}):
+            raise
+        channels, market_model, resolution_reason = [], None, str(exc)
     final_channel = channels[0]["channel_id"] if channels else None
     canonical = json.dumps(
-        {"request_id": request_id, "text": text},
+        {"request_id": request_id, "text": text, "requested_model": requested_model,
+         "mapping_version": mapping["mapping_version"]},
         ensure_ascii=False, sort_keys=True, separators=(",", ":"),
     )
     return {
@@ -34,11 +46,16 @@ def select_for_request(request_id: str, text: str) -> dict[str, Any]:
         "user_request": text,
         "detected_task": profile,
         "model_ranking": model_result["ranking"],
-        "selected_model": model_result["selected_model"],
-        "model_selection_reason": model_result["reason"],
+        "selected_model": market_model,
+        "model_preference": preference,
+        "selected_market_model": market_model,
+        "model_selection_reason": "Explicit user model selection" if requested_model else model_result["reason"],
         "channel_candidates": channels,
         "final_channel_decision": final_channel,
-        "source_type": "offline_demonstration_only",
+        "channel_resolution_status": "documented_candidates" if channels else "model_selection_required" if resolution_reason else "no_current_candidates",
+        "channel_resolution_reason": resolution_reason,
+        "source_type": "provider_documented_selection",
+        "execution_enabled": False,
         "real_api_called": False,
     }
 

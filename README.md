@@ -14,6 +14,7 @@ LLM applications often need more than a single model call. They must select an a
 
 - **Task and prompt analysis** — deterministic classification and complexity scoring before routing.
 - **Capability- and cost-aware model selection** — configurable ranking across quality, cost, and latency preferences.
+- **Published model offers** — source-linked model/channel mappings and token prices for six concrete models across eight offers from seven providers, with freshness checks and request cost estimates.
 - **Channel routing** — candidate resolution, confidence-aware selection, health-aware routing, and deterministic tie-breaking.
 - **Multi-agent orchestration** — planning and offline execution for research, coding, reasoning, writing, and review roles.
 - **Tool-aware agents** — a registry and controlled mock executors for calculation, code analysis, file analysis, and offline search.
@@ -99,6 +100,14 @@ streamlit run dashboard/app.py
 
 Use the language selector at the top of the home page to switch between English, Chinese, and Japanese.
 
+### Compare documented provider offers
+
+```powershell
+python src/model_market_catalog.py --model deepseek-v4.1-flash-1017 --input-tokens 10000 --output-tokens 2000
+```
+
+This reads the local, provider-sourced catalog and returns three documented DeepSeek offers with token cost breakdowns. It does not send a model request. Prices were verified on 19 October 2026 and require reverification after seven days; measured reliability and latency remain unknown until observations exist. See [Model market catalog](docs/MODEL_MARKET_CATALOG.md) for sources, model identities, pricing conditions, and account setup boundaries.
+
 ## Tests
 
 ```powershell
@@ -113,7 +122,7 @@ The suite covers routing behaviour, safety boundaries, deterministic simulations
 
 ## Repository boundaries
 
-This public portfolio edition intentionally excludes credentials, browser sessions, local databases, raw UAT evidence, and runtime logs. Networked model calls are not required for the demonstrated flows. Configuration values representing cost, latency, or capability are engineering assumptions for offline comparison, not claims about commercial providers.
+This public portfolio edition intentionally excludes credentials, browser sessions, local databases, raw UAT evidence, and runtime logs. Networked model calls are not required for the demonstrated flows. The model cost catalog and model-channel mapping now contain provider-published commercial offers, with sources and verification dates. Separate capability scores and synthetic experiment fixtures remain engineering heuristics or Mock data; they are not commercial benchmarks. Provider documentation does not establish account access, quota, live uptime, or successful execution. Configuring and validating provider adapters remains separate from catalog comparison.
 
 ## Skills demonstrated
 
@@ -123,5 +132,4 @@ This public portfolio edition intentionally excludes credentials, browser sessio
 - Deterministic simulation and statistical testing
 - AI routing and agent orchestration
 - Secure configuration and evidence-aware workflows
-
 
