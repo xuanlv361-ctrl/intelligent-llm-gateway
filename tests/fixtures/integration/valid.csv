@@ -1,0 +1,3 @@
+request_id,channel_id,channel_name,requested_model,actual_model,http_status,input_tokens,output_tokens,total_tokens,latency_ms,cost_cny,timestamp,source_type
+IT-C01,19,fixture-channel-19,deepseek-v4-flash,deepseek-v4-flash,200,10,5,15,640,0.002,2026-07-27T09:00:00+08:00,integration_test_fixture
+IT-C02,19,fixture-channel-19,deepseek-v4-flash,deepseek-v4-flash,500,12,3,15,1800,0.003,2026-07-27T09:01:00+08:00,integration_test_fixture

@@ -1,0 +1,2 @@
+request_id,channel_id,requested_model,timestamp,source_type
+IT-T01,19,deepseek-v4-flash,not-a-time,integration_test_fixture

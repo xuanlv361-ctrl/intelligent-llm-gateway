@@ -1,0 +1,2 @@
+request_id,channel_id,requested_model,latency_ms,source_type
+IT-LO01,19,deepseek-v4-flash,999999999,integration_test_fixture

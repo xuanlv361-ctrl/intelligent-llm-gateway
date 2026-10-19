@@ -1,0 +1,2 @@
+request_id,channel_id,requested_model,note,source_type
+IT-K01,19,deepseek-v4-flash,api_key=integrationFixtureValue123456,integration_test_fixture

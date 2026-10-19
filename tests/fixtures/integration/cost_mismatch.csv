@@ -1,0 +1,2 @@
+request_id,channel_id,requested_model,input_tokens,output_tokens,total_tokens,cost_cny,estimated_cost_cny,source_type
+IT-CM01,19,deepseek-v4-flash,10,5,15,9.99,0.002,integration_test_fixture

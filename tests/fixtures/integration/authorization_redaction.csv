@@ -1,0 +1,2 @@
+request_id,channel_id,requested_model,authorization,source_type
+IT-A01,19,deepseek-v4-flash,Bearer integration-fixture-not-a-real-token,integration_test_fixture

@@ -1,0 +1,2 @@
+request_id,channel_id,requested_model,actual_model,source_type
+IT-MM01,19,deepseek-v4-flash,deepseek-v3,integration_test_fixture
