@@ -178,10 +178,21 @@ def test_private_dns_resolution_is_rejected_before_transport(monkeypatch):
         default_transport(spec, SECRET)
 
 
-@pytest.mark.parametrize("name", ["Authorization", "Host", "Cookie", "Content-Length", "Proxy-Authorization", "X-Internal-Trace"])
+@pytest.mark.parametrize("name", [
+    "Authorization", "X-API-Key", "Host", "Cookie", "Content-Length",
+    "Content-Type", "Transfer-Encoding", "Proxy-Authorization", "X-Internal-Trace",
+])
 def test_dangerous_headers_are_rejected(name):
     with pytest.raises(WorkbenchError, match="uat_header_forbidden"):
         normalize_request(body(headers=[{"name": name, "value": SECRET}]), settings())
+
+
+def test_case_insensitive_duplicate_headers_are_rejected():
+    with pytest.raises(WorkbenchError, match="uat_header_duplicate"):
+        normalize_request(body(headers=[
+            {"name": "X-Trace-Label", "value": "first"},
+            {"name": "x-trace-label", "value": "second"},
+        ]), settings())
 
 
 def test_real_execution_requires_key_but_not_a_separate_connection_test():

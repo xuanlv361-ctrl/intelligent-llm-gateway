@@ -18,6 +18,7 @@ from typing import Any, Callable
 from urllib.parse import urlparse
 from execution_guard import ExecutionGuard
 from backend.platform_environments import load_platform_environments
+from backend.security.redaction import contains_sensitive_data, redact_text
 from backend.tenant_security import TenantScope
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,11 +26,17 @@ POLICY_PATH = ROOT / "config" / "uat_execution_policy_v1.json"
 PARSER_VERSION = "uat-response-parser-v2.0.0"
 PARSER_VERSION_BEFORE = "uat-response-parser-v1.0.0"
 MAX_PARSE_BYTES = 1_000_000
-SENSITIVE = re.compile(
-    r"(?i)(authorization\s*[:=]|bearer\s+[A-Za-z0-9._~+/-]{8,}|sk-[A-Za-z0-9_-]{8,}|"
-    r"(?:api[_-]?key|token|secret|credential|authorization)[\"']?\s*[:=]|"
-    r"cookie\s*[:=]|\bpassword[\"']?\s*[:=])"
-)
+
+
+class UatTransportError(RuntimeError):
+    """Stable transport failure that never embeds provider response content."""
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Keep credentials on the reviewed origin by rejecting every redirect."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: ANN001
+        return None
 
 
 def _nullable_limit(name: str, policy_key: str, caster: Callable[[Any], Any]) -> Any | None:
@@ -78,7 +85,7 @@ def now() -> str:
 
 
 def redact(value: Any) -> str:
-    return SENSITIVE.sub("[REDACTED]", str(value or ""))
+    return redact_text(value)
 
 
 @dataclass(frozen=True)
@@ -473,7 +480,7 @@ def validate(
     messages = request.get("messages") or []
     serialized = json.dumps(messages, ensure_ascii=False)
     if len(serialized) > cfg["maximum_input_characters"]: errors.append("input_too_large")
-    if SENSITIVE.search(serialized): errors.append("sensitive_input_rejected")
+    if contains_sensitive_data(serialized): errors.append("sensitive_input_rejected")
     if request.get("stream") and not cfg["streaming_enabled"]: errors.append("stream_execution_not_ready")
     estimate = estimate_cost(messages, max_tokens)
     input_tokens = int(estimate["estimated_input_tokens"])
@@ -540,7 +547,7 @@ def validate(
         "request_limit_ok": settings.daily_request_limit is None or used < settings.daily_request_limit,
         "budget_ok": settings.daily_budget_cny is None or spent + estimate["estimated_cost_cny"] <= settings.daily_budget_cny,
         "request_cost_ok": estimate["estimated_cost_cny"] <= settings.max_request_cost_cny,
-        "input_safe": not bool(SENSITIVE.search(serialized)),
+        "input_safe": not contains_sensitive_data(serialized),
         "stream_supported": not request.get("stream") or cfg["streaming_enabled"],
         "stop_rule_clear": True,
     })
@@ -571,19 +578,30 @@ def default_transport(url: str, api_key: str, payload: dict, timeout: int) -> di
     data = json.dumps(payload, ensure_ascii=False).encode()
     request = urllib.request.Request(url, data=data, method="POST", headers={
         "Content-Type": "application/json", "Authorization": f"Bearer {api_key}"})
+    opener = urllib.request.build_opener(
+        urllib.request.HTTPSHandler(context=ssl.create_default_context()),
+        _NoRedirect(),
+    )
     started = time.perf_counter()
     try:
-        with urllib.request.urlopen(request, timeout=timeout, context=ssl.create_default_context()) as response:
-            raw = response.read()
-            return {"status": response.status, "headers": dict(response.headers), "body": raw, "elapsed_ms": round((time.perf_counter()-started)*1000)}
+        response = opener.open(request, timeout=timeout)
     except urllib.error.HTTPError as exc:
-        return {"status": exc.code, "headers": dict(exc.headers), "body": exc.read(), "elapsed_ms": round((time.perf_counter()-started)*1000)}
+        response = exc
+    with response:
+        raw = response.read(MAX_PARSE_BYTES + 1)
+        if len(raw) > MAX_PARSE_BYTES:
+            raise UatTransportError("uat_response_too_large")
+        return {
+            "status": int(response.status), "headers": dict(response.headers),
+            "body": raw,
+            "elapsed_ms": round((time.perf_counter() - started) * 1000),
+        }
 
 
 def classify_response(status_code: int | None, content_type: str, body: bytes, timed_out: bool = False) -> dict:
     raw = body[:MAX_PARSE_BYTES]
     decoded = raw.decode("utf-8", errors="replace")
-    sensitive = bool(SENSITIVE.search(decoded))
+    sensitive = contains_sensitive_data(decoded)
     text = redact(decoded)
     if timed_out:
         category = "network_timeout"

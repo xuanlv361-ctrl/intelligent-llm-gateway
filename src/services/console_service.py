@@ -12,8 +12,8 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/"src")) if str(ROOT/"src") not in sys.path else None
 from error_taxonomy import classify_runtime_error, load_taxonomy  # noqa: E402
 from decision_logger import DecisionLogger  # noqa: E402
+from backend.security.redaction import contains_sensitive_data, redact_text  # noqa: E402
 
-SENSITIVE=re.compile(r"(?i)(authorization\s*[:=]|bearer\s+[A-Za-z0-9._-]+|sk-[A-Za-z0-9_-]{12,}|api[_-]?key\s*[:=]\s*\S+)")
 DECISION_LOG_PATH=ROOT/"output"/"scheduler_decision_logs_v1.jsonl"
 BUDGET_POLICY_PATH=ROOT/"config"/"budget_policy_v1.json"
 
@@ -24,8 +24,7 @@ ERRORS={name:(meta["error_code"],meta["error_layer"],meta["retryable"],meta["fal
   for name,meta in TAXONOMY["categories"].items()}
 
 def redact(value:Any)->str:
-    text=str(value or "")
-    return SENSITIVE.sub("[REDACTED]",text)
+    return redact_text(value)
 def safe_ref(name:str)->str:
     return f"evidence://{hashlib.sha256(name.encode()).hexdigest()[:16]}"
 def classify(status:int|None=None,message:str="",context:str="")->dict[str,Any]:
@@ -116,7 +115,7 @@ def validate_rows(rows:list[dict],mapping:dict[str,str]|None=None)->dict:
       if not stream and row.get("ttft_ms"): issue("unexpected_nonstream_ttft")
       raw=json.dumps(source,ensure_ascii=False)
       if "\ufffd" in raw or re.search(r"(?:Ã.|Â.|鈥[滀淇]|锛[歿坆])",raw): issue("likely_mojibake")
-      if SENSITIVE.search(raw): issue("sensitive_data","rejected")
+      if contains_sensitive_data(raw): issue("sensitive_data","rejected")
       def formula_risk(value: Any) -> bool:
        if not isinstance(value,str) or not value:return False
        if value[0] in ("=","+","@"):return True

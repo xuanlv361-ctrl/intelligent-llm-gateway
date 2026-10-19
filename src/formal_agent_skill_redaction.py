@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from backend.security.redaction import redact_text
+
 
 SENSITIVE_KEY = re.compile(
     r"(?:authorization(?:[_-]?header)?|api[_-]?key|token|(?:access|refresh|bearer|auth|session)[_-]?token|"
@@ -65,9 +67,9 @@ def redact(value: Any) -> tuple[Any, int]:
             count += 1
             return "[REDACTED_BINARY]"
         if isinstance(item, str):
-            replaced, matches = SENSITIVE_VALUE.subn("[REDACTED]", item)
-            count += matches
-            return replaced[:8000]
+            replaced = redact_text(item, maximum_length=8000)
+            count += int(replaced != item[:8000])
+            return replaced
         if item is None or isinstance(item, (bool, int, float)):
             return item
         return clean(str(item))

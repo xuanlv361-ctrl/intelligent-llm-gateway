@@ -1,0 +1,137 @@
+{
+  "taxonomy_version": "error-taxonomy-runtime-v1.0.0",
+  "scope": "Runtime execution and Console API error classification (Scheduler mock_execute fallback, error center, bug reports). This is a separate, versioned superset of the Week 2 measurement-layer taxonomy in data/error_taxonomy.csv, which stays unchanged as protected historical evidence. See docs/ERROR_TAXONOMY_UNIFICATION.md for the crosswalk between the two.",
+  "fields": {
+    "error_code": "Short machine code shown in technical panels.",
+    "chinese_name": "Display label for Chinese UI.",
+    "error_layer": "Where the failure is judged to originate: local, user, upstream, gateway, protocol, transport, routing, guard, unknown.",
+    "typical_http_status": "Representative HTTP status codes, or null when the category is not HTTP-status-driven.",
+    "retryable": "Whether retrying the SAME channel is considered safe. Informational only: this project never retries the same channel automatically.",
+    "fallback_allowed": "Whether Scheduler mock_execute may continue to the next candidate in fallback_order after this error. This is the field the Scheduler's fallback policy is derived from.",
+    "recommended_action": "Human-facing next step.",
+    "detection_rule": "Deterministic rule used by classify() in src/services/console_service.py to reach this category from (status, message, context).",
+    "measurement_taxonomy_mapping": "Corresponding data/error_taxonomy.csv category name(s) from the Week 2 measurement layer, or [] if this runtime-only category has no measurement-layer equivalent."
+  },
+  "categories": {
+    "local_request_error": {
+      "error_code": "LOCAL_REQUEST", "chinese_name": "本地请求错误", "error_layer": "local",
+      "typical_http_status": null, "retryable": false, "fallback_allowed": false,
+      "recommended_action": "修正本地请求格式",
+      "detection_rule": "message 包含 \"json\"（本地请求在发出前已被判定为格式错误）",
+      "measurement_taxonomy_mapping": ["local_command_error"]
+    },
+    "user_parameter_error": {
+      "error_code": "USER_PARAMETER", "chinese_name": "用户参数错误", "error_layer": "user",
+      "typical_http_status": [400], "retryable": false, "fallback_allowed": false,
+      "recommended_action": "修正请求参数",
+      "detection_rule": "status == 400",
+      "measurement_taxonomy_mapping": ["request_parameter_error"]
+    },
+    "user_authentication_error": {
+      "error_code": "USER_AUTH", "chinese_name": "用户鉴权错误", "error_layer": "user",
+      "typical_http_status": [401], "retryable": false, "fallback_allowed": false,
+      "recommended_action": "更新用户凭证",
+      "detection_rule": "status in (401, 403) 且 context 未确认为 channel",
+      "measurement_taxonomy_mapping": ["user_authentication_error"]
+    },
+    "channel_authentication_error": {
+      "error_code": "CHANNEL_AUTH", "chinese_name": "渠道鉴权错误", "error_layer": "upstream",
+      "typical_http_status": [401, 403], "retryable": false, "fallback_allowed": true,
+      "recommended_action": "渠道运维核查凭证",
+      "detection_rule": "status in (401, 403) 且 context == \"channel\"（已确认发生在渠道层）",
+      "measurement_taxonomy_mapping": ["upstream_authentication_error"]
+    },
+    "model_not_supported": {
+      "error_code": "MODEL_UNSUPPORTED", "chinese_name": "模型不支持", "error_layer": "routing",
+      "typical_http_status": [404, 503], "retryable": false, "fallback_allowed": true,
+      "recommended_action": "选择支持该模型的渠道",
+      "detection_rule": "status in (404, 503) 且 message 提及 \"model\"",
+      "measurement_taxonomy_mapping": ["model_unavailable"]
+    },
+    "rate_limited": {
+      "error_code": "RATE_LIMITED", "chinese_name": "上游限流", "error_layer": "upstream",
+      "typical_http_status": [429], "retryable": true, "fallback_allowed": true,
+      "recommended_action": "按策略有限重试或回退",
+      "detection_rule": "status == 429",
+      "measurement_taxonomy_mapping": ["rate_limit"]
+    },
+    "upstream_timeout": {
+      "error_code": "UPSTREAM_TIMEOUT", "chinese_name": "上游超时", "error_layer": "upstream",
+      "typical_http_status": [408], "retryable": true, "fallback_allowed": true,
+      "recommended_action": "有限重试或回退",
+      "detection_rule": "message 包含 \"timeout\" 且 status 不是 504",
+      "measurement_taxonomy_mapping": ["timeout"]
+    },
+    "gateway_timeout": {
+      "error_code": "GATEWAY_TIMEOUT", "chinese_name": "网关超时", "error_layer": "gateway",
+      "typical_http_status": [504], "retryable": true, "fallback_allowed": true,
+      "recommended_action": "检查网关并有限重试",
+      "detection_rule": "status == 504",
+      "measurement_taxonomy_mapping": ["timeout"]
+    },
+    "upstream_5xx": {
+      "error_code": "UPSTREAM_5XX", "chinese_name": "上游 5xx 错误", "error_layer": "upstream",
+      "typical_http_status": [500, 502, 503], "retryable": true, "fallback_allowed": true,
+      "recommended_action": "有限重试或回退",
+      "detection_rule": "status >= 500 且 status != 504 且未命中 model_not_supported",
+      "measurement_taxonomy_mapping": []
+    },
+    "protocol_error": {
+      "error_code": "PROTOCOL", "chinese_name": "协议转换错误", "error_layer": "protocol",
+      "typical_http_status": [400, 500], "retryable": false, "fallback_allowed": true,
+      "recommended_action": "核查协议转换",
+      "detection_rule": "message 包含 \"protocol\" 或 context == \"protocol\"",
+      "measurement_taxonomy_mapping": ["protocol_compatibility_error"]
+    },
+    "sse_incomplete": {
+      "error_code": "SSE_INCOMPLETE", "chinese_name": "SSE 不完整", "error_layer": "protocol",
+      "typical_http_status": null, "retryable": false, "fallback_allowed": true,
+      "recommended_action": "保留片段且不要拼接重试输出",
+      "detection_rule": "message 包含 \"sse\"",
+      "measurement_taxonomy_mapping": []
+    },
+    "response_schema_error": {
+      "error_code": "SCHEMA", "chinese_name": "响应结构错误", "error_layer": "protocol",
+      "typical_http_status": null, "retryable": false, "fallback_allowed": true,
+      "recommended_action": "核查响应结构",
+      "detection_rule": "message 包含 \"schema\"",
+      "measurement_taxonomy_mapping": []
+    },
+    "network_transport_error": {
+      "error_code": "NETWORK", "chinese_name": "网络传输错误", "error_layer": "transport",
+      "typical_http_status": null, "retryable": true, "fallback_allowed": true,
+      "recommended_action": "检查网络并有限重试",
+      "detection_rule": "message 包含 \"connection\" 或 context == \"network\"",
+      "measurement_taxonomy_mapping": []
+    },
+    "budget_exceeded": {
+      "error_code": "BUDGET", "chinese_name": "预算超限", "error_layer": "guard",
+      "typical_http_status": null, "retryable": false, "fallback_allowed": false,
+      "recommended_action": "降低用量或申请预算",
+      "detection_rule": "message 包含 \"budget\"",
+      "measurement_taxonomy_mapping": []
+    },
+    "execution_not_authorized": {
+      "error_code": "NOT_AUTHORIZED", "chinese_name": "执行未授权", "error_layer": "guard",
+      "typical_http_status": null, "retryable": false, "fallback_allowed": false,
+      "recommended_action": "保持只读并申请授权",
+      "detection_rule": "context == \"guard\" 或 message 包含 \"not_authorized\"",
+      "measurement_taxonomy_mapping": []
+    },
+    "all_candidates_unavailable": {
+      "error_code": "NO_CANDIDATE", "chinese_name": "无可用候选", "error_layer": "routing",
+      "typical_http_status": null, "retryable": false, "fallback_allowed": false,
+      "recommended_action": "恢复至少一个合格候选",
+      "detection_rule": "context == \"routing\" 或 message 包含 \"no_candidate\"",
+      "measurement_taxonomy_mapping": ["platform_routing_error"]
+    },
+    "unknown_error": {
+      "error_code": "UNKNOWN", "chinese_name": "未知错误", "error_layer": "unknown",
+      "typical_http_status": null, "retryable": false, "fallback_allowed": false,
+      "recommended_action": "人工检查脱敏证据",
+      "detection_rule": "以上规则均未命中",
+      "measurement_taxonomy_mapping": ["unknown_error"]
+    }
+  }
+}
+

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import urllib.request
 from datetime import datetime, timedelta, timezone
 import sqlite3
 from pathlib import Path
@@ -11,8 +12,9 @@ from backend.environment_runtime_settings import EnvironmentRuntimeSettings
 from tests.enterprise_test_client import authenticated_test_client
 app = application.app
 from backend.uat_service import (
-    ERROR_CONTRACT, UatSettings, UatStore, classify_response, correlate,
-    execute, reparse_stored_response, runtime_error, status, validate,
+    ERROR_CONTRACT, MAX_PARSE_BYTES, UatSettings, UatStore, UatTransportError,
+    _NoRedirect, classify_response, correlate, default_transport, execute,
+    reparse_stored_response, runtime_error, status, validate,
 )
 
 CONFIRMATION = "I understand this will call the Weimeta UAT API and may incur UAT cost."
@@ -167,6 +169,91 @@ def test_http_and_malformed_response_contract(code, content_type, payload, categ
     assert result["content_type"] == content_type
     if category == "gateway_502":
         assert result["response_body_type"] == "html"
+
+
+@pytest.mark.parametrize("payload", [
+    b'{"api_key":"SUPERSECRET123","error":"bad"}',
+    b'{"token":"SUPERSECRET123","error":"bad"}',
+    b'Authorization: Bearer SUPERSECRET123',
+])
+def test_sensitive_response_values_are_fully_redacted(payload):
+    result = classify_response(500, "application/json", payload)
+    serialized = json.dumps(result, ensure_ascii=False)
+    assert "SUPERSECRET123" not in serialized
+    assert "[REDACTED]" in serialized
+
+
+def test_uat_transport_disables_redirects_and_bounds_response(monkeypatch):
+    captured = {}
+
+    class Response:
+        status = 200
+        headers = {"content-type": "application/json"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def read(self, limit):
+            captured["read_limit"] = limit
+            return b'{}'
+
+    class Opener:
+        def open(self, request, timeout):
+            captured["authorization"] = request.get_header("Authorization")
+            captured["timeout"] = timeout
+            return Response()
+
+    def build_opener(*handlers):
+        captured["handlers"] = handlers
+        return Opener()
+
+    monkeypatch.setattr(urllib.request, "build_opener", build_opener)
+    result = default_transport(
+        "https://api-uat.weimeta.cn/v1/chat/completions",
+        "test-key-not-real", {"model": "fixture"}, 3)
+    assert result["status"] == 200
+    assert captured["authorization"] == "Bearer test-key-not-real"
+    assert captured["read_limit"] == MAX_PARSE_BYTES + 1
+    assert any(isinstance(handler, _NoRedirect) for handler in captured["handlers"])
+
+
+@pytest.mark.parametrize("status_code", [301, 302, 303, 307, 308])
+def test_uat_transport_redirect_handler_rejects_every_redirect(status_code):
+    original = urllib.request.Request(
+        "https://api-uat.weimeta.cn/v1/chat/completions",
+        headers={"Authorization": "Bearer test-key-not-real"},
+    )
+    assert _NoRedirect().redirect_request(
+        original, None, status_code, "redirect", {}, "https://attacker.invalid/collect"
+    ) is None
+
+
+def test_uat_transport_rejects_oversized_response(monkeypatch):
+    class Response:
+        status = 200
+        headers = {"content-type": "application/json"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def read(self, _limit):
+            return b"x" * (MAX_PARSE_BYTES + 1)
+
+    class Opener:
+        def open(self, _request, _timeout=None, **_kwargs):
+            return Response()
+
+    monkeypatch.setattr(urllib.request, "build_opener", lambda *_handlers: Opener())
+    with pytest.raises(UatTransportError, match="uat_response_too_large"):
+        default_transport(
+            "https://api-uat.weimeta.cn/v1/chat/completions",
+            "test-key-not-real", {"model": "fixture"}, 3)
 
 
 def test_timeout_missing_ids_and_actual_model_remain_null():

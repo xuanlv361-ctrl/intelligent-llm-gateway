@@ -36,6 +36,8 @@ FORBIDDEN_HEADERS = frozenset({
     "authorization", "host", "content-length", "connection", "proxy-authorization",
     "cookie", "set-cookie", "x-correlation-id", "x-request-id", "forwarded",
     "x-forwarded-for", "x-forwarded-host", "x-forwarded-proto",
+    "x-api-key", "content-type", "transfer-encoding", "te", "trailer",
+    "upgrade", "proxy-connection", "expect",
 })
 SAFE_RESPONSE_HEADERS = frozenset({
     "content-type", "content-length", "allow", "access-control-allow-origin",
@@ -198,8 +200,12 @@ def _normalize_path(path: Any) -> str:
 
 def _normalize_headers(value: Any) -> dict[str, str]:
     result: dict[str, str] = {}
+    observed: set[str] = set()
     for item in _pairs(value, "headers"):
         name, lowered = item["name"], item["name"].casefold()
+        if lowered in observed:
+            raise WorkbenchError("uat_header_duplicate")
+        observed.add(lowered)
         if lowered in FORBIDDEN_HEADERS or lowered.startswith("x-internal-"):
             raise WorkbenchError("uat_header_forbidden")
         result[name] = item["value"]
