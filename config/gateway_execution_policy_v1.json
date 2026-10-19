@@ -1,0 +1,24 @@
+{
+  "policy_version": "gateway-execution-v1.0.0",
+  "real_execution_enabled": false,
+  "network_access_enabled": false,
+  "enabled_channels": [],
+  "maximum_attempts": 2,
+  "timeout_seconds": 30,
+  "maximum_response_bytes": 1000000,
+  "maximum_output_tokens": 4096,
+  "credential_environment_variables": {
+    "Anthropic": "ANTHROPIC_API_KEY",
+    "DeepSeek": "DEEPSEEK_API_KEY",
+    "Together AI": "TOGETHER_API_KEY",
+    "Fireworks AI": "FIREWORKS_API_KEY",
+    "OpenAI": "OPENAI_API_KEY",
+    "Google Gemini Developer API": "GEMINI_API_KEY",
+    "Alibaba Cloud Model Studio": "DASHSCOPE_API_KEY"
+  },
+  "notes": [
+    "Operator configuration and per-request confirmation are both required before dispatch.",
+    "No automatic retry after uncertain billing or emitted output. Local idempotency does not guarantee provider billing idempotency.",
+    "The adapter currently executes non-streaming text requests. Other request types remain blocked at execution."
+  ]
+}

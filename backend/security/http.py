@@ -105,6 +105,16 @@ def _permission_for(method: str, path: str) -> str:
     method, path = method.upper(), path.casefold()
     if path.startswith("/api/v1/security/session"):
         return ""
+    if path.startswith("/api/v1/gateway/"):
+        if method in SAFE_METHODS:
+            return "decision.read"
+        if path.endswith("/execute"):
+            return "scheduler.execute"
+        if "/access-policy/" in path or path.endswith("/budget"):
+            return "tenant.manage"
+        if "/settlements/" in path:
+            return "evidence.import"
+        return "scheduler.decide"
     if "kill-switch" in path:
         return "kill_switch.release" if "release" in path else "kill_switch.activate"
     if "circuit-breaker" in path:

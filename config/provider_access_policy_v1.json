@@ -1,0 +1,56 @@
+{
+  "policy_version": "provider-access-policy-v1",
+  "description": "Account-specific capabilities and privacy terms require confirmation. No account activation is inferred from public model documentation.",
+  "observation_policy": {"rolling_window_hours": 24, "minimum_samples": 5},
+  "balanced_weights": {"cost": 0.5, "reliability": 0.3, "latency": 0.2},
+  "channels": {
+    "ANTHROPIC-DIRECT-SONNET-5-5": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    },
+    "DEEPSEEK-DIRECT-FLASH": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    },
+    "TOGETHER-DEEPSEEK-V4.1-FLASH-1017": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    },
+    "FIREWORKS-DEEPSEEK-V4.1-FLASH-1017": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    },
+    "OPENAI-DIRECT-GPT-4.1": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    },
+    "OPENAI-DIRECT-GPT-4O": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    },
+    "GOOGLE-DIRECT-GEMINI-3.8-FLASH": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    },
+    "ALIBABA-SG-QWEN3.7-PLUS": {
+      "stream": "unknown", "tool_calling": "unknown", "max_context_tokens": null,
+      "storage_regions": [], "retention_days": null, "training_use": "unknown",
+      "sensitive_tasks_allowed": false, "compliance_labels": [],
+      "verification_status": "pending_confirmation", "source_urls": [], "verified_at": null
+    }
+  }
+}

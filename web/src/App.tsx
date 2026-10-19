@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { api, ApiError, DataMode, EnvironmentFilter, EnvironmentId, HealthCard, ImportBatch, UatRequestBody } from "./services/api";
 import CostBudgetPage from "./pages/CostBudgetPage";
+import GatewayWorkspacePage from "./pages/GatewayWorkspacePage";
 import RealtimeLogSyncPage from "./pages/RealtimeLogSyncPage";
 import SearchPage from "./pages/SearchPage";
 import IncrementalMetricsPage from "./pages/IncrementalMetricsPage";
@@ -30,6 +31,7 @@ import {RoutingDecisionDetailPage,RoutingDecisionsPage} from "./pages/RoutingDec
 import {BusinessSkillAction} from "./components/console/BusinessSkillAction";
 
 const navGroups = [
+  {label:"Gateway workspace",icon:"⇄",items:[["/gateway","Providers & budgets"]]},
   {label:"总览",icon:"⌂",items:[["/dashboard","总览"]]},
   {label:"调度执行",icon:"▶",items:[["/routing/execute","发起调度"],["/routing/runs","执行记录"]]},
   {label:"策略与数据",icon:"◇",items:[["/data/models","模型目录"],["/strategy/config","策略配置"],["/strategy/effect","策略效果"],["/strategy/shadow","影子调度"],["/data/snapshots","指标快照"],["/data/dynamic-metrics","动态指标"],["/data/capabilities","能力矩阵"],["/data/pricing","价格版本"]]},
@@ -528,6 +530,7 @@ function App() {
     <nav aria-label="主导航">{navGroups.map(group=>{const open=expandedGroup===group.label||collapsed;return <div className={`nav-group ${open?"open":""}`} key={group.label}><button type="button" className="nav-group-trigger" aria-expanded={open} title={group.label} onClick={()=>setExpandedGroup(current=>current===group.label?"":group.label)}><span className="nav-icon" aria-hidden="true">{group.icon}</span><span>{group.label}</span><b aria-hidden="true">⌄</b></button>{open&&<div className="nav-children">{group.items.map(([to,label])=><NavLink to={to} key={to} title={label}><span>{label}</span></NavLink>)}</div>}</div>})}</nav></aside>
     {mobileNav&&<button className="nav-scrim" aria-label="关闭导航" onClick={()=>setMobileNav(false)}/>}<main><header className="top"><button className="mobile-menu" aria-label="打开导航" onClick={()=>setMobileNav(true)}>☰</button><div><label className="top-field">环境<select aria-label="全局环境筛选" value={location.pathname==="/integrations/agent-skill"?"china_uat":environmentFilter} disabled={location.pathname==="/integrations/agent-skill"} onChange={e=>{const value=e.target.value as EnvironmentFilter;setEnvironmentFilter(value);api.setEnvironmentFilter(value);queryClient.invalidateQueries();}}>{location.pathname!=="/integrations/agent-skill"&&<option value="all">全部环境</option>}<option value="china_uat">国内 UAT</option>{location.pathname!=="/integrations/agent-skill"&&<option value="overseas">海外站</option>}</select></label><label className="top-field">数据模式<select aria-label="数据来源模式" value={location.pathname==="/integrations/agent-skill"?"uat":mode} disabled={location.pathname==="/integrations/agent-skill"} onChange={e => setMode(e.target.value as DataMode)}>{location.pathname!=="/integrations/agent-skill"&&<option value="demo">Mock 数据</option>}<option value="uat">真实数据</option></select></label><NavLink className={`global-sync-status ${syncStatus.data?.requires_human?"needs-attention":""}`} to="/strategy/shadow#sync-history">{globalSyncLabel}</NavLink></div><div className="top-tools"><GlobalSearch/><button className="user-menu" title="当前 Windows 本地操作员">LX · 本地操作员</button></div></header>
       <div className="content"><Routes>
+        <Route path="/gateway" element={<GatewayWorkspacePage/>}/>
         <Route path="/search" element={<SearchPage environment={environmentFilter} mode={mode}/>} />
         <Route path="/" element={<DashboardPage mode={mode}/>}/><Route path="/dashboard" element={<DashboardPage mode={mode}/>}/>
         <Route path="/routing/execute" element={<RoutingExecutePage mode={mode} environment={executionEnvironment} onEnvironmentChange={setExecutionEnvironment}/>}/><Route path="/routing/runs" element={<RoutingRunsPage environment={executionEnvironment}/>}/>

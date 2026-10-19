@@ -1,6 +1,6 @@
 # Intelligent LLM Gateway
 
-An offline-first orchestration platform for routing language-model workloads across models and channels. The project combines capability-aware model selection, health-aware channel routing, multi-agent execution, recovery controls, evaluation, and observability in one auditable workflow.
+A provider decision workspace for language-model applications: compare documented model offers, estimate request costs, enforce project budgets, and inspect observed reliability before selecting a channel. The project also includes agent orchestration, controlled recovery, evaluation, and observability.
 
 > Portfolio note: this repository demonstrates engineering architecture and deterministic offline workflows. Included metrics and fixtures are synthetic or sanitised unless explicitly labelled. It does not claim production benchmark performance, and real API execution is disabled by default.
 
@@ -15,6 +15,7 @@ LLM applications often need more than a single model call. They must select an a
 - **Task and prompt analysis** — deterministic classification and complexity scoring before routing.
 - **Capability- and cost-aware model selection** — configurable ranking across quality, cost, and latency preferences.
 - **Published model offers** — source-linked model/channel mappings and token prices for six concrete models across eight offers from seven providers, with freshness checks and request cost estimates.
+- **Gateway workspace** — provider comparison, itemised request estimates, project budget protection, model identity records, controlled fallback, usage analysis, in-app SLA alerts, historical repricing, and account capability/privacy controls at `/gateway`.
 - **Channel routing** — candidate resolution, confidence-aware selection, health-aware routing, and deterministic tie-breaking.
 - **Multi-agent orchestration** — planning and offline execution for research, coding, reasoning, writing, and review roles.
 - **Tool-aware agents** — a registry and controlled mock executors for calculation, code analysis, file analysis, and offline search.
@@ -89,7 +90,9 @@ cd ..
 powershell -ExecutionPolicy Bypass -File scripts/start-local.ps1 -OpenBrowser
 ```
 
-The local console is served at `http://127.0.0.1:5174`.
+The local console is served at `http://127.0.0.1:5174`. Open [the gateway workspace](http://127.0.0.1:5174/gateway) to compare providers, set budgets, and inspect usage, identities, recovery, alerts and access policies. See [Gateway workspace guide](docs/GATEWAY_WORKSPACE.md) for API endpoints, execution setup and evidence boundaries.
+
+Comparison reads the documented catalog and existing local observations. It does not send a provider request. Optional execution requires server configuration, provider credentials, execution permission and explicit request confirmation; it is disabled by default. The current adapter supports non-streaming text requests. Unknown provider bills keep a conservative budget reservation until an evidenced settlement.
 
 ### Run the offline dashboard
 
@@ -120,9 +123,11 @@ npm run build
 
 The suite covers routing behaviour, safety boundaries, deterministic simulations, fallback traces, agent/tool execution, dashboard parsing, and UI components.
 
+The gateway's focused checks are listed in [the workspace guide](docs/GATEWAY_WORKSPACE.md#verification). Some historical tests reference private raw evidence or experiment artefacts intentionally excluded from this public edition; those missing inputs are not replaced with fabricated fixtures. Focused passing checks do not imply that every historical test passes in a fresh public checkout.
+
 ## Repository boundaries
 
-This public portfolio edition intentionally excludes credentials, browser sessions, local databases, raw UAT evidence, and runtime logs. Networked model calls are not required for the demonstrated flows. The model cost catalog and model-channel mapping now contain provider-published commercial offers, with sources and verification dates. Separate capability scores and synthetic experiment fixtures remain engineering heuristics or Mock data; they are not commercial benchmarks. Provider documentation does not establish account access, quota, live uptime, or successful execution. Configuring and validating provider adapters remains separate from catalog comparison.
+This public portfolio edition intentionally excludes credentials, browser sessions, local databases, raw UAT evidence, and runtime logs. Networked model calls are not required for comparison or analysis. The model cost catalog and model-channel mapping contain provider-published commercial offers, with sources and verification dates; they are local snapshots, not a live polling feed. Separate capability scores and synthetic experiment fixtures remain engineering heuristics or Mock data; they are not commercial benchmarks. Provider documentation does not establish account access, quota, live uptime, or successful execution. Reliability without sufficient real observations remains unknown. No live inference was performed to implement or validate the gateway workspace.
 
 ## Skills demonstrated
 

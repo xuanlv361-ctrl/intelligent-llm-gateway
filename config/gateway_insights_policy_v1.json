@@ -1,0 +1,14 @@
+{
+  "policy_version": "gateway-insights-v1",
+  "window_seconds": 86400,
+  "minimum_samples": 5,
+  "success_rate_threshold": 0.95,
+  "p95_latency_threshold_ms": 10000,
+  "p95_increase_ratio": 1.5,
+  "price_change_ratio": 0.1,
+  "quota_remaining_ratio": 0.1,
+  "cooldown_seconds": 3600,
+  "exclude_mock": true,
+  "exclude_injected": true,
+  "notification_mode": "in_app_read_only"
+}
