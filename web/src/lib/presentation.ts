@@ -1,10 +1,19 @@
-export const sourceLabels={
+import {getLocale, localeTags, translate as t} from "../i18n";
+
+/** Keep API enum keys stable while resolving display labels at read time. */
+function translatedLabels<T extends Record<string,string>>(sources:T):Record<keyof T,string>{
+  return Object.defineProperties(Object.create(null),Object.fromEntries(Object.entries(sources).map(([key,source])=>
+    [key,{enumerable:true,get:()=>t(source)}]
+  ))) as Record<keyof T,string>;
+}
+
+export const sourceLabels=translatedLabels({
   demo_mock:"演示数据",integration_test_fixture:"集成测试数据",measured_uat:"真实 UAT 数据",
   measured_unified_uat:"统一路由 UAT 数据",backend_log_export:"后端日志证据",unknown:"待确认"
   ,measured_uat_browser_collector:"真实 UAT 浏览器采集证据"
   ,standardized_call_logs:"标准化真实调用日志"
-} as const;
-export const enumLabels:Record<string,string>={
+} as const);
+export const enumLabels:Record<string,string>=translatedLabels({
   budget_ok:"预算正常",near_limit:"接近预算上限",blocked:"已阻止",cost_anomaly:"成本异常",
   usage_mismatch:"Token 或费用不一致",awaiting_backend_log:"等待后台日志",exact_match:"精确匹配",
   strong_match:"高置信度匹配",ambiguous:"存在多个可能记录",unmatched:"未找到匹配日志",
@@ -36,20 +45,28 @@ export const enumLabels:Record<string,string>={
   ,capability_pending_confirmation:"当前模型或渠道的能力信息待确认，暂不能执行真实请求。"
   ,DISABLED:"尚未创建",DRAFT:"草稿",PENDING_APPROVAL:"待审批",APPROVED:"已批准",ACTIVE:"执行中"
   ,COMPLETED:"已完成",STOPPED:"已停止",EXPIRED:"已过期",BUDGET_EXHAUSTED:"预算已耗尽",KILLED:"已终止"
-};
-export const labelEnum=(value:unknown)=>enumLabels[String(value??"unknown")]||String(value??"待确认");
-export const formatSourceType=(value:unknown)=>sourceLabels[String(value??"unknown") as keyof typeof sourceLabels]||"待确认";
+});
+export const labelEnum=(value:unknown)=>enumLabels[String(value??"unknown")]||String(value??t("待确认"));
+export const formatSourceType=(value:unknown)=>sourceLabels[String(value??"unknown") as keyof typeof sourceLabels]||t("待确认");
 export const formatMissingValue=(value:unknown,kind:"unknown"|"unavailable"|"na"|"not-executed"|"blocked"|"no-sample"="unknown")=>{
   if(value!==null&&value!==undefined&&value!=="")return String(value);
-  return {unknown:"待确认",unavailable:"暂无数据",na:"不适用","not-executed":"尚未执行",blocked:"已阻止","no-sample":"样本不足"}[kind];
+  return t({unknown:"待确认",unavailable:"暂无数据",na:"不适用","not-executed":"尚未执行",blocked:"已阻止","no-sample":"样本不足"}[kind]);
 };
-export const formatMoney=(value:unknown,places=4)=>value===null||value===undefined||value===""?"待确认":`¥${Number(value).toFixed(places)}`;
-export const formatPercentage=(value:unknown,ratio=true)=>value===null||value===undefined||value===""?"暂无数据":`${(Number(value)*(ratio?100:1)).toFixed(1)}%`;
-export const formatLatency=(value:unknown)=>value===null||value===undefined||value===""?"暂无数据":`${Math.round(Number(value))} ms`;
-export const formatTokenCount=(value:unknown)=>value===null||value===undefined||value===""?"待确认":Math.round(Number(value)).toLocaleString("zh-CN");
-export const formatTimestamp=(value:unknown)=>!value?"待确认":new Date(String(value)).toLocaleString("zh-CN",{hour12:false});
-export const formatBoolean=(value:unknown)=>value===true?"是":value===false?"否":"待确认";
-export const formatHttpStatus=(value:unknown)=>!value?"待确认":`${value} ${Number(value)<400?"成功":Number(value)<500?"客户端错误":"服务端错误"}`;
+const isMissing=(value:unknown)=>value===null||value===undefined||value==="";
+const formatNumber=(value:number,options:Intl.NumberFormatOptions={})=>new Intl.NumberFormat(localeTags[getLocale()],options).format(value);
+export const formatMoney=(value:unknown,places=4)=>isMissing(value)||!Number.isFinite(Number(value))?t("待确认"):
+  `¥${formatNumber(Number(value),{minimumFractionDigits:places,maximumFractionDigits:places})}`;
+export const formatPercentage=(value:unknown,ratio=true)=>isMissing(value)||!Number.isFinite(Number(value))?t("暂无数据"):
+  formatNumber(Number(value)*(ratio?1:0.01),{style:"percent",minimumFractionDigits:1,maximumFractionDigits:1});
+export const formatLatency=(value:unknown)=>isMissing(value)||!Number.isFinite(Number(value))?t("暂无数据"):`${formatNumber(Math.round(Number(value)))} ms`;
+export const formatTokenCount=(value:unknown)=>isMissing(value)||!Number.isFinite(Number(value))?t("待确认"):formatNumber(Math.round(Number(value)));
+export const formatTimestamp=(value:unknown)=>{
+  if(!value)return t("待确认");
+  const date=new Date(String(value));
+  return Number.isNaN(date.getTime())?t("待确认"):date.toLocaleString(localeTags[getLocale()],{hour12:false});
+};
+export const formatBoolean=(value:unknown)=>t(value===true?"是":value===false?"否":"待确认");
+export const formatHttpStatus=(value:unknown)=>!value?t("待确认"):`${value} ${t(Number(value)<400?"成功":Number(value)<500?"客户端错误":"服务端错误")}`;
 export const formatExecutionStatus=labelEnum;
 export const formatCorrelationStatus=labelEnum;
 export const formatHealthStatus=labelEnum;

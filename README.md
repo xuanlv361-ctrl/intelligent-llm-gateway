@@ -4,7 +4,7 @@ A provider decision workspace for language-model applications: compare documente
 
 > Portfolio note: this repository demonstrates engineering architecture and deterministic offline workflows. Included metrics and fixtures are synthetic or sanitised unless explicitly labelled. It does not claim production benchmark performance, and real API execution is disabled by default.
 
-![Routing Quality Console overview](docs/screenshots/final_acceptance/overview-desktop.png)
+![LLM Gateway provider workspace](docs/screenshots/ui-redesign/gateway-desktop.png)
 
 ## Why this project
 
@@ -16,6 +16,7 @@ LLM applications often need more than a single model call. They must select an a
 - **Capability- and cost-aware model selection** — configurable ranking across quality, cost, and latency preferences.
 - **Published model offers** — source-linked model/channel mappings and token prices for six concrete models across eight offers from seven providers, with freshness checks and request cost estimates.
 - **Gateway workspace** — provider comparison, itemised request estimates, project budget protection, model identity records, controlled fallback, usage analysis, in-app SLA alerts, historical repricing, and account capability/privacy controls at `/gateway`.
+- **Unified operator experience** — responsive circuit-paper layouts, light/dark themes, English by default with Chinese and Japanese switching, and interactive routing topology with keyboard-accessible evidence panels and controlled trace replay.
 - **Channel routing** — candidate resolution, confidence-aware selection, health-aware routing, and deterministic tie-breaking.
 - **Multi-agent orchestration** — planning and offline execution for research, coding, reasoning, writing, and review roles.
 - **Tool-aware agents** — a registry and controlled mock executors for calculation, code analysis, file analysis, and offline search.
@@ -58,7 +59,7 @@ The routing, simulation, and agent modules use deterministic configuration files
 | Area | Technologies |
 | --- | --- |
 | Backend | Python, FastAPI, Pydantic, Uvicorn |
-| Frontend | React 18, TypeScript, Vite, TanStack Query, Recharts |
+| Frontend | React 18, TypeScript, Vite, TanStack Query, Recharts, React Flow, Motion |
 | Dashboard | Streamlit, Pandas |
 | Testing | pytest, Vitest, Testing Library, Playwright |
 | Storage | JSON/CSV fixtures and local SQLite runtime state |
@@ -124,6 +125,14 @@ npm run build
 The suite covers routing behaviour, safety boundaries, deterministic simulations, fallback traces, agent/tool execution, dashboard parsing, and UI components.
 
 The gateway's focused checks are listed in [the workspace guide](docs/GATEWAY_WORKSPACE.md#verification). Some historical tests reference private raw evidence or experiment artefacts intentionally excluded from this public edition; those missing inputs are not replaced with fabricated fixtures. Focused passing checks do not imply that every historical test passes in a fresh public checkout.
+
+## Operator interface
+
+The shared language control switches the React console between English, 中文, and 日本語 without resetting request inputs or changing submitted model/strategy identifiers. The adjacent theme control switches between light and dark. Only these presentation preferences are stored in the browser; prompts, responses and credentials are not stored by the locale/theme layer.
+
+At `/gateway`, compare providers to inspect a proposed route. Select nodes for evidence, pan or zoom the canvas, or use its text summary. The graph never edits routing decisions. Recorded attempts have a separate, explicitly labelled replay with play, pause and reset; it is not a live-traffic animation and cannot execute requests. Reduced-motion preferences disable playback. The Streamlit dashboard keeps its existing pages and language controls, with a matching theme.
+
+See [the UI guide](docs/UI_REDESIGN_GUIDE.md) for presentation boundaries, verification results and known limitations.
 
 ## Repository boundaries
 

@@ -193,7 +193,7 @@ describe('Gateway provider decision desk', () => {
     const user = setup();
     await screen.findByText('Fixture direct');
     await user.click(screen.getByRole('tab', { name: 'Identity & recovery' }));
-    await user.click(await screen.findByText('FIXTURE-LOCAL-EXEC'));
+    await user.click(await screen.findByText('FIXTURE-LOCAL-EXEC', { selector: 'summary code' }));
     expect(screen.getByRole('heading', { name: 'Attempt sequence' })).toBeInTheDocument();
     expect(screen.getByText('timeout')).toBeInTheDocument();
     expect(screen.getByText(/billing uncertain/)).toBeInTheDocument();

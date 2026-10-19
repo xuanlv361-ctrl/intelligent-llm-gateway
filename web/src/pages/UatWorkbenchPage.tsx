@@ -1,3 +1,4 @@
+import {translate as uiText} from "../i18n/index";
 import {KeyboardEvent,useEffect,useMemo,useRef,useState} from "react";
 import {useMutation,useQuery,useQueryClient} from "@tanstack/react-query";
 import {Link} from "react-router-dom";
@@ -62,15 +63,15 @@ function ResultDetails({result}:{result:UatWorkbenchResult}){
     ["总 Token",total],["费用",result.cost_amount==null?"待 Provider 日志同步":`${result.currency||"CNY"} ${result.cost_amount}`],
     ["价格版本","未提供"],["错误分类",result.error?String(result.error.category??"未分类"):"无"],
   ];
-  return <details className="agent-execution-details"><summary>查看执行详情</summary>
-    {result.decision_id?<Link className="decision-log-link" to={`/routing/decisions/${encodeURIComponent(result.decision_id)}`}>查看决策日志</Link>:<span className="decision-log-unavailable" title="本次请求未生成调度决策">本次请求未生成调度决策</span>}
-    <dl>{facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value==null||value===""?"未提供":String(value)}</dd></div>)}</dl>
-    {result.routing_decision&&<section className="agent-routing-evidence"><h4>自动调度决策</h4>
-      <p>从真实目录 {result.routing_decision.catalog_candidate_count} 个候选中选择 <strong>{result.routing_decision.selected_model}</strong>；依据：{result.routing_decision.selection_reason}；置信度：{result.routing_decision.confidence}。</p>
-      <table><thead><tr><th>候选模型</th><th>评分</th><th>成功样本</th><th>失败样本</th><th>平均延迟</th><th>原因</th></tr></thead><tbody>
-        {result.routing_decision.candidates.slice(0,5).map(item=><tr key={item.model_id}><td>{item.model_id}</td><td>{item.score}</td><td>{item.successful_live_samples}</td><td>{item.failed_live_samples}</td><td>{item.average_latency_ms==null?"未提供":`${item.average_latency_ms} ms`}</td><td>{item.reason}</td></tr>)}
+  return <details className="agent-execution-details"><summary>{uiText("查看执行详情")}</summary>
+    {result.decision_id?<Link className="decision-log-link" to={`/routing/decisions/${encodeURIComponent(result.decision_id)}`}>{uiText("查看决策日志")}</Link>:<span className="decision-log-unavailable" title={uiText("本次请求未生成调度决策")}>{uiText("本次请求未生成调度决策")}</span>}
+    <dl>{facts.map(([label,value])=><div key={label}><dt>{uiText(label)}</dt><dd>{value==null||value===""?uiText("未提供"):String(value)}</dd></div>)}</dl>
+    {result.routing_decision&&<section className="agent-routing-evidence"><h4>{uiText("自动调度决策")}</h4>
+      <p>{uiText("从真实目录 ")}{result.routing_decision.catalog_candidate_count} {uiText("个候选中选择 ")}<strong>{result.routing_decision.selected_model}</strong>{uiText("；依据：")}{result.routing_decision.selection_reason}{uiText("；置信度：")}{result.routing_decision.confidence}。</p>
+      <table><thead><tr><th>{uiText("候选模型")}</th><th>{uiText("评分")}</th><th>{uiText("成功样本")}</th><th>{uiText("失败样本")}</th><th>{uiText("平均延迟")}</th><th>{uiText("原因")}</th></tr></thead><tbody>
+        {result.routing_decision.candidates.slice(0,5).map(item=><tr key={item.model_id}><td>{item.model_id}</td><td>{item.score}</td><td>{item.successful_live_samples}</td><td>{item.failed_live_samples}</td><td>{item.average_latency_ms==null?uiText("未提供"):uiText("{0} ms", {"0": item.average_latency_ms})}</td><td>{item.reason}</td></tr>)}
       </tbody></table></section>}
-    <details className="agent-technical-details"><summary>技术详情</summary><pre>{JSON.stringify({response_headers:result.response_headers,error:result.error,capability_evidence:result.capability_evidence},null,2)}</pre></details>
+    <details className="agent-technical-details"><summary>{uiText("技术详情")}</summary><pre>{JSON.stringify({response_headers:result.response_headers,error:result.error,capability_evidence:result.capability_evidence},null,2)}</pre></details>
   </details>;
 }
 
@@ -227,42 +228,42 @@ export function UatWorkbenchPage({mode,environment}:{mode:DataMode;environment:E
   const preview=useMemo(()=>isChat?{model:selectionMode==="automatic"?"[自动调度]":model||"[未选择]",messages:"[当前对话内容已脱敏]",stream,temperature:Number(temperature),max_tokens:Number(maxTokens)}:null,[isChat,selectionMode,model,stream,temperature,maxTokens]);
 
   return <div className="agent-request-page">
-    <PageHeader title="发起调度" description="输入任务，系统将使用所选模型或自动调度完成国内 UAT 请求。" actions={<Link className="secondary button-link" to="/routing/runs">执行记录</Link>}/>
-    <section className="agent-config-bar" aria-label="请求配置">
-      <label className="agent-url-field"><span>URL</span><input aria-label="完整 UAT URL" value={fullUrl} onChange={event=>setFullUrl(event.target.value)} placeholder="https://api-uat.weimeta.cn/v1/chat/completions" spellCheck={false}/></label>
-      <label><span>HTTP Method</span><select aria-label="HTTP Method" value={method} onChange={event=>setMethod(event.target.value as Method)}>{METHODS.map(item=><option key={item}>{item}</option>)}</select></label>
-      <fieldset><legend>响应方式</legend><label><input type="radio" name="stream" checked={stream} onChange={()=>setStream(true)}/> 流式</label><label><input type="radio" name="stream" checked={!stream} onChange={()=>setStream(false)}/> 非流式</label></fieldset>
-      <label className="agent-key-field"><span>API Key</span><span className="agent-inline-input"><input aria-label="API Key" name="uat-temporary-credential" type={showKey?"text":"password"} value={apiKey} onChange={event=>{setApiKey(event.target.value);setAuthSessionId(null);setCredentialSource(null);setCatalogMeta(null);setCatalogModels([])}} placeholder={credentialSource==="vault"?"已使用后端加密凭据":"输入当前会话 API Key"} autoComplete="new-password" data-1p-ignore="true" data-lpignore="true" data-form-type="other"/><button type="button" onClick={()=>setShowKey(value=>!value)}>{showKey?"隐藏":"显示"}</button><button type="button" onClick={clearKey}>清除</button></span>{persistentCredential.data?.configured&&!apiKey&&<button className="agent-vault-credential" type="button" disabled={useVaultCredential.isPending} onClick={()=>useVaultCredential.mutate()}>{useVaultCredential.isPending?"正在验证…":credentialSource==="vault"?"后端加密凭据已选用":"使用已保存的后端凭据"}</button>}</label>
-      <label className="agent-model-field"><span>模型</span><select aria-label="模型选择方式" value={selectionMode} onChange={event=>setSelectionMode(event.target.value as "automatic"|"specified")}><option value="automatic">自动调度</option><option value="specified">指定真实模型</option></select></label>
-      {selectionMode==="specified"&&<label className="agent-model-id"><span>模型 ID</span><span className="agent-inline-input"><input aria-label="搜索或输入模型 ID" list="agent-model-options" value={model} onChange={event=>setModel(event.target.value)} placeholder="搜索或手动输入真实模型 ID"/><datalist id="agent-model-options">{catalogModels.map(item=><option key={item.id} value={item.id}>{item.display_name} · {item.owned_by||"Provider 未提供"}</option>)}</datalist><button type="button" disabled={refreshModels.isPending} onClick={()=>refreshModels.mutate()}>{refreshModels.isPending?"读取中…":"刷新目录"}</button></span></label>}
-      {selectionMode==="automatic"&&<button className="agent-catalog-action" type="button" disabled={refreshModels.isPending} onClick={()=>refreshModels.mutate()}>{refreshModels.isPending?"读取模型中…":"刷新真实模型目录"}</button>}
-      <div className="agent-config-status"><StatusBadge tone={envState.data?.enabled?"success":"danger"}>{envState.data?.enabled?"国内 UAT 已开启":"国内 UAT 已关闭"}</StatusBadge>{catalogMeta&&<span>真实目录 {catalogMeta.count} 个 · {formatLocalTime(catalogMeta.testedAt)}</span>}</div>
+    <PageHeader title={uiText("发起调度")} description={uiText("输入任务，系统将使用所选模型或自动调度完成国内 UAT 请求。")} actions={<Link className="secondary button-link" to="/routing/runs">{uiText("执行记录")}</Link>}/>
+    <section className="agent-config-bar" aria-label={uiText("请求配置")}>
+      <label className="agent-url-field"><span>URL</span><input aria-label={uiText("完整 UAT URL")} value={fullUrl} onChange={event=>setFullUrl(event.target.value)} placeholder="https://api-uat.weimeta.cn/v1/chat/completions" spellCheck={false}/></label>
+      <label><span>{uiText("HTTP Method")}</span><select aria-label={uiText("HTTP Method")} value={method} onChange={event=>setMethod(event.target.value as Method)}>{METHODS.map(item=><option key={item}>{item}</option>)}</select></label>
+      <fieldset><legend>{uiText("响应方式")}</legend><label><input type="radio" name="stream" checked={stream} onChange={()=>setStream(true)}/> {uiText("流式")}</label><label><input type="radio" name="stream" checked={!stream} onChange={()=>setStream(false)}/> {uiText("非流式")}</label></fieldset>
+      <label className="agent-key-field"><span>{uiText("API Key")}</span><span className="agent-inline-input"><input aria-label={uiText("API Key")} name="uat-temporary-credential" type={showKey?"text":"password"} value={apiKey} onChange={event=>{setApiKey(event.target.value);setAuthSessionId(null);setCredentialSource(null);setCatalogMeta(null);setCatalogModels([])}} placeholder={credentialSource==="vault"?uiText("已使用后端加密凭据"):uiText("输入当前会话 API Key")} autoComplete="new-password" data-1p-ignore="true" data-lpignore="true" data-form-type="other"/><button type="button" onClick={()=>setShowKey(value=>!value)}>{showKey?uiText("隐藏"):uiText("显示")}</button><button type="button" onClick={clearKey}>{uiText("清除")}</button></span>{persistentCredential.data?.configured&&!apiKey&&<button className="agent-vault-credential" type="button" disabled={useVaultCredential.isPending} onClick={()=>useVaultCredential.mutate()}>{useVaultCredential.isPending?uiText("正在验证…"):credentialSource==="vault"?uiText("后端加密凭据已选用"):uiText("使用已保存的后端凭据")}</button>}</label>
+      <label className="agent-model-field"><span>{uiText("模型")}</span><select aria-label={uiText("模型选择方式")} value={selectionMode} onChange={event=>setSelectionMode(event.target.value as "automatic"|"specified")}><option value="automatic">{uiText("自动调度")}</option><option value="specified">{uiText("指定真实模型")}</option></select></label>
+      {selectionMode==="specified"&&<label className="agent-model-id"><span>{uiText("模型 ID")}</span><span className="agent-inline-input"><input aria-label={uiText("搜索或输入模型 ID")} list="agent-model-options" value={model} onChange={event=>setModel(event.target.value)} placeholder={uiText("搜索或手动输入真实模型 ID")}/><datalist id="agent-model-options">{catalogModels.map(item=><option key={item.id} value={item.id}>{item.display_name} · {item.owned_by||uiText("Provider 未提供")}</option>)}</datalist><button type="button" disabled={refreshModels.isPending} onClick={()=>refreshModels.mutate()}>{refreshModels.isPending?uiText("读取中…"):uiText("刷新目录")}</button></span></label>}
+      {selectionMode==="automatic"&&<button className="agent-catalog-action" type="button" disabled={refreshModels.isPending} onClick={()=>refreshModels.mutate()}>{refreshModels.isPending?uiText("读取模型中…"):uiText("刷新真实模型目录")}</button>}
+      <div className="agent-config-status"><StatusBadge tone={envState.data?.enabled?"success":"danger"}>{envState.data?.enabled?uiText("国内 UAT 已开启"):uiText("国内 UAT 已关闭")}</StatusBadge>{catalogMeta&&<span>{uiText("真实目录 ")}{catalogMeta.count} {uiText("个 · ")}{formatLocalTime(catalogMeta.testedAt)}</span>}</div>
     </section>
     {target.error&&<div className="agent-blocker" role="alert">{target.error}</div>}
     {adapterError&&<div className="agent-blocker" role="alert">{adapterError}</div>}
-    {isChat&&<div className="agent-capability-note">当前模型能力信息尚未审核时，本次普通文本请求仍会通过真实 UAT 调用验证。</div>}
+    {isChat&&<div className="agent-capability-note">{uiText("当前模型能力信息尚未审核时，本次普通文本请求仍会通过真实 UAT 调用验证。")}</div>}
 
     <main className="agent-conversation" aria-live="polite">
-      {messages.length===0?<div className="agent-empty">输入任务，系统将使用所选模型或自动调度完成请求。</div>:messages.map(message=><article key={message.id} className={`agent-message ${message.role}`}>
-        <header>{message.role==="user"?"你":"任务结果"}</header><div className="agent-message-content">{message.content}</div>
-        {message.stopped&&<div className="agent-stopped-label">用户已停止</div>}
-        {message.result&&<><div className="agent-result-summary">状态 {message.result.http_status} · 模型 {message.result.actual_model||message.result.requested_model||"未提供"} · 渠道 {message.result.channel_id||"未提供"} · {(message.result.total_latency_ms/1000).toFixed(2)}s · {message.result.total_tokens??"Token 未提供"}{message.result.total_tokens!=null?" Token":""} · {message.result.cost_amount==null?"费用待 Provider 日志同步":`${message.result.currency||"CNY"} ${message.result.cost_amount}`}</div><div className="agent-result-actions"><button onClick={()=>navigator.clipboard?.writeText(message.content)}>复制结果</button><button onClick={()=>setInput(messages.filter(item=>item.role==="user").at(-1)?.content||"")}>重新发送</button><button onClick={()=>setInput("")}>继续追问</button></div><ResultDetails result={message.result}/></>}
+      {messages.length===0?<div className="agent-empty">{uiText("输入任务，系统将使用所选模型或自动调度完成请求。")}</div>:messages.map(message=><article key={message.id} className={`agent-message ${message.role}`}>
+        <header>{message.role==="user"?uiText("你"):uiText("任务结果")}</header><div className="agent-message-content">{message.content}</div>
+        {message.stopped&&<div className="agent-stopped-label">{uiText("用户已停止")}</div>}
+        {message.result&&<><div className="agent-result-summary">{uiText("状态 ")}{message.result.http_status} {uiText("· 模型 ")}{message.result.actual_model||message.result.requested_model||uiText("未提供")} {uiText("· 渠道 ")}{message.result.channel_id||uiText("未提供")} · {(message.result.total_latency_ms/1000).toFixed(2)}{uiText("s · ")}{message.result.total_tokens??uiText("Token 未提供")}{message.result.total_tokens!=null?uiText(" Token"):""} · {message.result.cost_amount==null?uiText("费用待 Provider 日志同步"):`${message.result.currency||"CNY"} ${message.result.cost_amount}`}</div><div className="agent-result-actions"><button onClick={()=>navigator.clipboard?.writeText(message.content)}>{uiText("复制结果")}</button><button onClick={()=>setInput(messages.filter(item=>item.role==="user").at(-1)?.content||"")}>{uiText("重新发送")}</button><button onClick={()=>setInput("")}>{uiText("继续追问")}</button></div><ResultDetails result={message.result}/></>}
       </article>)}
       {progress&&stage!=="completed"&&<div className="agent-progress"><span className="agent-pulse"/>{progress}</div>}
     </main>
 
-    <details className="agent-advanced"><summary>高级设置</summary><div className="agent-advanced-grid">
-      <label>System Prompt<textarea value={systemPrompt} onChange={event=>setSystemPrompt(event.target.value)}/></label>
-      <label>Temperature<input type="number" min="0" max="2" step="0.1" value={temperature} onChange={event=>setTemperature(event.target.value)}/></label>
-      <label>max_tokens<input type="number" min="1" value={maxTokens} onChange={event=>setMaxTokens(event.target.value)}/></label>
-      <label>超时时间（秒）<input type="number" min="1" max="60" value={timeout} onChange={event=>setTimeoutValue(event.target.value)}/></label>
-      <label>最大尝试次数<input type="number" min="1" value={maxAttempts} onChange={event=>setMaxAttempts(event.target.value)}/></label>
-      <label>Query Params<textarea aria-label="Query Params" value={paramsText} onChange={event=>setParamsText(event.target.value)} placeholder='[{"name":"q","value":"关键词","enabled":true}]'/></label>
-      <label>自定义 Headers<textarea aria-label="自定义 Headers" value={headersText} onChange={event=>setHeadersText(event.target.value)} placeholder='[{"name":"Accept-Language","value":"zh-CN","enabled":true}]'/></label>
-    </div><details><summary>原始请求预览 / 开发者 JSON 模式</summary><pre>{JSON.stringify(preview,null,2)}</pre></details></details>
+    <details className="agent-advanced"><summary>{uiText("高级设置")}</summary><div className="agent-advanced-grid">
+      <label>{uiText("System Prompt")}<textarea value={systemPrompt} onChange={event=>setSystemPrompt(event.target.value)}/></label>
+      <label>{uiText("Temperature")}<input type="number" min="0" max="2" step="0.1" value={temperature} onChange={event=>setTemperature(event.target.value)}/></label>
+      <label>{uiText("max_tokens")}<input type="number" min="1" value={maxTokens} onChange={event=>setMaxTokens(event.target.value)}/></label>
+      <label>{uiText("超时时间（秒）")}<input type="number" min="1" max="60" value={timeout} onChange={event=>setTimeoutValue(event.target.value)}/></label>
+      <label>{uiText("最大尝试次数")}<input type="number" min="1" value={maxAttempts} onChange={event=>setMaxAttempts(event.target.value)}/></label>
+      <label>{uiText("Query Params")}<textarea aria-label={uiText("Query Params")} value={paramsText} onChange={event=>setParamsText(event.target.value)} placeholder={uiText("[{\"name\":\"q\",\"value\":\"关键词\",\"enabled\":true}]")}/></label>
+      <label>{uiText("自定义 Headers")}<textarea aria-label={uiText("自定义 Headers")} value={headersText} onChange={event=>setHeadersText(event.target.value)} placeholder={uiText("[{\"name\":\"Accept-Language\",\"value\":\"zh-CN\",\"enabled\":true}]")}/></label>
+    </div><details><summary>{uiText("原始请求预览 / 开发者 JSON 模式")}</summary><pre>{JSON.stringify(preview,null,2)}</pre></details></details>
 
-    <section className="agent-composer" aria-label="请求输入区"><label htmlFor="agent-prompt">请求内容</label><textarea id="agent-prompt" value={input} onChange={event=>setInput(event.target.value)} onKeyDown={onComposerKeyDown} placeholder="输入你希望模型完成的任务……" disabled={execute.isPending}/><div className="agent-composer-actions"><span>Enter 发送 · Shift+Enter 换行</span><button className="secondary" type="button" onClick={()=>setInput("")} disabled={!input||execute.isPending}>清空</button>{execute.isPending?<button className="danger" type="button" onClick={stop}>停止生成</button>:<button className="primary" type="button" disabled={!canSend} onClick={send}>发送请求</button>}</div></section>
+    <section className="agent-composer" aria-label={uiText("请求输入区")}><label htmlFor="agent-prompt">{uiText("请求内容")}</label><textarea id="agent-prompt" value={input} onChange={event=>setInput(event.target.value)} onKeyDown={onComposerKeyDown} placeholder={uiText("输入你希望模型完成的任务……")} disabled={execute.isPending}/><div className="agent-composer-actions"><span>{uiText("Enter 发送 · Shift+Enter 换行")}</span><button className="secondary" type="button" onClick={()=>setInput("")} disabled={!input||execute.isPending}>{uiText("清空")}</button>{execute.isPending?<button className="danger" type="button" onClick={stop}>{uiText("停止生成")}</button>:<button className="primary" type="button" disabled={!canSend} onClick={send}>{uiText("发送请求")}</button>}</div></section>
     {localError&&<div className="agent-error" role="alert">{localError}</div>}
-    <p className="api-security-footnote">API Key 仅进入当前后端临时会话，不写入浏览器存储、URL、请求预览或调用日志。</p>
+    <p className="api-security-footnote">{uiText("API Key 仅进入当前后端临时会话，不写入浏览器存储、URL、请求预览或调用日志。")}</p>
   </div>;
 }

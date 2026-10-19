@@ -1,3 +1,7 @@
+// Legacy contract tests explicitly exercise the original Chinese locale.
+import {beforeEach as beforeLocaleTest} from 'vitest';
+import {setLocale} from "../i18n/index";
+beforeLocaleTest(()=>setLocale('zh'));
 import {QueryClient,QueryClientProvider} from "@tanstack/react-query";
 import {render,screen,waitFor,within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -139,8 +143,8 @@ describe("agent-style UAT request page",()=>{
   it("allows editing advanced query parameters and safe headers",async()=>{
     show();const user=userEvent.setup();await fillRequired(user,true);
     await user.click(screen.getByText("高级设置"));
-    await user.clear(screen.getByLabelText("Query Params"));
-    await user.click(screen.getByLabelText("Query Params"));
+    await user.clear(screen.getByLabelText("查询参数"));
+    await user.click(screen.getByLabelText("查询参数"));
     await user.paste(JSON.stringify([{name:"region",value:"cn",enabled:true}]));
     await user.clear(screen.getByLabelText("自定义 Headers"));
     await user.click(screen.getByLabelText("自定义 Headers"));

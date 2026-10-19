@@ -1,3 +1,7 @@
+// Legacy contract tests explicitly exercise the original Chinese locale.
+import {beforeEach as beforeLocaleTest} from 'vitest';
+import {setLocale} from "../i18n/index";
+beforeLocaleTest(()=>setLocale('zh'));
 import {render,screen,waitFor,within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {QueryClient,QueryClientProvider} from "@tanstack/react-query";

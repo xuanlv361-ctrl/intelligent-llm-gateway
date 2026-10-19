@@ -1,3 +1,7 @@
+// Legacy contract tests explicitly exercise the original Chinese locale.
+import {beforeEach as beforeLocaleTest} from 'vitest';
+import {setLocale} from "./i18n/index";
+beforeLocaleTest(()=>setLocale('zh'));
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -7,6 +11,7 @@ import App from "./App";
 import { resetEnterpriseSecurityClientForTests } from "./lib/apiClient";
 import tokens from "./theme/tokens.css?raw";
 import theme from "./theme.css?raw";
+import consoleTheme from "./console-theme.css?raw";
 
 const batch = { batch_id: "IMP-TEST", import_batch_id: "IMP-TEST", source_sha256: "a".repeat(64), source_type: "integration_test_fixture", created_at: "2026-07-27", imported_at: "2026-07-27", row_count: 1, imported_row_count: 1, valid_count: 1, warning_count: 0, rejected_count: 0, needs_confirmation_count: 0, audit_status: "immutable_audited", detected_columns: ["request_id", "channel_id"], issues: [], normalized_preview: [{ request_id: "r1", channel_id: "19", _row_number: 1, _classification: "valid", _issues: [] }], provenance: { filename: "valid.csv", immutable: true } };
 function response(url: string): Record<string,unknown> {
@@ -142,9 +147,34 @@ function readyUatResponse(url:string):Record<string,unknown>{
 }
 beforeEach(() => vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => new Response(JSON.stringify(response(String(input))), { status: 200, headers: { "Content-Type": "application/json" } }))));
 afterEach(() => {
-  cleanup(); resetEnterpriseSecurityClientForTests(); vi.unstubAllGlobals();
+  cleanup(); resetEnterpriseSecurityClientForTests(); vi.restoreAllMocks(); vi.unstubAllGlobals();
 });
+function expectOnlyPresentationStorage(spy:{mock:{calls:unknown[][]}}){
+  const permitted:Record<string,unknown[]>={'llm-gateway.theme.v1':['light','dark'],'llm-gateway.locale.v1':['en','zh','ja']};
+  for(const [key,value] of spy.mock.calls){expect(Object.keys(permitted)).toContain(key);expect(permitted[String(key)]).toContain(value);}
+}
 function show(path = "/") { const client = new QueryClient({ defaultOptions: { queries: { retry: false } } }); return render(<QueryClientProvider client={client}><MemoryRouter initialEntries={[path]}><App /></MemoryRouter></QueryClientProvider>); }
+
+test("English shell switches languages and themes without resetting request inputs or syncing again",async()=>{
+  setLocale('en');
+  show('/routing/execute');
+  const prompt=await screen.findByLabelText('Request content');
+  await userEvent.type(prompt,'请保留这段用户原始输入。');
+  await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([input])=>String(input).includes('/log-sync/ensure'))).toBe(true));
+  const ensureCount=()=>vi.mocked(fetch).mock.calls.filter(([input])=>String(input).includes('/log-sync/ensure')).length;
+  const count=ensureCount();
+  await userEvent.selectOptions(screen.getByLabelText('Language'),'ja');
+  expect(prompt).toHaveValue('请保留这段用户原始输入。');
+  expect(screen.getByLabelText('言語')).toHaveValue('ja');
+  await userEvent.selectOptions(screen.getByLabelText('言語'),'zh');
+  expect(screen.getByLabelText('请求内容')).toBe(prompt);
+  expect(prompt).toHaveValue('请保留这段用户原始输入。');
+  await userEvent.click(screen.getByRole('button',{name:'切换为深色主题'}));
+  expect(document.documentElement.dataset.theme).toBe('dark');
+  await userEvent.click(screen.getByRole('button',{name:'切换为浅色主题'}));
+  expect(document.documentElement.dataset.theme).toBe('light');
+  expect(ensureCount()).toBe(count);
+});
 
 test("loads the real UAT overview by default", async () => { show(); expect(await screen.findByText("业务请求")).toBeInTheDocument(); expect(screen.getAllByText(/UAT 证据|真实数据/).length).toBeGreaterThan(0); expect(screen.queryByText(/当前为 Mock 数据/)).not.toBeInTheDocument(); expect(fetch).toHaveBeenCalled(); });
 test("top search button navigates to grouped local search and preserves environment scope",async()=>{
@@ -229,8 +259,8 @@ test("dynamic metrics empty and error states keep an honest safe next action",as
 });
 test("import wizard previews validates and confirms", async () => { show("/imports"); const file = new File(["request_id,channel_id\nr1,19"], "valid.csv", { type: "text/csv" }); await userEvent.upload(screen.getByLabelText("选择证据文件"), file); await userEvent.click(screen.getByRole("button", { name: /上传并预览/ })); expect(await screen.findByText("导入检查")).toBeInTheDocument(); await userEvent.click(screen.getByRole("button", { name: /运行后端验证/ })); await waitFor(() => expect(screen.getByRole("button", { name: /明确确认导入/ })).toBeInTheDocument()); await userEvent.click(screen.getByRole("button", { name: /明确确认导入/ })); expect(await screen.findByText(/不可变批次已保存/)).toBeInTheDocument(); });
 test("downstream pages expose retry-safe error state", async () => { vi.mocked(fetch).mockRejectedValueOnce(new Error("offline")); show("/errors"); expect(await screen.findByRole("button", { name: "重试" })).toBeInTheDocument(); });
-test("loads required avocado tokens and primary interaction states", () => { expect(tokens).toContain("--color-primary: #647C3A"); expect(tokens).toContain("--color-danger: #B84C45"); expect(theme).toContain("button:hover"); expect(theme).toContain("button:active"); expect(theme).toContain(":focus-visible"); });
-test("marks active navigation and keeps responsive navigation rules", async () => { show("/health"); const link = screen.getByRole("link", { name: "渠道健康" }); expect(link).toHaveClass("active"); expect(theme).toContain("@media(max-width:800px)"); expect(theme).toContain(".sidebar nav{display:flex"); });
+test("loads circuit-paper tokens and accessible interaction states", () => { expect(tokens).toContain("--color-primary:#245DE8"); expect(tokens).toContain("--color-danger:"); expect(tokens).toContain('[data-theme="dark"]'); expect(theme).toContain("button:hover"); expect(theme).toContain("button:active"); expect(consoleTheme).toContain(":focus-visible"); expect(consoleTheme).toContain("prefers-reduced-motion"); });
+test("marks active navigation and keeps responsive navigation rules", async () => { show("/health"); const link = screen.getByRole("link", { name: "渠道健康" }); expect(link).toHaveClass("active"); expect(consoleTheme).toContain("@media(max-width:760px)"); expect(consoleTheme).toContain(".sidebar nav"); });
 test("distinguishes UAT and explicitly selected Demo provenance badges", async () => { show(); expect((await screen.findAllByText(/UAT Evidence/))[0]).toHaveClass("badge-uat"); await userEvent.selectOptions(screen.getByLabelText("数据来源模式"), "demo"); expect((await screen.findAllByText(/Demo Data/))[0]).toHaveClass("badge-demo"); });
 test("keeps warning, error, blocked, and insufficient-data semantics visible", async () => {
   expect(theme).toContain(".badge-warning"); expect(theme).toContain(".state.error"); expect(theme).toContain(".blocked");
@@ -413,7 +443,7 @@ test("routing execute saves an inline key without browser storage and immediatel
   show("/routing/execute");
   const currentKey=await screen.findByLabelText("API Key");
   await userEvent.type(currentKey,"test-only-inline-secret-not-real");
-  expect(currentStorageSpy).not.toHaveBeenCalled();
+  expectOnlyPresentationStorage(currentStorageSpy);
   expect(document.body.textContent).not.toContain("test-only-inline-secret-not-real");
   currentStorageSpy.mockRestore();
   if(Date.now()>0)return;
@@ -470,7 +500,7 @@ test("persistent UAT credential editor uses a password field and never browser s
   await userEvent.type(input,"test-only-credential-not-real");
   await userEvent.click(screen.getByRole("button",{name:"显示"}));
   expect(input).toHaveAttribute("type","text");
-  expect(localSpy).not.toHaveBeenCalled();
+  expectOnlyPresentationStorage(localSpy);
   localSpy.mockRestore();
 });
 test("UAT execution requires confirmation even when backend is ready", async () => {

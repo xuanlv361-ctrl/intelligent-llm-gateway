@@ -4,6 +4,12 @@ import {resolve} from 'node:path';
 
 const screenshots=resolve('../docs/screenshots/final_acceptance');
 
+// Keep the existing Chinese acceptance selectors explicit, without changing
+// the product's English default for new users.
+test.beforeEach(async({page})=>{
+  await page.addInitScript(()=>localStorage.setItem('llm-gateway.locale.v1','zh'));
+});
+
 test.beforeAll(async()=>{
   mkdirSync(screenshots,{recursive:true});
 });

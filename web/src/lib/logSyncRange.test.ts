@@ -16,7 +16,8 @@ test("quick ranges calculate deterministic 15m, 1h, 24h and today values",()=>{
 });
 
 test("custom range validates ordering, future skew and maximum duration",()=>{
- const now=new Date("2026-07-29T04:00:00Z");
+ // Inputs below are browser-local wall times, not a fixed UTC+8 instant.
+ const now=new Date(2026,6,29,12,0,0);
  expect(validateLogSyncRange("","2026-07-29T12:00",now)).toMatch(/必须填写/);
  expect(validateLogSyncRange("2026-07-29T12:00","2026-07-29T11:00",now)).toMatch(/早于/);
  expect(validateLogSyncRange("2026-07-29T11:00","2026-07-29T12:06",now,168,300)).toMatch(/时钟偏差/);

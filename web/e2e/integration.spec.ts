@@ -1,5 +1,27 @@
-import {test,expect} from '@playwright/test';
+import {test,expect,type Page} from '@playwright/test';
 import {resolve} from 'node:path';
+
+// These legacy acceptance scenarios intentionally exercise the Chinese locale.
+// Product first-visit behaviour remains English and is covered independently.
+test.beforeEach(async({page})=>{
+  await page.addInitScript(()=>localStorage.setItem('llm-gateway.locale.v1','zh'));
+});
+
+async function expectOnlyUiPreferencesInBrowserStorage(page:Page){
+  const storage=await page.evaluate(()=>({
+    local:Object.fromEntries(Object.keys(localStorage).map(key=>[key,localStorage.getItem(key)])),
+    session:Object.fromEntries(Object.keys(sessionStorage).map(key=>[key,sessionStorage.getItem(key)])),
+  }));
+  const allowed:Record<string,readonly string[]>={
+    'llm-gateway.locale.v1':['en','zh','ja'],
+    'llm-gateway.theme.v1':['light','dark'],
+  };
+  expect(storage.session).toEqual({});
+  for(const [key,value] of Object.entries(storage.local)){
+    expect(Object.hasOwn(allowed,key),`Unexpected browser storage key: ${key}`).toBe(true);
+    expect(allowed[key]??[],`Unexpected preference value for ${key}`).toContain(value);
+  }
+}
 test('discovers and accepts every visible sidebar page at desktop and narrow widths',async({page})=>{
   const routes=[
     ['overview','/','总览'],['uat-execution','/uat-execution','真实 API 执行'],['compatibility','/compatibility','兼容性测试'],
@@ -67,7 +89,7 @@ test('browser uses real local FastAPI, persists imports, and keeps rejected evid
   await page.goto('/reliability/channels');
   await expect(page.getByRole('heading',{name:'渠道健康',exact:true})).toBeVisible();
   await expect(page.locator('body')).not.toContainText(/Bearer\s+\S+|sk-[A-Za-z0-9_-]{20,}/);
-  expect(await page.evaluate(()=>({local:Object.keys(localStorage),session:Object.keys(sessionStorage)}))).toEqual({local:[],session:[]});
+  await expectOnlyUiPreferencesInBrowserStorage(page);
   return;
   await page.goto('/health');await expect(page.getByText(/赤陶一号/)).toBeVisible();
   await page.screenshot({path:'../docs/screenshots/avocado-theme/channel-health.png',fullPage:true});
@@ -154,7 +176,7 @@ test('browser uses real local FastAPI, persists imports, and keeps rejected evid
   await page.goto('/strategy/shadow');
   await expect(page.getByText(/暂无可比较的真实关联数据/)).toBeVisible();
   await expect(page.getByText('暂无数据')).toBeVisible();
-  expect(await page.evaluate(()=>({local:Object.keys(localStorage),session:Object.keys(sessionStorage)}))).toEqual({local:[],session:[]});
+  await expectOnlyUiPreferencesInBrowserStorage(page);
   await page.goto('/uat-execution');await expect(page.getByRole('switch',{name:'UAT 环境开关'})).toBeChecked();await page.getByRole('button',{name:'清除已保存密钥'}).click();await expect(page.getByText('未配置').first()).toBeVisible();
 });
 test('UAT environment switch persists independently and never submits task parameters',async({page})=>{
@@ -278,8 +300,7 @@ test('persistent sticky routing local Mock inspection and confirmed invalidation
   await page.getByLabel('粘性绑定失效确认文本').fill('我确认使此粘性路由绑定失效');
   await confirm.click();
   await expect(page.getByLabel('粘性绑定详情').getByText('已失效')).toBeVisible();
-  expect(await page.evaluate(()=>({local:Object.keys(localStorage),session:Object.keys(sessionStorage)})))
-    .toEqual({local:[],session:[]});
+  await expectOnlyUiPreferencesInBrowserStorage(page);
 });
 
 test('model capability matrix exposes evidence, mappings and a narrow-screen card layout',async({page})=>{

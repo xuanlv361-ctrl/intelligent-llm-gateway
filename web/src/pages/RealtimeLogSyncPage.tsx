@@ -1,3 +1,4 @@
+import {translate as uiText} from "../i18n/index";
 import {useEffect,useRef,useState} from "react";
 import {useMutation,useQuery,useQueryClient} from "@tanstack/react-query";
 import {api,ApiError,EnvironmentFilter,EnvironmentId} from "../services/api";
@@ -103,57 +104,57 @@ function DomesticAccessRecoveryPanel(){
   "waiting_for_operator","waiting_for_confirmation","authentication_validation_failed",
  ].includes(pairing.state));
  return <section className="ops-section access-recovery" aria-labelledby="domestic-access-title">
-  <header><div><h2 id="domestic-access-title">国内 UAT 访问恢复</h2><p>日志页确认、登录认证和同步执行是三个独立步骤；前两步都不会读取账单日志。</p></div></header>
-  {notice&&<div className="notice" role="status">{notice}</div>}
+  <header><div><h2 id="domestic-access-title">{uiText("国内 UAT 访问恢复")}</h2><p>{uiText("日志页确认、登录认证和同步执行是三个独立步骤；前两步都不会读取账单日志。")}</p></div></header>
+  {notice&&<div className="notice" role="status">{uiText(notice)}</div>}
   <div className="prerequisite-grid">
    <div className={logPage.data?.logs_page_url?"state success":"state pending-state"}>
-    <b>{logPage.data?.logs_page_url?"日志页已确认":"批准日志页 = 尚未确认"}</b>
-    <span>{logPage.data?.configuration_reason||"已使用版本化本机运行时设置。"}</span>
+    <b>{logPage.data?.logs_page_url?uiText("日志页已确认"):uiText("批准日志页 = 尚未确认")}</b>
+    <span>{logPage.data?.configuration_reason||uiText("已使用版本化本机运行时设置。")}</span>
     <button type="button" className="secondary" onClick={()=>setShowConfig(value=>!value)}>
-     {logPage.data?.logs_page_url?"查看/重新确认日志页":"配置日志页"}
+     {logPage.data?.logs_page_url?uiText("查看/重新确认日志页"):uiText("配置日志页")}
     </button>
    </div>
    <div className={authenticationValid?"state success":"state error"}>
-    <b>{authenticationValid?"国内 UAT 登录有效":"国内 UAT 登录不可用"}</b>
-    <span>{session?`状态：${session.state} / ${session.authentication_status}`:"未找到有效的本机加密登录状态。"}</span>
+    <b>{authenticationValid?uiText("国内 UAT 登录有效"):uiText("国内 UAT 登录不可用")}</b>
+    <span>{session?uiText("状态：{0} / {1}", {"0": session.state, "1": session.authentication_status}):uiText("未找到有效的本机加密登录状态。")}</span>
     {reauthenticationRequired
-     ?<><label>登录状态有效期（小时）<input aria-label="重新认证有效期" type="number" min="1" max="24" value={ttl} onChange={event=>setTtl(Number(event.target.value))}/></label>
-      <button type="button" onClick={()=>reauthenticate.mutate()} disabled={pairingActive||reauthenticate.isPending}>重新登录国内 UAT</button></>
-     :<span className="status-chip">已认证 / 可用</span>}
+     ?<><label>{uiText("登录状态有效期（小时）")}<input aria-label={uiText("重新认证有效期")} type="number" min="1" max="24" value={ttl} onChange={event=>setTtl(Number(event.target.value))}/></label>
+      <button type="button" onClick={()=>reauthenticate.mutate()} disabled={pairingActive||reauthenticate.isPending}>{uiText("重新登录国内 UAT")}</button></>
+     :<span className="status-chip">{uiText("已认证 / 可用")}</span>}
     <div className="action-row">
-     <button type="button" className="secondary" onClick={()=>openChrome.mutate()} disabled={openChrome.isPending}>{browser?.running?"聚焦UAT登录窗口":"打开UAT登录窗口"}</button>
-     {browser?.running&&<button type="button" className="secondary" onClick={()=>closeChrome.mutate()} disabled={closeChrome.isPending}>关闭UAT浏览器</button>}
+     <button type="button" className="secondary" onClick={()=>openChrome.mutate()} disabled={openChrome.isPending}>{browser?.running?uiText("聚焦UAT登录窗口"):uiText("打开UAT登录窗口")}</button>
+     {browser?.running&&<button type="button" className="secondary" onClick={()=>closeChrome.mutate()} disabled={closeChrome.isPending}>{uiText("关闭UAT浏览器")}</button>}
     </div>
-    <span>浏览器：{browser?.browser_family||"Google Chrome"} · {labels[browser?.state||""]||browser?.state||"browser_not_running"}</span>
+    <span>{uiText("浏览器：")}{browser?.browser_family||uiText("Google Chrome")} · {labels[browser?.state||""]||browser?.state||uiText("browser_not_running")}</span>
    </div>
   </div>
   {showConfig&&<fieldset className="range-panel">
-   <legend>确认经过评审的只读日志页</legend>
-   <label>日志页 URL<input aria-label="国内 UAT 日志页 URL" readOnly value={logPage.data?.reviewed_url||"https://uat.weimeta.cn/console/billing/logs"}/></label>
+   <legend>{uiText("确认经过评审的只读日志页")}</legend>
+   <label>{uiText("日志页 URL")}<input aria-label={uiText("国内 UAT 日志页 URL")} readOnly value={logPage.data?.reviewed_url||"https://uat.weimeta.cn/console/billing/logs"}/></label>
    <dl className="environment-config-grid">
-    <dt>允许来源</dt><dd><code>{logPage.data?.reviewed_origin||"https://uat.weimeta.cn"}</code></dd>
-    <dt>允许路径</dt><dd><code>{logPage.data?.reviewed_path||"/console/billing/logs"}</code></dd>
-    <dt>设置版本</dt><dd>{logPage.data?.setting_version||"environment_log_page_confirmation_v1"}</dd>
+    <dt>{uiText("允许来源")}</dt><dd><code>{logPage.data?.reviewed_origin||"https://uat.weimeta.cn"}</code></dd>
+    <dt>{uiText("允许路径")}</dt><dd><code>{logPage.data?.reviewed_path||"/console/billing/logs"}</code></dd>
+    <dt>{uiText("设置版本")}</dt><dd>{logPage.data?.setting_version||uiText("environment_log_page_confirmation_v1")}</dd>
    </dl>
-   <label className="confirmation"><input aria-label="明确确认国内 UAT 日志页" type="checkbox" checked={configConfirmed} onChange={event=>setConfigConfirmed(event.target.checked)}/>我明确确认仅使用上述国内 UAT 只读账单日志页。</label>
-   <button type="button" onClick={()=>configure.mutate()} disabled={!configConfirmed||configure.isPending}>确认日志页</button>
+   <label className="confirmation"><input aria-label={uiText("明确确认国内 UAT 日志页")} type="checkbox" checked={configConfirmed} onChange={event=>setConfigConfirmed(event.target.checked)}/>{uiText("我明确确认仅使用上述国内 UAT 只读账单日志页。")}</label>
+   <button type="button" onClick={()=>configure.mutate()} disabled={!configConfirmed||configure.isPending}>{uiText("确认日志页")}</button>
   </fieldset>}
   {pairingActive&&<div className="login-gate" role="status">
-   <b>配对正在进行</b>
-   <p>只在项目专用的正式 Google Chrome 窗口中输入登录信息。该窗口不会因页面刷新、API 返回或后端重启而自动关闭；本页面不会收集密码、Cookie、Authorization、API Key、浏览器存储或 DPAPI 材料。</p>
-   <p>当前阶段：{labels[pairing!.state]||pairing!.state}</p>
+   <b>{uiText("配对正在进行")}</b>
+   <p>{uiText("只在项目专用的正式 Google Chrome 窗口中输入登录信息。该窗口不会因页面刷新、API 返回或后端重启而自动关闭；本页面不会收集密码、Cookie、Authorization、API Key、浏览器存储或 DPAPI 材料。")}</p>
+   <p>{uiText("当前阶段：")}{labels[pairing!.state]||pairing!.state}</p>
    {diagnostic.data?.diagnostic&&<div className="storage-diagnostic">
-    <h3>认证存储诊断（仅元数据）</h3>
+    <h3>{uiText("认证存储诊断（仅元数据）")}</h3>
     <dl className="environment-config-grid">
-     <dt>认证来源</dt><dd>{diagnostic.data.diagnostic.authentication_origins.join("、")||"未检测到"}</dd>
-     <dt>localStorage 键名</dt><dd>{diagnostic.data.diagnostic.local_storage_keys.join("、")||"无"}</dd>
-     <dt>sessionStorage 键名</dt><dd>{diagnostic.data.diagnostic.session_storage_keys.join("、")||"无"}</dd>
-     <dt>IndexedDB 名称</dt><dd>{diagnostic.data.diagnostic.indexed_db_names.join("、")||"无"}</dd>
+     <dt>{uiText("认证来源")}</dt><dd>{diagnostic.data.diagnostic.authentication_origins.join("、")||uiText("未检测到")}</dd>
+     <dt>{uiText("localStorage 键名")}</dt><dd>{diagnostic.data.diagnostic.local_storage_keys.join("、")||uiText("无")}</dd>
+     <dt>{uiText("sessionStorage 键名")}</dt><dd>{diagnostic.data.diagnostic.session_storage_keys.join("、")||uiText("无")}</dd>
+     <dt>{uiText("IndexedDB 名称")}</dt><dd>{diagnostic.data.diagnostic.indexed_db_names.join("、")||uiText("无")}</dd>
     </dl>
    </div>}
-   <button type="button" onClick={()=>confirmPair.mutate()} disabled={!canConfirmPair||confirmPair.isPending}>重新检查认证状态</button>
+   <button type="button" onClick={()=>confirmPair.mutate()} disabled={!canConfirmPair||confirmPair.isPending}>{uiText("重新检查认证状态")}</button>
   </div>}
-  {pairing?.failure_summary&&!pairingActive&&<div className="state error" role="alert"><b>重新认证未完成</b><span>{pairing.failure_summary}</span></div>}
+  {pairing?.failure_summary&&!pairingActive&&<div className="state error" role="alert"><b>{uiText("重新认证未完成")}</b><span>{pairing.failure_summary}</span></div>}
  </section>;
 }
 
@@ -192,9 +193,9 @@ function PersistentModePanel({environment,dateFrom,dateTo,timezoneName,interval,
   onSuccess:()=>{setNotice("加密保险库完整性、来源和有效期校验通过。");refresh()},
   onError:error=>setNotice(message(error))});
  useEffect(()=>{setConfirmed(false);setNotice("");setRevokeText("")},[environment]);
- if(environment!=="china_uat")return <section className="ops-section"><div className="state error"><b>加密持久后台同步仅限国内 UAT</b><span>海外站和生产环境均不允许使用本机加密会话。</span></div></section>;
- if(status.isLoading)return <section className="ops-section"><div className="state loading">正在读取本机加密会话状态…</div></section>;
- if(!status.data?.enabled)return <section className="ops-section"><div className="state pending-state"><b>加密持久后台同步默认关闭</b><span>由本机管理员设置 UAT_PERSISTENT_SESSION_ENABLED=true 后重启后端。临时模式仍可正常使用。</span></div></section>;
+ if(environment!=="china_uat")return <section className="ops-section"><div className="state error"><b>{uiText("加密持久后台同步仅限国内 UAT")}</b><span>{uiText("海外站和生产环境均不允许使用本机加密会话。")}</span></div></section>;
+ if(status.isLoading)return <section className="ops-section"><div className="state loading">{uiText("正在读取本机加密会话状态…")}</div></section>;
+ if(!status.data?.enabled)return <section className="ops-section"><div className="state pending-state"><b>{uiText("加密持久后台同步默认关闭")}</b><span>{uiText("由本机管理员设置 UAT_PERSISTENT_SESSION_ENABLED=true 后重启后端。临时模式仍可正常使用。")}</span></div></section>;
  const remaining=session?Math.max(0,Math.floor((new Date(session.expires_at).getTime()-Date.now())/60000)):0;
  const latest=status.data.latest_job;
  const usageLabel=session?.usage_state==="in_use"?"会话使用中":session?"会话可用":"尚未配对";
@@ -209,44 +210,44 @@ function PersistentModePanel({environment,dateFrom,dateTo,timezoneName,interval,
   ...(rangeError?[rangeError]:[]),
  ];
  return <section className="ops-section persistent-mode">
-  <header><div><h2>加密持久后台同步</h2><p>首次人工登录后，批准来源的 Cookie 与 Web Storage 使用 AES‑256‑GCM 加密，随机密钥仅由 Windows DPAPI CurrentUser 保护；后续任务使用全新无界面 Chromium context。</p></div></header>
-  {notice&&<div className="notice">{notice}</div>}
+  <header><div><h2>{uiText("加密持久后台同步")}</h2><p>{uiText("首次人工登录后，批准来源的 Cookie 与 Web Storage 使用 AES‑256‑GCM 加密，随机密钥仅由 Windows DPAPI CurrentUser 保护；后续任务使用全新无界面 Chromium context。")}</p></div></header>
+  {notice&&<div className="notice">{uiText(notice)}</div>}
   {schemaMappingRequired&&<div className="state error" role="alert">
-   <b>UAT 已返回数据，但响应已被安全拒绝</b>
-   <span>本次没有导入任何记录；需要完成经过评审的字段映射，系统没有猜测任何字段。</span>
-   <small>已观察 {latest?.collected_count||0} 条，接受 {latest?.inserted_count||0} 条，拒绝 {latest?.rejected_count||0} 条。最后原因：{latest?.schema_adapter?.rejection_reason||latest?.schema_status}</small>
+   <b>{uiText("UAT 已返回数据，但响应已被安全拒绝")}</b>
+   <span>{uiText("本次没有导入任何记录；需要完成经过评审的字段映射，系统没有猜测任何字段。")}</span>
+   <small>{uiText("已观察 ")}{latest?.collected_count||0} {uiText("条，接受 ")}{latest?.inserted_count||0} {uiText("条，拒绝 ")}{latest?.rejected_count||0} {uiText("条。最后原因：")}{latest?.schema_adapter?.rejection_reason||latest?.schema_status}</small>
   </div>}
   {status.data.last_lease_event?.event_type.includes("recovered")&&<div className="state pending-state">
-   <b>已恢复陈旧会话租约</b><span>历史占用状态已清理，会话按当前有效租约重新计算。</span>
+   <b>{uiText("已恢复陈旧会话租约")}</b><span>{uiText("历史占用状态已清理，会话按当前有效租约重新计算。")}</span>
   </div>}
-  <div className="state pending-state"><b>{usageLabel}</b><span>{status.data.active_job?`${labels[status.data.active_job.state]||status.data.active_job.state}：${status.data.active_job.sync_job_id}`:"当前没有有效同步租约"}</span></div>
+  <div className="state pending-state"><b>{usageLabel}</b><span>{status.data.active_job?`${labels[status.data.active_job.state]||status.data.active_job.state}：${status.data.active_job.sync_job_id}`:uiText("当前没有有效同步租约")}</span></div>
   {latest&&<dl className="environment-config-grid">
-   <dt>最近任务状态</dt><dd>{labels[latest.state]||latest.state}</dd>
-   <dt>Schema 状态</dt><dd>{latest.schema_status}</dd>
-   <dt>Schema 适配器</dt><dd>{latest.schema_adapter?.schema_adapter_id||"尚无已评审记录适配器"}</dd>
-   <dt>适配器版本</dt><dd>{latest.schema_adapter?.adapter_version||"待评审"}</dd>
-   <dt>记录统计</dt><dd>观察 {latest.collected_count} / 接受 {latest.inserted_count} / 拒绝 {latest.rejected_count}</dd>
-   <dt>同步模式</dt><dd>{latest.periodic_polling?"有界周期同步":"一次性读取"}</dd>
-   <dt>证据类型</dt><dd>{latest.source_type==="measured_uat_realtime_browser_sync"?"当前真实 UAT 日志":latest.source_type==="measured_uat_historical_reconciled"?"历史 CSV 对账证据":latest.source_type||"尚未同步"}</dd>
-   <dt>读取 / 页面</dt><dd>{latest.http_read_count} / {latest.maximum_http_reads} 次；{latest.pages_read} / {latest.maximum_pages} 页</dd>
-   <dt>连续空读 / 失败</dt><dd>{latest.consecutive_empty_reads} / {latest.consecutive_failures}</dd>
-   <dt>最后成功读取</dt><dd>{formatTimestamp(latest.last_successful_read_at)}</dd>
-   <dt>Watermark</dt><dd><code>{latest.watermark_utc||"尚无已接受事件"}</code></dd>
-   <dt>指标快照</dt><dd><code>{latest.latest_metric_snapshot_id||"尚未生成"}</code></dd>
-   <dt>置信度快照</dt><dd><code>{latest.latest_confidence_snapshot_id||"尚未生成"}</code></dd>
-   <dt>证据清单</dt><dd><code>{latest.provenance_manifest_sha256||"尚未绑定"}</code></dd>
+   <dt>{uiText("最近任务状态")}</dt><dd>{labels[latest.state]||latest.state}</dd>
+   <dt>{uiText("Schema 状态")}</dt><dd>{latest.schema_status}</dd>
+   <dt>{uiText("Schema 适配器")}</dt><dd>{latest.schema_adapter?.schema_adapter_id||uiText("尚无已评审记录适配器")}</dd>
+   <dt>{uiText("适配器版本")}</dt><dd>{latest.schema_adapter?.adapter_version||uiText("待评审")}</dd>
+   <dt>{uiText("记录统计")}</dt><dd>{uiText("观察 ")}{latest.collected_count} {uiText("/ 接受 ")}{latest.inserted_count} {uiText("/ 拒绝 ")}{latest.rejected_count}</dd>
+   <dt>{uiText("同步模式")}</dt><dd>{latest.periodic_polling?uiText("有界周期同步"):uiText("一次性读取")}</dd>
+   <dt>{uiText("证据类型")}</dt><dd>{latest.source_type==="measured_uat_realtime_browser_sync"?uiText("当前真实 UAT 日志"):latest.source_type==="measured_uat_historical_reconciled"?uiText("历史 CSV 对账证据"):latest.source_type||uiText("尚未同步")}</dd>
+   <dt>{uiText("读取 / 页面")}</dt><dd>{latest.http_read_count} / {latest.maximum_http_reads} {uiText("次；")}{latest.pages_read} / {latest.maximum_pages} {uiText("页")}</dd>
+   <dt>{uiText("连续空读 / 失败")}</dt><dd>{latest.consecutive_empty_reads} / {latest.consecutive_failures}</dd>
+   <dt>{uiText("最后成功读取")}</dt><dd>{formatTimestamp(latest.last_successful_read_at)}</dd>
+   <dt>{uiText("Watermark")}</dt><dd><code>{latest.watermark_utc||"尚无已接受事件"}</code></dd>
+   <dt>{uiText("指标快照")}</dt><dd><code>{latest.latest_metric_snapshot_id||"尚未生成"}</code></dd>
+   <dt>{uiText("置信度快照")}</dt><dd><code>{latest.latest_confidence_snapshot_id||"尚未生成"}</code></dd>
+   <dt>{uiText("证据清单")}</dt><dd><code>{latest.provenance_manifest_sha256||"尚未绑定"}</code></dd>
   </dl>}
-  <div className="ops-metrics"><MetricCard label="会话状态" value={session?.state||"未配对"} context={session?.authentication_status||"等待首次登录"} source="AES‑GCM / DPAPI"/><MetricCard label="保险库状态" value={session?"已加密保存":"尚未创建"} context={session?.storage_types?.join(" + ")||"等待认证存储诊断"} source="本机保险库"/><MetricCard label="剩余有效期" value={session?`${remaining} 分钟`:"—"} context={session?formatTimestamp(session.expires_at):"默认 8 小时"} source="本机时钟"/><MetricCard label="配对状态" value={labels[pairing?.state||""]||pairing?.state||"未开始"} context={pairing?.browser_state||"无活动配对浏览器"} source="可见 Chromium"/><MetricCard label="同步记录" value={String(status.data.active_job?.inserted_count||0)} context={status.data.active_job?.sync_job_id||"无活动任务"} source="SQLite"/><MetricCard label="精确关联" value={String(status.data.active_job?.correlated_count||0)} context="仅 Request ID / response ID 精确匹配" source="日志关联"/><MetricCard label="实际费用已补全" value={String(status.data.active_job?.actual_cost_enriched_count||0)} context="仅统计含平台实际费用的精确关联" source="平台日志"/></div>
-  <dl className="environment-config-grid"><dt>创建时间</dt><dd>{formatTimestamp(session?.created_at)}</dd><dt>到期时间</dt><dd>{formatTimestamp(session?.expires_at)}</dd><dt>最近验证</dt><dd>{formatTimestamp(session?.last_validated_at)}</dd><dt>最近使用</dt><dd>{formatTimestamp(session?.last_used_at)}</dd><dt>自动恢复</dt><dd>{session?.auto_resume_enabled?"已启用":"默认关闭"}</dd><dt>最近同步</dt><dd>{formatTimestamp(status.data.active_job?.last_successful_poll_at)}</dd></dl>
-  <fieldset className="range-panel"><legend>执行模式与读取边界</legend>
-   <div className="mode-cards"><label><input type="radio" name="persistent-polling-mode" checked={!periodicPolling} onChange={()=>{setPeriodicPolling(false);setConfirmed(false)}}/><b>一次性读取</b><span>只发出一个已预留的账单日志 GET，收到首个响应后结束。</span></label><label><input type="radio" name="persistent-polling-mode" checked={periodicPolling} onChange={()=>{setPeriodicPolling(true);setConfirmed(false)}}/><b>有界周期同步</b><span>请求完成后至少等待 {interval} 秒；空响应也计入读取次数。</span></label></div>
-   {periodicPolling&&<label>最大 HTTP 读取次数<input aria-label="最大 HTTP 读取次数" type="number" min="1" max="20" value={maximumHttpReads} onChange={e=>{setMaximumHttpReads(Number(e.target.value));setConfirmed(false)}}/></label>}
+  <div className="ops-metrics"><MetricCard label={uiText("会话状态")} value={session?.state||uiText("未配对")} context={session?.authentication_status||uiText("等待首次登录")} source="AES‑GCM / DPAPI"/><MetricCard label={uiText("保险库状态")} value={session?uiText("已加密保存"):uiText("尚未创建")} context={session?.storage_types?.join(" + ")||uiText("等待认证存储诊断")} source="本机保险库"/><MetricCard label={uiText("剩余有效期")} value={session?uiText("{0} 分钟", {"0": remaining}):"—"} context={session?formatTimestamp(session.expires_at):uiText("默认 8 小时")} source="本机时钟"/><MetricCard label={uiText("配对状态")} value={labels[pairing?.state||""]||pairing?.state||uiText("未开始")} context={pairing?.browser_state||uiText("无活动配对浏览器")} source="可见 Chromium"/><MetricCard label={uiText("同步记录")} value={String(status.data.active_job?.inserted_count||0)} context={status.data.active_job?.sync_job_id||uiText("无活动任务")} source="SQLite"/><MetricCard label={uiText("精确关联")} value={String(status.data.active_job?.correlated_count||0)} context={uiText("仅 Request ID / response ID 精确匹配")} source="日志关联"/><MetricCard label={uiText("实际费用已补全")} value={String(status.data.active_job?.actual_cost_enriched_count||0)} context={uiText("仅统计含平台实际费用的精确关联")} source="平台日志"/></div>
+  <dl className="environment-config-grid"><dt>{uiText("创建时间")}</dt><dd>{formatTimestamp(session?.created_at)}</dd><dt>{uiText("到期时间")}</dt><dd>{formatTimestamp(session?.expires_at)}</dd><dt>{uiText("最近验证")}</dt><dd>{formatTimestamp(session?.last_validated_at)}</dd><dt>{uiText("最近使用")}</dt><dd>{formatTimestamp(session?.last_used_at)}</dd><dt>{uiText("自动恢复")}</dt><dd>{session?.auto_resume_enabled?uiText("已启用"):uiText("默认关闭")}</dd><dt>{uiText("最近同步")}</dt><dd>{formatTimestamp(status.data.active_job?.last_successful_poll_at)}</dd></dl>
+  <fieldset className="range-panel"><legend>{uiText("执行模式与读取边界")}</legend>
+   <div className="mode-cards"><label><input type="radio" name="persistent-polling-mode" checked={!periodicPolling} onChange={()=>{setPeriodicPolling(false);setConfirmed(false)}}/><b>{uiText("一次性读取")}</b><span>{uiText("只发出一个已预留的账单日志 GET，收到首个响应后结束。")}</span></label><label><input type="radio" name="persistent-polling-mode" checked={periodicPolling} onChange={()=>{setPeriodicPolling(true);setConfirmed(false)}}/><b>{uiText("有界周期同步")}</b><span>{uiText("请求完成后至少等待 ")}{interval} {uiText("秒；空响应也计入读取次数。")}</span></label></div>
+   {periodicPolling&&<label>{uiText("最大 HTTP 读取次数")}<input aria-label={uiText("最大 HTTP 读取次数")} type="number" min="1" max="20" value={maximumHttpReads} onChange={e=>{setMaximumHttpReads(Number(e.target.value));setConfirmed(false)}}/></label>}
   </fieldset>
-  <div className="confirmation-summary"><b>无界面同步确认</b><p>国内 UAT · {dateFrom} 至 {dateTo} · {timezoneName} · {periodicPolling?`每 ${interval} 秒，最多 ${maximumHttpReads} 次读取`:"一次性读取 1 次"} · 最多 {maximum} 条</p><label className="confirmation"><input aria-label="确认启动持久同步" type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)} disabled={blockers.length>0}/>我确认使用本机加密登录状态启动只读无界面同步。</label></div>
-  {blockers.length>0&&<div className="state error" role="alert" aria-label="无法启动同步的原因"><b>当前不能启动同步</b><ul>{blockers.map(reason=><li key={reason}>{reason}</li>)}</ul></div>}
-  <div className="uat-actions"><button onClick={()=>start.mutate()} disabled={blockers.length>0||!confirmed||start.isPending}>{periodicPolling?"启动周期同步":"启动一次性同步"}</button>{status.data.active_job&&<button className="secondary" onClick={()=>api.stopLogSync(status.data!.active_job!.sync_job_id,"china_uat").then(refresh)}>停止同步</button>}</div>
-  {session&&<><div className="uat-actions"><button className="secondary" onClick={()=>validate.mutate()} disabled={validate.isPending}>验证加密会话</button></div><label className="confirmation"><input aria-label="启用自动恢复" type="checkbox" checked={false} disabled readOnly/>自动恢复暂未开放；后端重启时会安全终止旧任务并释放租约，请人工重新启动。</label>
-  <div className="danger-zone"><label>清除确认文字<input aria-label="清除持久会话确认文字" value={revokeText} onChange={e=>setRevokeText(e.target.value)} placeholder="我确认清除本机保存的UAT登录状态。"/></label><button className="danger" onClick={()=>revoke.mutate()} disabled={revokeText!=="我确认清除本机保存的UAT登录状态。"||revoke.isPending}>清除本地登录状态</button><p className="field-help">只删除本机加密副本，不一定注销平台服务端 UAT 会话。</p></div></>}
+  <div className="confirmation-summary"><b>{uiText("无界面同步确认")}</b><p>{uiText("国内 UAT · ")}{dateFrom} {uiText("至 ")}{dateTo} · {timezoneName} · {periodicPolling?uiText("每 {0} 秒，最多 {1} 次读取", {"0": interval, "1": maximumHttpReads}):uiText("一次性读取 1 次")} {uiText("· 最多 ")}{maximum} {uiText("条")}</p><label className="confirmation"><input aria-label={uiText("确认启动持久同步")} type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)} disabled={blockers.length>0}/>{uiText("我确认使用本机加密登录状态启动只读无界面同步。")}</label></div>
+  {blockers.length>0&&<div className="state error" role="alert" aria-label={uiText("无法启动同步的原因")}><b>{uiText("当前不能启动同步")}</b><ul>{blockers.map(reason=><li key={reason}>{reason}</li>)}</ul></div>}
+  <div className="uat-actions"><button onClick={()=>start.mutate()} disabled={blockers.length>0||!confirmed||start.isPending}>{periodicPolling?uiText("启动周期同步"):uiText("启动一次性同步")}</button>{status.data.active_job&&<button className="secondary" onClick={()=>api.stopLogSync(status.data!.active_job!.sync_job_id,"china_uat").then(refresh)}>{uiText("停止同步")}</button>}</div>
+  {session&&<><div className="uat-actions"><button className="secondary" onClick={()=>validate.mutate()} disabled={validate.isPending}>{uiText("验证加密会话")}</button></div><label className="confirmation"><input aria-label={uiText("启用自动恢复")} type="checkbox" checked={false} disabled readOnly/>{uiText("自动恢复暂未开放；后端重启时会安全终止旧任务并释放租约，请人工重新启动。")}</label>
+  <div className="danger-zone"><label>{uiText("清除确认文字")}<input aria-label={uiText("清除持久会话确认文字")} value={revokeText} onChange={e=>setRevokeText(e.target.value)} placeholder={uiText("我确认清除本机保存的UAT登录状态。")}/></label><button className="danger" onClick={()=>revoke.mutate()} disabled={revokeText!=="我确认清除本机保存的UAT登录状态。"||revoke.isPending}>{uiText("清除本地登录状态")}</button><p className="field-help">{uiText("只删除本机加密副本，不一定注销平台服务端 UAT 会话。")}</p></div></>}
  </section>;
 }
 
@@ -310,8 +311,8 @@ export default function RealtimeLogSyncPage({environment}:{environment:Environme
    void qc.invalidateQueries();
   }
  },[job.data?.inserted_count,qc]);
- if(!concrete)return <div className="state error"><b>请选择具体环境</b><span>近实时日志同步不会混合国内 UAT 与海外站。</span></div>;
- if(environmentStatus.isLoading)return <div className="state loading">正在读取日志同步配置…</div>;
+ if(!concrete)return <div className="state error"><b>{uiText("请选择具体环境")}</b><span>{uiText("近实时日志同步不会混合国内 UAT 与海外站。")}</span></div>;
+ if(environmentStatus.isLoading)return <div className="state loading">{uiText("正在读取日志同步配置…")}</div>;
  const status=environmentStatus.data;
  const current=job.data;
  const pending=Math.max(0,(current?.inserted_count||0)-(current?.correlated_count||0)-(current?.ambiguous_count||0));
@@ -322,48 +323,48 @@ export default function RealtimeLogSyncPage({environment}:{environment:Environme
   ...(current&&active.has(current.state)?["已有活动同步任务"]:[]),
  ];
   return <main className="collector-page">
-   <header className="ops-page-header collector-hero"><div><p className="eyebrow">{concrete==="china_uat"?"FORMAL CHROME · PERSISTENT PROFILE · READ-ONLY":"VISIBLE · TEMPORARY · READ-ONLY"}</p><h1>UAT 日志近实时同步</h1><p>平台日志可能延迟到达。Completion 响应元数据不等同于平台账单证据，费用和实际渠道只在平台日志明确提供后展示。</p></div><div className="collector-orbit"><span className={current&&active.has(current.state)?"pulse":""}/><b>{labels[current?.state||"idle"]}</b><small>{status?.environment_name||concrete}</small></div></header>
+   <header className="ops-page-header collector-hero"><div><p className="eyebrow">{concrete==="china_uat"?uiText("FORMAL CHROME · PERSISTENT PROFILE · READ-ONLY"):uiText("VISIBLE · TEMPORARY · READ-ONLY")}</p><h1>{uiText("UAT 日志近实时同步")}</h1><p>{uiText("平台日志可能延迟到达。Completion 响应元数据不等同于平台账单证据，费用和实际渠道只在平台日志明确提供后展示。")}</p></div><div className="collector-orbit"><span className={current&&active.has(current.state)?"pulse":""}/><b>{labels[current?.state||"idle"]}</b><small>{status?.environment_name||concrete}</small></div></header>
    {concrete==="china_uat"&&<DomesticAccessRecoveryPanel/>}
-   <section className="ops-section mode-selector"><h2>同步模式</h2><div className="mode-cards">{concrete==="china_uat"?<div className="state success"><b>正式 Chrome 人工认证 + 加密持久后台同步</b><span>人工认证只使用项目专用 Google Chrome；临时 Playwright Chromium 仅用于 Mock E2E，不作为真人认证入口。</span></div>:<label><input type="radio" name="sync-mode" checked={syncMode==="temporary"} onChange={()=>setSyncMode("temporary")}/><b>临时后台同步</b><span>仅用于已评审的非国内 UAT 环境。</span></label>}</div></section>
+   <section className="ops-section mode-selector"><h2>{uiText("同步模式")}</h2><div className="mode-cards">{concrete==="china_uat"?<div className="state success"><b>{uiText("正式 Chrome 人工认证 + 加密持久后台同步")}</b><span>{uiText("人工认证只使用项目专用 Google Chrome；临时 Playwright Chromium 仅用于 Mock E2E，不作为真人认证入口。")}</span></div>:<label><input type="radio" name="sync-mode" checked={syncMode==="temporary"} onChange={()=>setSyncMode("temporary")}/><b>{uiText("临时后台同步")}</b><span>{uiText("仅用于已评审的非国内 UAT 环境。")}</span></label>}</div></section>
   {syncMode==="persistent"?<PersistentModePanel environment={concrete} dateFrom={dateFrom} dateTo={dateTo} timezoneName={timezoneName} interval={interval} maximum={maximum} rangeError={rangeError}/>:<>
-  <section className="ops-section collector-config"><header><div><h2>启动只读同步</h2><p>点击后打开可见临时 Chromium；请在新窗口中手动完成登录、CAPTCHA 或 MFA。</p></div></header>
-   <dl className="environment-config-grid"><dt>环境</dt><dd>{status?.environment_name||concrete}</dd><dt>批准日志页</dt><dd>{status?.log_page_url||"尚未确认"}</dd><dt>允许主机</dt><dd>{status?.allowed_hosts.join("、")||"—"}</dd><dt>认证材料</dt><dd>不持久化 Cookie、密码或 Authorization</dd></dl>
-   <fieldset className="range-panel"><legend>日期与时间范围</legend>
-    <div className="quick-ranges" aria-label="快捷时间范围">{([
+  <section className="ops-section collector-config"><header><div><h2>{uiText("启动只读同步")}</h2><p>{uiText("点击后打开可见临时 Chromium；请在新窗口中手动完成登录、CAPTCHA 或 MFA。")}</p></div></header>
+   <dl className="environment-config-grid"><dt>{uiText("环境")}</dt><dd>{status?.environment_name||concrete}</dd><dt>{uiText("批准日志页")}</dt><dd>{status?.log_page_url||uiText("尚未确认")}</dd><dt>{uiText("允许主机")}</dt><dd>{status?.allowed_hosts.join("、")||"—"}</dd><dt>{uiText("认证材料")}</dt><dd>{uiText("不持久化 Cookie、密码或 Authorization")}</dd></dl>
+   <fieldset className="range-panel"><legend>{uiText("日期与时间范围")}</legend>
+    <div className="quick-ranges" aria-label={uiText("快捷时间范围")}>{([
      ["15m","最近15分钟"],["1h","最近1小时"],["24h","最近24小时"],["today","今天"],["custom","自定义"],
     ] as Array<[LogSyncQuickRange,string]>).map(([value,label])=><button type="button" key={value} className={quickRange===value?"active secondary":"secondary"} aria-pressed={quickRange===value} onClick={()=>{
       setQuickRange(value);setConfirmed(false);
       if(value!=="custom"){const next=calculateQuickRange(value);setDateFrom(next.dateFrom);setDateTo(next.dateTo)}
-     }}>{label}</button>)}</div>
-    <div className="scope-grid"><label>开始日期和时间<input aria-label="开始日期和时间" type="datetime-local" value={dateFrom} onChange={e=>{setDateFrom(e.target.value);setQuickRange("custom");setConfirmed(false)}}/></label><label>结束日期和时间<input aria-label="结束日期和时间" type="datetime-local" value={dateTo} onChange={e=>{setDateTo(e.target.value);setQuickRange("custom");setConfirmed(false)}}/></label></div>
-    <p className="field-help">浏览器本地时区：<b>{timezoneName}</b></p>
+     }}>{uiText(label)}</button>)}</div>
+    <div className="scope-grid"><label>{uiText("开始日期和时间")}<input aria-label={uiText("开始日期和时间")} type="datetime-local" value={dateFrom} onChange={e=>{setDateFrom(e.target.value);setQuickRange("custom");setConfirmed(false)}}/></label><label>{uiText("结束日期和时间")}<input aria-label={uiText("结束日期和时间")} type="datetime-local" value={dateTo} onChange={e=>{setDateTo(e.target.value);setQuickRange("custom");setConfirmed(false)}}/></label></div>
+    <p className="field-help">{uiText("浏览器本地时区：")}<b>{timezoneName}</b></p>
     {rangeError&&<div className="state error" role="alert">{rangeError}</div>}
-    {utcRange&&<details><summary>技术时间详情（UTC）</summary><dl><dt>date_from</dt><dd><code>{utcRange.dateFromUtc}</code></dd><dt>date_to</dt><dd><code>{utcRange.dateToUtc}</code></dd><dt>timezone</dt><dd>{timezoneName}</dd></dl></details>}
+    {utcRange&&<details><summary>{uiText("技术时间详情（UTC）")}</summary><dl><dt>{uiText("date_from")}</dt><dd><code>{utcRange.dateFromUtc}</code></dd><dt>{uiText("date_to")}</dt><dd><code>{utcRange.dateToUtc}</code></dd><dt>{uiText("timezone")}</dt><dd>{timezoneName}</dd></dl></details>}
    </fieldset>
-   <div className="scope-grid"><label>同步间隔（秒）<input aria-label="同步间隔" type="number" min="7" max="30" value={interval} onChange={e=>{setIntervalValue(Number(e.target.value));setConfirmed(false)}}/></label><label>最多记录<input aria-label="最多记录" type="number" min="1" max="1000" value={maximum} onChange={e=>{setMaximum(Number(e.target.value));setConfirmed(false)}}/></label></div>
-   <div className="confirmation-summary"><b>启动确认摘要</b><p>{status?.environment_name||concrete} · {dateFrom||"未填写"} 至 {dateTo||"未填写"} · {timezoneName} · 每 {interval} 秒 · 最多 {maximum} 条</p><label className="confirmation"><input aria-label="确认同步范围" type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)} disabled={Boolean(rangeError)}/>我已核对环境与时间范围，并确认只读同步。</label></div>
-    {temporaryBlockers.length>0&&<div className="state error" role="alert" aria-label="无法启动同步的原因"><b>当前不能启动同步</b><ul>{temporaryBlockers.map(reason=><li key={reason}>{reason}</li>)}</ul></div>}
-    <div className="uat-actions"><button disabled={temporaryBlockers.length>0||!confirmed||start.isPending} onClick={()=>start.mutate()}>{start.isPending?"正在打开安全浏览器":"启动实时日志同步"}</button>{current&&active.has(current.state)&&<button className="secondary" onClick={()=>stop.mutate()} disabled={stop.isPending}>停止同步</button>}</div>
-   {notice&&<div className="notice">{notice}</div>}
-   <details className="collector-cli"><summary>诊断后备方式</summary><p>正常流程不需要终端或文件上传；旧 Collector CLI 仅保留用于受控诊断。</p></details>
+   <div className="scope-grid"><label>{uiText("同步间隔（秒）")}<input aria-label={uiText("同步间隔")} type="number" min="7" max="30" value={interval} onChange={e=>{setIntervalValue(Number(e.target.value));setConfirmed(false)}}/></label><label>{uiText("最多记录")}<input aria-label={uiText("最多记录")} type="number" min="1" max="1000" value={maximum} onChange={e=>{setMaximum(Number(e.target.value));setConfirmed(false)}}/></label></div>
+   <div className="confirmation-summary"><b>{uiText("启动确认摘要")}</b><p>{status?.environment_name||concrete} · {dateFrom||uiText("未填写")} {uiText("至 ")}{dateTo||uiText("未填写")} · {timezoneName} {uiText("· 每 ")}{interval} {uiText("秒 · 最多 ")}{maximum} {uiText("条")}</p><label className="confirmation"><input aria-label={uiText("确认同步范围")} type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)} disabled={Boolean(rangeError)}/>{uiText("我已核对环境与时间范围，并确认只读同步。")}</label></div>
+    {temporaryBlockers.length>0&&<div className="state error" role="alert" aria-label={uiText("无法启动同步的原因")}><b>{uiText("当前不能启动同步")}</b><ul>{temporaryBlockers.map(reason=><li key={reason}>{reason}</li>)}</ul></div>}
+    <div className="uat-actions"><button disabled={temporaryBlockers.length>0||!confirmed||start.isPending} onClick={()=>start.mutate()}>{start.isPending?uiText("正在打开安全浏览器"):uiText("启动实时日志同步")}</button>{current&&active.has(current.state)&&<button className="secondary" onClick={()=>stop.mutate()} disabled={stop.isPending}>{uiText("停止同步")}</button>}</div>
+   {notice&&<div className="notice">{uiText(notice)}</div>}
+   <details className="collector-cli"><summary>{uiText("诊断后备方式")}</summary><p>{uiText("正常流程不需要终端或文件上传；旧 Collector CLI 仅保留用于受控诊断。")}</p></details>
   </section>
-  {current&&<section className="ops-section collector-progress"><header><div><h2>同步状态</h2><p>这是近实时轮询状态，不是模拟进度。</p></div><span className={`run-state state-${current.state}`}>{labels[current.state]||current.state}</span></header>
-   <dl className="environment-config-grid"><dt>任务 ID</dt><dd><code>{current.sync_job_id}</code></dd><dt>环境</dt><dd>{current.environment_id}</dd><dt>所选范围</dt><dd>{formatTimestamp(current.date_from_utc)} 至 {formatTimestamp(current.date_to_utc)}（{current.timezone}）</dd><dt>浏览器状态</dt><dd>{current.browser_context_active?"可见临时浏览器已打开":"浏览器上下文未活动"}</dd><dt>Schema 状态</dt><dd>{current.schema_status}</dd></dl>
-   <div className="heartbeat-strip"><span className="heartbeat-dot"/><b>{current.current_safe_url||current.safe_log_page_url}</b><small>最近同步：{formatTimestamp(current.last_successful_poll_at)}</small></div>
-   <div className="ops-metrics"><MetricCard label="已观察" value={String(current.collected_count)} context="平台日志候选" source={current.source_type}/><MetricCard label="已接受" value={String(current.inserted_count)} context="范围内幂等新增" source="SQLite"/><MetricCard label="范围外" value={String(current.out_of_range_count)} context="严格排除" source="平台时间戳"/><MetricCard label="时间未解析" value={String(current.missing_timestamp_count)} context="不猜测" source="平台证据"/><MetricCard label="重复" value={String(current.duplicate_count)} context="未重复写入" source="增量 cursor"/><MetricCard label="精确关联" value={String(current.correlated_count)} context="Request ID / Response ID" source="平台证据"/><MetricCard label="歧义关联" value={String(current.ambiguous_count)} context="不会自动接受" source="候选匹配"/><MetricCard label="等待平台日志" value={String(pending)} context="不推断费用或渠道" source="本地执行"/></div>
-   {["waiting_for_manual_login","waiting_for_operator_confirmation"].includes(current.state)&&<div className="login-gate"><b>请在新窗口中手动登录并导航到批准日志页</b><p>应用不会读取或保存密码，也不会处理 CAPTCHA/MFA。</p><button disabled={!current.current_safe_url||confirm.isPending} onClick={()=>confirm.mutate()}>我已完成登录，开始只读同步</button></div>}
+  {current&&<section className="ops-section collector-progress"><header><div><h2>{uiText("同步状态")}</h2><p>{uiText("这是近实时轮询状态，不是模拟进度。")}</p></div><span className={`run-state state-${current.state}`}>{labels[current.state]||current.state}</span></header>
+   <dl className="environment-config-grid"><dt>{uiText("任务 ID")}</dt><dd><code>{current.sync_job_id}</code></dd><dt>{uiText("环境")}</dt><dd>{current.environment_id}</dd><dt>{uiText("所选范围")}</dt><dd>{formatTimestamp(current.date_from_utc)} {uiText("至 ")}{formatTimestamp(current.date_to_utc)}（{current.timezone}）</dd><dt>{uiText("浏览器状态")}</dt><dd>{current.browser_context_active?uiText("可见临时浏览器已打开"):uiText("浏览器上下文未活动")}</dd><dt>{uiText("Schema 状态")}</dt><dd>{current.schema_status}</dd></dl>
+   <div className="heartbeat-strip"><span className="heartbeat-dot"/><b>{current.current_safe_url||current.safe_log_page_url}</b><small>{uiText("最近同步：")}{formatTimestamp(current.last_successful_poll_at)}</small></div>
+   <div className="ops-metrics"><MetricCard label={uiText("已观察 ")} value={String(current.collected_count)} context={uiText("平台日志候选")} source={current.source_type}/><MetricCard label={uiText("已接受")} value={String(current.inserted_count)} context={uiText("范围内幂等新增")} source="SQLite"/><MetricCard label={uiText("范围外")} value={String(current.out_of_range_count)} context={uiText("严格排除")} source="平台时间戳"/><MetricCard label={uiText("时间未解析")} value={String(current.missing_timestamp_count)} context={uiText("不猜测")} source="平台证据"/><MetricCard label={uiText("重复")} value={String(current.duplicate_count)} context={uiText("未重复写入")} source="增量 cursor"/><MetricCard label={uiText("精确关联")} value={String(current.correlated_count)} context={uiText("Request ID / Response ID")} source="平台证据"/><MetricCard label={uiText("歧义关联")} value={String(current.ambiguous_count)} context={uiText("不会自动接受")} source="候选匹配"/><MetricCard label={uiText("等待平台日志")} value={String(pending)} context={uiText("不推断费用或渠道")} source="本地执行"/></div>
+   {["waiting_for_manual_login","waiting_for_operator_confirmation"].includes(current.state)&&<div className="login-gate"><b>{uiText("请在新窗口中手动登录并导航到批准日志页")}</b><p>{uiText("应用不会读取或保存密码，也不会处理 CAPTCHA/MFA。")}</p><button disabled={!current.current_safe_url||confirm.isPending} onClick={()=>confirm.mutate()}>{uiText("我已完成登录，开始只读同步")}</button></div>}
    {current.state==="syncing"&&<progress max={current.maximum_records} value={current.inserted_count}/>}
-   {current.state==="session_expired"&&<div className="state error"><b>登录会话已失效</b><span>已停止采集并保留已有证据；请重新启动并手动登录。</span></div>}
-   {current.safe_error_message&&<div className="state error"><b>{current.safe_error_message}</b><small>停止原因：{current.stop_reason||current.error_code||"待确认"}</small><small>发生时间：{formatTimestamp(current.error_at||current.stopped_at)}</small><small>建议操作：{current.suggested_next_action||"查看最近事件并修正本地条件后重试。"}</small></div>}
+   {current.state==="session_expired"&&<div className="state error"><b>{uiText("登录会话已失效")}</b><span>{uiText("已停止采集并保留已有证据；请重新启动并手动登录。")}</span></div>}
+   {current.safe_error_message&&<div className="state error"><b>{current.safe_error_message}</b><small>{uiText("停止原因：")}{current.stop_reason||current.error_code||uiText("待确认")}</small><small>{uiText("发生时间：")}{formatTimestamp(current.error_at||current.stopped_at)}</small><small>{uiText("建议操作：")}{current.suggested_next_action||uiText("查看最近事件并修正本地条件后重试。")}</small></div>}
    <TechnicalDataDrawer data={{sync_job_id:current.sync_job_id,source_type:current.source_type,network_called:current.network_called,cookies_persisted:current.cookies_persisted,credentials_persisted:current.credentials_persisted,poll_interval_seconds:current.poll_interval_seconds,last_poll_at:current.last_poll_at}}/>
   </section>}
   </>}
-  <section className="ops-section"><header><div><h2>费用与渠道对账</h2><p>同时保留估算值与平台实际值；Scheduler 推荐绝不替代平台实际渠道。</p></div></header>
-   <div className="table-wrap dense"><table><thead><tr><th>执行 ID</th><th>平台日志</th><th>估算费用</th><th>平台实际费用</th><th>Scheduler 推荐渠道</th><th>平台实际渠道</th><th>状态</th></tr></thead><tbody>
-    {reconciliation.data?.items.map((item,index)=><tr key={`${item.execution_id}-${item.platform_log_id}-${index}`}><td><code>{item.execution_id||"待确认"}</code></td><td>{item.platform_log_id||"—"}</td><td>{money(item.estimated_cost,item.currency)}</td><td>{money(item.actual_cost,item.currency)}</td><td>{item.scheduler_recommendation||"未记录"}</td><td>{item.actual_channel_name||item.actual_channel_id||"待平台渠道日志确认"}</td><td>{reconciliationLabels[item.reconciliation_status]||item.reconciliation_status}</td></tr>)}
-    {!reconciliation.data?.items.length&&<tr><td colSpan={7}>等待平台日志；当前没有可展示的费用或渠道关联。</td></tr>}
+  <section className="ops-section"><header><div><h2>{uiText("费用与渠道对账")}</h2><p>{uiText("同时保留估算值与平台实际值；Scheduler 推荐绝不替代平台实际渠道。")}</p></div></header>
+   <div className="table-wrap dense"><table><thead><tr><th>{uiText("执行 ID")}</th><th>{uiText("平台日志")}</th><th>{uiText("估算费用")}</th><th>{uiText("平台实际费用")}</th><th>{uiText("Scheduler 推荐渠道")}</th><th>{uiText("平台实际渠道")}</th><th>{uiText("状态")}</th></tr></thead><tbody>
+    {reconciliation.data?.items.map((item,index)=><tr key={`${item.execution_id}-${item.platform_log_id}-${index}`}><td><code>{item.execution_id||"待确认"}</code></td><td>{item.platform_log_id||"—"}</td><td>{money(item.estimated_cost,item.currency)}</td><td>{money(item.actual_cost,item.currency)}</td><td>{item.scheduler_recommendation||uiText("未记录")}</td><td>{item.actual_channel_name||item.actual_channel_id||uiText("待平台渠道日志确认")}</td><td>{reconciliationLabels[item.reconciliation_status]||item.reconciliation_status}</td></tr>)}
+    {!reconciliation.data?.items.length&&<tr><td colSpan={7}>{uiText("等待平台日志；当前没有可展示的费用或渠道关联。")}</td></tr>}
    </tbody></table></div>
   </section>
-  <section className="ops-section"><h2>最近同步事件</h2><div className="table-wrap dense"><table><thead><tr><th>时间</th><th>事件</th></tr></thead><tbody>{events.data?.items.slice(-10).reverse().map(event=><tr key={event.event_id}><td>{formatTimestamp(event.created_at)}</td><td>{event.event_type}</td></tr>)}{!events.data?.items.length&&<tr><td colSpan={2}>暂无同步事件。</td></tr>}</tbody></table></div></section>
+  <section className="ops-section"><h2>{uiText("最近同步事件")}</h2><div className="table-wrap dense"><table><thead><tr><th>{uiText("时间")}</th><th>{uiText("事件")}</th></tr></thead><tbody>{events.data?.items.slice(-10).reverse().map(event=><tr key={event.event_id}><td>{formatTimestamp(event.created_at)}</td><td>{event.event_type}</td></tr>)}{!events.data?.items.length&&<tr><td colSpan={2}>{uiText("暂无同步事件。")}</td></tr>}</tbody></table></div></section>
  </main>;
 }
