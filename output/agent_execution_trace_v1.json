@@ -1,0 +1,546 @@
+{
+  "execution_id": "EXEC-001",
+  "status": "completed",
+  "execution_mode": "multi_agent",
+  "agents": [
+    {
+      "role": "research_agent",
+      "task": "collect configured offline information",
+      "selected_model": "gemini-flash",
+      "router_selected_model": "claude-sonnet",
+      "routing_source_type": "offline_capability_routing",
+      "execution_type": "offline_deterministic_mock",
+      "context_item_count": 1,
+      "tool_results": [
+        {
+          "tool_id": "search_mock_tool",
+          "status": "success",
+          "result": {
+            "query": "collect configured offline information",
+            "results": [
+              {
+                "result_id": "MOCK-f4211cf8-1",
+                "title": "Synthetic offline result",
+                "snippet": "Offline mock information for: collect configured offline information"
+              }
+            ]
+          },
+          "execution_time": 0.005,
+          "execution_time_type": "fixed_offline_simulation_seconds",
+          "failure_reason": null,
+          "real_tool_called": false,
+          "real_api_calls_performed": 0,
+          "reason": "matched task indicators: information"
+        }
+      ],
+      "real_api_calls_performed": 0,
+      "status": "success",
+      "output": "Offline research summary for: collect configured offline information. Evidence collection was simulated.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution.",
+      "error": null,
+      "steps": [
+        {
+          "type": "tool_call",
+          "tool": "search_mock_tool",
+          "status": "success",
+          "execution_time": 0.005,
+          "failure_reason": null
+        },
+        {
+          "type": "agent_reasoning",
+          "status": "success",
+          "failure_reason": null
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.528,
+          "issues": [
+            "reasoning chain is not sufficiently explicit",
+            "analysis appears incomplete"
+          ],
+          "reflection_round": 0
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "correct",
+          "confidence": 0.836,
+          "reflection_round": 0
+        },
+        {
+          "type": "correction",
+          "actions": [
+            "incomplete_answer"
+          ],
+          "status": "corrected",
+          "reflection_round": 1
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.98,
+          "issues": [],
+          "reflection_round": 1
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "accept",
+          "confidence": 0.79,
+          "reflection_round": 1
+        }
+      ],
+      "final_evaluation": {
+        "evaluation_score": 0.98,
+        "metrics": {
+          "completeness": 1.0,
+          "correctness": 1.0,
+          "format": 0.9
+        },
+        "issues": [],
+        "evaluation_method": "offline_rule_based_v1"
+      },
+      "final_reflection": {
+        "confidence": 0.79,
+        "evaluation_score": 0.98,
+        "accept_threshold": 0.8,
+        "reflection_round": 1,
+        "policy_version": "reflection_policy_v1",
+        "source_type": "offline_deterministic_reflection",
+        "decision": "accept",
+        "reason": [
+          "evaluation score meets configured threshold"
+        ],
+        "correction_plan": []
+      },
+      "reflection_rounds": 1,
+      "final_status": "accepted"
+    },
+    {
+      "role": "reasoning_agent",
+      "task": "calculate and analyze the offline information",
+      "selected_model": "claude-sonnet",
+      "router_selected_model": "deepseek-reasoner",
+      "routing_source_type": "offline_capability_routing",
+      "execution_type": "offline_deterministic_mock",
+      "context_item_count": 2,
+      "tool_results": [
+        {
+          "tool_id": "calculator_tool",
+          "status": "success",
+          "result": {
+            "value": 4
+          },
+          "execution_time": 0.001,
+          "execution_time_type": "fixed_offline_simulation_seconds",
+          "failure_reason": null,
+          "real_tool_called": false,
+          "real_api_calls_performed": 0,
+          "reason": "matched task indicators: calculate"
+        }
+      ],
+      "real_api_calls_performed": 0,
+      "status": "success",
+      "output": "Offline reasoning analysis for: calculate and analyze the offline information. Assumptions were evaluated deterministically.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution.",
+      "error": null,
+      "steps": [
+        {
+          "type": "tool_call",
+          "tool": "calculator_tool",
+          "status": "success",
+          "execution_time": 0.001,
+          "failure_reason": null
+        },
+        {
+          "type": "agent_reasoning",
+          "status": "success",
+          "failure_reason": null
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.541,
+          "issues": [
+            "reasoning chain is not sufficiently explicit",
+            "analysis appears incomplete"
+          ],
+          "reflection_round": 0
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "correct",
+          "confidence": 0.829,
+          "reflection_round": 0
+        },
+        {
+          "type": "correction",
+          "actions": [
+            "incomplete_answer"
+          ],
+          "status": "corrected",
+          "reflection_round": 1
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.98,
+          "issues": [],
+          "reflection_round": 1
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "accept",
+          "confidence": 0.79,
+          "reflection_round": 1
+        }
+      ],
+      "final_evaluation": {
+        "evaluation_score": 0.98,
+        "metrics": {
+          "completeness": 1.0,
+          "correctness": 1.0,
+          "format": 0.9
+        },
+        "issues": [],
+        "evaluation_method": "offline_rule_based_v1"
+      },
+      "final_reflection": {
+        "confidence": 0.79,
+        "evaluation_score": 0.98,
+        "accept_threshold": 0.8,
+        "reflection_round": 1,
+        "policy_version": "reflection_policy_v1",
+        "source_type": "offline_deterministic_reflection",
+        "decision": "accept",
+        "reason": [
+          "evaluation score meets configured threshold"
+        ],
+        "correction_plan": []
+      },
+      "reflection_rounds": 1,
+      "final_status": "accepted"
+    },
+    {
+      "role": "writer_agent",
+      "task": "write the final offline summary from a document",
+      "selected_model": "qwen",
+      "router_selected_model": "claude-sonnet",
+      "routing_source_type": "offline_capability_routing",
+      "execution_type": "offline_deterministic_mock",
+      "context_item_count": 3,
+      "tool_results": [
+        {
+          "tool_id": "file_analyzer_tool",
+          "status": "success",
+          "result": {
+            "character_count": 47,
+            "word_count": 8,
+            "line_count": 1,
+            "summary": "write the final offline summary from a document"
+          },
+          "execution_time": 0.002,
+          "execution_time_type": "fixed_offline_simulation_seconds",
+          "failure_reason": null,
+          "real_tool_called": false,
+          "real_api_calls_performed": 0,
+          "reason": "matched task indicators: document"
+        }
+      ],
+      "real_api_calls_performed": 0,
+      "status": "success",
+      "output": "# Corrected Response\n\n## Summary\nOffline drafted response for: write the final offline summary from a document. It synthesizes available agent context.\n\n## Details\n- Scope and assumptions are stated.\n- Evidence and limitations are separated.\n- The conclusion follows a consistent structure.\n\n## Required Information\nThe response now states the required assumptions, inputs, expected outcome, and validation criteria explicitly.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution.",
+      "error": null,
+      "steps": [
+        {
+          "type": "tool_call",
+          "tool": "file_analyzer_tool",
+          "status": "success",
+          "execution_time": 0.002,
+          "failure_reason": null
+        },
+        {
+          "type": "agent_reasoning",
+          "status": "success",
+          "failure_reason": null
+        },
+        {
+          "type": "evaluation",
+          "task_type": "writing",
+          "score": 0.66,
+          "issues": [
+            "response is shorter than the writing heuristic",
+            "missing visible structure"
+          ],
+          "reflection_round": 0
+        },
+        {
+          "type": "reflection",
+          "task_type": "writing",
+          "decision": "correct",
+          "confidence": 0.77,
+          "reflection_round": 0
+        },
+        {
+          "type": "correction",
+          "actions": [
+            "format_error",
+            "missing_content",
+            "incomplete_answer"
+          ],
+          "status": "corrected",
+          "reflection_round": 1
+        },
+        {
+          "type": "evaluation",
+          "task_type": "writing",
+          "score": 0.9,
+          "issues": [],
+          "reflection_round": 1
+        },
+        {
+          "type": "reflection",
+          "task_type": "writing",
+          "decision": "accept",
+          "confidence": 0.75,
+          "reflection_round": 1
+        }
+      ],
+      "final_evaluation": {
+        "evaluation_score": 0.9,
+        "metrics": {
+          "completeness": 1.0,
+          "correctness": 0.75,
+          "format": 1.0
+        },
+        "issues": [],
+        "evaluation_method": "offline_rule_based_v1"
+      },
+      "final_reflection": {
+        "confidence": 0.75,
+        "evaluation_score": 0.9,
+        "accept_threshold": 0.8,
+        "reflection_round": 1,
+        "policy_version": "reflection_policy_v1",
+        "source_type": "offline_deterministic_reflection",
+        "decision": "accept",
+        "reason": [
+          "evaluation score meets configured threshold"
+        ],
+        "correction_plan": []
+      },
+      "reflection_rounds": 1,
+      "final_status": "accepted"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "agent": "research_agent",
+      "model": "gemini-flash",
+      "status": "success",
+      "error": null,
+      "steps": [
+        {
+          "type": "tool_call",
+          "tool": "search_mock_tool",
+          "status": "success",
+          "execution_time": 0.005,
+          "failure_reason": null
+        },
+        {
+          "type": "agent_reasoning",
+          "status": "success",
+          "failure_reason": null
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.528,
+          "issues": [
+            "reasoning chain is not sufficiently explicit",
+            "analysis appears incomplete"
+          ],
+          "reflection_round": 0
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "correct",
+          "confidence": 0.836,
+          "reflection_round": 0
+        },
+        {
+          "type": "correction",
+          "actions": [
+            "incomplete_answer"
+          ],
+          "status": "corrected",
+          "reflection_round": 1
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.98,
+          "issues": [],
+          "reflection_round": 1
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "accept",
+          "confidence": 0.79,
+          "reflection_round": 1
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "agent": "reasoning_agent",
+      "model": "claude-sonnet",
+      "status": "success",
+      "error": null,
+      "steps": [
+        {
+          "type": "tool_call",
+          "tool": "calculator_tool",
+          "status": "success",
+          "execution_time": 0.001,
+          "failure_reason": null
+        },
+        {
+          "type": "agent_reasoning",
+          "status": "success",
+          "failure_reason": null
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.541,
+          "issues": [
+            "reasoning chain is not sufficiently explicit",
+            "analysis appears incomplete"
+          ],
+          "reflection_round": 0
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "correct",
+          "confidence": 0.829,
+          "reflection_round": 0
+        },
+        {
+          "type": "correction",
+          "actions": [
+            "incomplete_answer"
+          ],
+          "status": "corrected",
+          "reflection_round": 1
+        },
+        {
+          "type": "evaluation",
+          "task_type": "reasoning",
+          "score": 0.98,
+          "issues": [],
+          "reflection_round": 1
+        },
+        {
+          "type": "reflection",
+          "task_type": "reasoning",
+          "decision": "accept",
+          "confidence": 0.79,
+          "reflection_round": 1
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "agent": "writer_agent",
+      "model": "qwen",
+      "status": "success",
+      "error": null,
+      "steps": [
+        {
+          "type": "tool_call",
+          "tool": "file_analyzer_tool",
+          "status": "success",
+          "execution_time": 0.002,
+          "failure_reason": null
+        },
+        {
+          "type": "agent_reasoning",
+          "status": "success",
+          "failure_reason": null
+        },
+        {
+          "type": "evaluation",
+          "task_type": "writing",
+          "score": 0.66,
+          "issues": [
+            "response is shorter than the writing heuristic",
+            "missing visible structure"
+          ],
+          "reflection_round": 0
+        },
+        {
+          "type": "reflection",
+          "task_type": "writing",
+          "decision": "correct",
+          "confidence": 0.77,
+          "reflection_round": 0
+        },
+        {
+          "type": "correction",
+          "actions": [
+            "format_error",
+            "missing_content",
+            "incomplete_answer"
+          ],
+          "status": "corrected",
+          "reflection_round": 1
+        },
+        {
+          "type": "evaluation",
+          "task_type": "writing",
+          "score": 0.9,
+          "issues": [],
+          "reflection_round": 1
+        },
+        {
+          "type": "reflection",
+          "task_type": "writing",
+          "decision": "accept",
+          "confidence": 0.75,
+          "reflection_round": 1
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "aggregation_method": "ordered_sections",
+    "sections": [
+      {
+        "role": "research_agent",
+        "model": "gemini-flash",
+        "content": "Offline research summary for: collect configured offline information. Evidence collection was simulated.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution."
+      },
+      {
+        "role": "reasoning_agent",
+        "model": "claude-sonnet",
+        "content": "Offline reasoning analysis for: calculate and analyze the offline information. Assumptions were evaluated deterministically.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution."
+      },
+      {
+        "role": "writer_agent",
+        "model": "qwen",
+        "content": "# Corrected Response\n\n## Summary\nOffline drafted response for: write the final offline summary from a document. It synthesizes available agent context.\n\n## Details\n- Scope and assumptions are stated.\n- Evidence and limitations are separated.\n- The conclusion follows a consistent structure.\n\n## Required Information\nThe response now states the required assumptions, inputs, expected outcome, and validation criteria explicitly.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution."
+      }
+    ],
+    "final_response": "## research_agent\nOffline research summary for: collect configured offline information. Evidence collection was simulated.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution.\n\n## reasoning_agent\nOffline reasoning analysis for: calculate and analyze the offline information. Assumptions were evaluated deterministically.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution.\n\n## writer_agent\n# Corrected Response\n\n## Summary\nOffline drafted response for: write the final offline summary from a document. It synthesizes available agent context.\n\n## Details\n- Scope and assumptions are stated.\n- Evidence and limitations are separated.\n- The conclusion follows a consistent structure.\n\n## Required Information\nThe response now states the required assumptions, inputs, expected outcome, and validation criteria explicitly.\n\n## Expanded Answer\nFirst, the task requirements and assumptions are identified because they define the expected result. Second, the available evidence is checked for completeness and consistency. However, uncertain claims remain explicitly bounded. Therefore, the final answer summarizes the result, relevant limitations, validation steps, and a clear conclusion without claiming external execution.",
+    "successful_agent_count": 3,
+    "failed_agents": []
+  },
+  "policy_version": "agent_runtime_policy_v1",
+  "real_api_calls_performed": 0
+}

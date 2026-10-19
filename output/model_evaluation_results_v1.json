@@ -1,0 +1,71 @@
+{
+  "source_type": "synthetic_offline_evaluation_fixture",
+  "real_api_calls_performed": 0,
+  "records": [
+    {
+      "evaluation_id": "EVAL-001",
+      "model": "deepseek-reasoner",
+      "task_type": "coding",
+      "prompt": "Write a Python add function with a test.",
+      "response": "```python\ndef add(a, b):\n    return a + b\n\nassert add(2, 3) == 5\n```\nThe assertion is a small test.",
+      "evaluation_score": 0.864,
+      "metrics": {
+        "completeness": 0.659,
+        "correctness": 1.0,
+        "format": 1.0
+      },
+      "issues": [],
+      "evaluation_method": "offline_rule_based_v1"
+    },
+    {
+      "evaluation_id": "EVAL-002",
+      "model": "qwen",
+      "task_type": "writing",
+      "prompt": "Write a structured introduction to routing.",
+      "response": "Routing sends work to a suitable destination.",
+      "evaluation_score": 0.596,
+      "metrics": {
+        "completeness": 0.464,
+        "correctness": 0.75,
+        "format": 0.55
+      },
+      "issues": [
+        "response is shorter than the writing heuristic",
+        "missing visible structure"
+      ],
+      "evaluation_method": "offline_rule_based_v1"
+    },
+    {
+      "evaluation_id": "EVAL-003",
+      "model": "claude-sonnet",
+      "task_type": "reasoning",
+      "prompt": "Compare cost and quality trade-offs.",
+      "response": "First, quality may require a stronger model because difficult tasks need more capability. Second, cost favors smaller models. However, routing by task complexity balances both objectives; therefore the preferred choice depends on requirements.",
+      "evaluation_score": 0.934,
+      "metrics": {
+        "completeness": 0.886,
+        "correctness": 1.0,
+        "format": 0.9
+      },
+      "issues": [
+        "analysis appears incomplete"
+      ],
+      "evaluation_method": "offline_rule_based_v1"
+    },
+    {
+      "evaluation_id": "EVAL-004",
+      "model": "gemini-flash",
+      "task_type": "qa",
+      "prompt": "What is model routing?",
+      "response": "Model routing is the process of selecting an appropriate model for a request based on its requirements and configured policy.",
+      "evaluation_score": 0.75,
+      "metrics": {
+        "completeness": 0.675,
+        "correctness": 0.75,
+        "format": 0.9
+      },
+      "issues": [],
+      "evaluation_method": "offline_rule_based_v1"
+    }
+  ]
+}

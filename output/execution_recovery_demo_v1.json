@@ -1,0 +1,37 @@
+{
+  "demonstration_type": "offline demonstration only",
+  "real_api_calls_performed": 0,
+  "trace": {
+    "request_id": "DEMO-001",
+    "attempts": [
+      {
+        "attempt_number": 1,
+        "channel": "19",
+        "result": "failed",
+        "error": "timeout",
+        "is_mock": true,
+        "network_called": false
+      },
+      {
+        "attempt_number": 2,
+        "channel": "48",
+        "result": "success",
+        "error": null,
+        "is_mock": true,
+        "network_called": false
+      }
+    ],
+    "final_channel": "48",
+    "final_status": "success",
+    "fallback_executed": true,
+    "fallback_trace": [
+      "19",
+      "48"
+    ],
+    "stopped_reason": "success",
+    "retry_policy_version": "retry-v1.0.0",
+    "is_mock": true,
+    "network_called": false,
+    "validation_scope": "offline demonstration only"
+  }
+}

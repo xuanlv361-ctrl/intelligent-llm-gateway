@@ -1,0 +1,174 @@
+{
+  "health_version": "v1.0.0",
+  "metrics_version": "simulation-v1.0.0",
+  "metrics_updated_at": "2026-07-24T12:00:00+08:00",
+  "estimation_type": "offline health estimation based on configured metrics",
+  "channels": [
+    {
+      "channel_id": "SIM-HEALTHY-001",
+      "health_score": 0.926,
+      "confidence": 1.0,
+      "status": "healthy",
+      "reason": [
+        "high configured reliability",
+        "low normalized latency",
+        "configured sample threshold reached"
+      ],
+      "components": {
+        "reliability_score": 0.99,
+        "latency_score": 0.833333,
+        "cost_score": 0.9
+      },
+      "sample_count": 5000,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "healthy",
+      "status_matches_expected": true
+    },
+    {
+      "channel_id": "SIM-HIGH-LATENCY-001",
+      "health_score": 0.702,
+      "confidence": 1.0,
+      "status": "warning",
+      "reason": [
+        "high configured reliability",
+        "high normalized latency",
+        "configured sample threshold reached"
+      ],
+      "components": {
+        "reliability_score": 0.98,
+        "latency_score": 0.166667,
+        "cost_score": 0.8
+      },
+      "sample_count": 5000,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "warning",
+      "status_matches_expected": true
+    },
+    {
+      "channel_id": "SIM-LOW-RELIABILITY-001",
+      "health_score": 0.8,
+      "confidence": 1.0,
+      "status": "warning",
+      "reason": [
+        "configured sample threshold reached"
+      ],
+      "components": {
+        "reliability_score": 0.9,
+        "latency_score": 0.666667,
+        "cost_score": 0.7
+      },
+      "sample_count": 5000,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "warning",
+      "status_matches_expected": true
+    },
+    {
+      "channel_id": "SIM-EXPENSIVE-001",
+      "health_score": 0.742,
+      "confidence": 1.0,
+      "status": "warning",
+      "reason": [
+        "high configured reliability",
+        "low normalized latency",
+        "configured sample threshold reached"
+      ],
+      "components": {
+        "reliability_score": 0.98,
+        "latency_score": 0.766667,
+        "cost_score": 0.1
+      },
+      "sample_count": 5000,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "warning",
+      "status_matches_expected": true
+    },
+    {
+      "channel_id": "SIM-SMALL-001",
+      "health_score": 0.8301,
+      "confidence": 0.001,
+      "status": "warning",
+      "reason": [
+        "very small configured sample; reliability remains uncertain",
+        "low normalized latency"
+      ],
+      "components": {
+        "reliability_score": 1.0,
+        "latency_score": 0.833333,
+        "cost_score": 0.9
+      },
+      "sample_count": 5,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "warning",
+      "status_matches_expected": true
+    },
+    {
+      "channel_id": "SIM-BALANCED-001",
+      "health_score": 0.82,
+      "confidence": 1.0,
+      "status": "warning",
+      "reason": [
+        "high configured reliability",
+        "configured sample threshold reached"
+      ],
+      "components": {
+        "reliability_score": 0.95,
+        "latency_score": 0.666667,
+        "cost_score": 0.7
+      },
+      "sample_count": 5000,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "warning",
+      "status_matches_expected": true
+    },
+    {
+      "channel_id": "SIM-DEGRADED-001",
+      "health_score": 0.44,
+      "confidence": 1.0,
+      "status": "degraded",
+      "reason": [
+        "low configured reliability",
+        "high normalized latency",
+        "configured sample threshold reached"
+      ],
+      "components": {
+        "reliability_score": 0.65,
+        "latency_score": 0.133333,
+        "cost_score": 0.2
+      },
+      "sample_count": 5000,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "degraded",
+      "status_matches_expected": true
+    },
+    {
+      "channel_id": "SIM-HEALTHY-002",
+      "health_score": 0.888,
+      "confidence": 1.0,
+      "status": "healthy",
+      "reason": [
+        "high configured reliability",
+        "low normalized latency",
+        "configured sample threshold reached"
+      ],
+      "components": {
+        "reliability_score": 0.995,
+        "latency_score": 0.733333,
+        "cost_score": 0.85
+      },
+      "sample_count": 5000,
+      "metrics_version": "simulation-v1.0.0",
+      "expected_status": "healthy",
+      "status_matches_expected": true
+    }
+  ],
+  "limitations": [
+    "All channel conditions are deterministic engineering assumptions.",
+    "No real API calls or production measurements are used.",
+    "Expected statuses validate configured mechanics, not channel performance."
+  ],
+  "source_type": "offline_simulation",
+  "validation_type": "offline simulation based health validation",
+  "simulation_version": "health-simulation-v1.0.0",
+  "confidence_sample_threshold": 5000,
+  "all_statuses_match_expected": true
+}

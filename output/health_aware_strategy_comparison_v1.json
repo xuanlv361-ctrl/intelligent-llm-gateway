@@ -1,0 +1,23 @@
+{
+  "evaluation_type": "offline demonstration only",
+  "is_mock": true,
+  "real_api_calls_performed": 0,
+  "summary": [
+    {
+      "strategy": "confidence_aware_v2",
+      "request_count": 5000,
+      "success_rate": 0.8464,
+      "average_latency_ms": 1095.748767224,
+      "average_cost": 0.0034806986700000003,
+      "average_regret": 0.503889002960064
+    },
+    {
+      "strategy": "health_aware_v1",
+      "request_count": 5000,
+      "success_rate": 0.8338,
+      "average_latency_ms": 1192.8702565301999,
+      "average_cost": 0.00306909691,
+      "average_regret": 0.5154209624380126
+    }
+  ]
+}
