@@ -1,0 +1,80 @@
+{
+  "registry_version": "formal-agent-skill-registry-v1",
+  "minimum_skill_count": 8,
+  "maximum_skill_count": 32,
+  "invocation_schema": "schemas/formal_agent_skill_invocation_v1.json",
+  "result_schema": "schemas/formal_agent_skill_result_v1.json",
+  "security": {
+    "grant_ttl_seconds": 20,
+    "session_ttl_seconds": 120,
+    "allowed_origins": ["local-agent://runtime", "http://127.0.0.1:5174", "http://localhost:5174"],
+    "allowed_operation": "read",
+    "maximum_evidence_ids": 50
+  },
+  "skills": [
+    {
+      "skill_id": "inspect-channel-health", "version": "1.0.0",
+      "artifact": "skills/inspect-channel-health/SKILL.md", "artifact_sha256": "5d04668989b48b1e0e2ebede230ee3ae556e08637ac38ee5f809cf3f990a2b53",
+      "binding": "channel_health.read", "read_only": true,
+      "triggers": ["channel health", "health evidence", "latency", "failure rate"],
+      "input_schema": {"type":"object","additionalProperties":false,"properties":{"environment_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,79}$"},"limit":{"type":"integer","minimum":1,"maximum":100}}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    },
+    {
+      "skill_id": "inspect-statistical-confidence", "version": "1.0.0",
+      "artifact": "skills/inspect-statistical-confidence/SKILL.md", "artifact_sha256": "15419a006cbab9c743dbafd824df2ad786a1cb5873d6310847061507a4e93794",
+      "binding": "statistical_confidence.read", "read_only": true,
+      "triggers": ["statistical confidence", "confidence interval", "effective sample size", "uncertainty"],
+      "input_schema": {"type":"object","additionalProperties":false,"properties":{"limit":{"type":"integer","minimum":1,"maximum":100}}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    },
+    {
+      "skill_id": "explain-scheduler-decision", "version": "1.0.0",
+      "artifact": "skills/explain-scheduler-decision/SKILL.md", "artifact_sha256": "8bf75c1f0f21a8f97b637cde2ecc0bcfc9bd579ec2caa9db5af54c284621d483",
+      "binding": "scheduler_attribution.read", "read_only": true,
+      "triggers": ["explain decision", "scheduler decision", "decision attribution", "decision id"],
+      "input_schema": {"type":"object","additionalProperties":false,"required":["decision_id"],"properties":{"decision_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    },
+    {
+      "skill_id": "inspect-sticky-routing", "version": "1.0.0",
+      "artifact": "skills/inspect-sticky-routing/SKILL.md", "artifact_sha256": "1d05939aaa23d1cdd3371d1c27d81c0567f5bc89d275d6f419be2d0306a17b75",
+      "binding": "sticky_routing.read", "read_only": true,
+      "triggers": ["sticky routing", "sticky binding", "affinity status"],
+      "input_schema": {"type":"object","additionalProperties":false,"properties":{}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    },
+    {
+      "skill_id": "inspect-circuit-breaker", "version": "1.0.0",
+      "artifact": "skills/inspect-circuit-breaker/SKILL.md", "artifact_sha256": "c13ed2c71fb32289ea5a12482ae93315b361e677fa08ba3b7ad911b536b17a1d",
+      "binding": "circuit_breaker.read", "read_only": true,
+      "triggers": ["circuit breaker", "circuit open", "half open", "cooldown"],
+      "input_schema": {"type":"object","additionalProperties":false,"properties":{"circuit_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,239}$"},"limit":{"type":"integer","minimum":1,"maximum":100}}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    },
+    {
+      "skill_id": "inspect-exploration-governance", "version": "1.0.0",
+      "artifact": "skills/inspect-exploration-governance/SKILL.md", "artifact_sha256": "92fb006a3d71d30d2d0181d744fa145ce355045be3097bd5d5c2a3fa5024db19",
+      "binding": "exploration_governance.read", "read_only": true,
+      "triggers": ["exploration governance", "kill switch", "exploration budget", "shadow exploration"],
+      "input_schema": {"type":"object","additionalProperties":false,"properties":{}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    },
+    {
+      "skill_id": "inspect-capability-evidence", "version": "1.0.0",
+      "artifact": "skills/inspect-capability-evidence/SKILL.md", "artifact_sha256": "64772f244db7c8a500e85e281f09990c25c844694a1efb1593a9a81f5a36a9a6",
+      "binding": "capability_evidence.read", "read_only": true,
+      "triggers": ["capability evidence", "capability support", "unconfirmed capability", "model capability"],
+      "input_schema": {"type":"object","additionalProperties":false,"properties":{"subject_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},"limit":{"type":"integer","minimum":1,"maximum":100}}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    },
+    {
+      "skill_id": "review-cost-configuration", "version": "1.0.0",
+      "artifact": "skills/review-cost-configuration/SKILL.md", "artifact_sha256": "319992a91e4e721683d5a65243053aa5dc35fd630bebe52e251ea4d267460eab",
+      "binding": "cost_configuration.read", "read_only": true,
+      "triggers": ["cost configuration", "budget configuration", "configuration review", "cost guard"],
+      "input_schema": {"type":"object","additionalProperties":false,"properties":{"environment_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,79}$"}}},
+      "output_schema": {"type":"object","required":["network_called"],"properties":{"network_called":{"const":false}}}
+    }
+  ]
+}

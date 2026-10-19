@@ -1,0 +1,50 @@
+{
+  "schema_version": "full-scheduler-benchmark-v1",
+  "definition_status": "authoritative_repository_baseline_v1",
+  "execution_boundary": {
+    "offline_only": true,
+    "mock_only": true,
+    "network_allowed": false,
+    "real_execution_allowed": false
+  },
+  "dataset": {
+    "dataset_id": "full_scheduler_fixed_workload_v1",
+    "request_count": 12,
+    "seeds": [4101, 4102, 4103],
+    "repetitions_per_seed": 2,
+    "strategies": ["confidence_aware_v2", "fastest_first"],
+    "mode": "mock_execute",
+    "requested_model": "deepseek-v4-flash",
+    "environment_id": "offline_benchmark",
+    "request_profile_id": "BENCH-V1"
+  },
+  "statistics": {
+    "confidence_level": 0.95,
+    "primary_metric": "quality",
+    "metrics": ["quality", "reliability", "latency_ms", "cost_cny"],
+    "paired_difference": "strategy_minus_confidence_aware_v2",
+    "multiple_testing": "benjamini_hochberg",
+    "effect_size": "paired_cohens_dz",
+    "alpha": 0.05
+  },
+  "sensitivity": {
+    "status": "exploratory_separate",
+    "request_counts": [6, 12]
+  },
+  "component_requirements": [
+    "dynamic_metrics",
+    "capability_evidence",
+    "circuit_preselection",
+    "sticky_routing",
+    "strategy_ranking",
+    "exploration_shadow",
+    "decision_logging",
+    "fallback",
+    "sticky_interruption",
+    "circuit_admission",
+    "circuit_outcome",
+    "attribution",
+    "execution_guard",
+    "mock_candidate_isolation"
+  ]
+}

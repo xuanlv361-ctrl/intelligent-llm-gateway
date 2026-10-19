@@ -1,0 +1,33 @@
+{
+  "schema_version": "authoritative_phase_baseline_v1",
+  "received_date": "2026-08-01",
+  "source_bytes": 11731,
+  "source_sha256": "BD6176AD205EDDCE0165859DF666424521CBD43FED4DBA8415735F5B18EE1968",
+  "supersedes_conflicting_status_claims": true,
+  "workstreams": [
+    {"id": "phase_0", "name": "Full Audit", "starting_status": "implemented_and_verified"},
+    {"id": "mode_2", "name": "Local Implementation", "starting_status": "implemented_pending_live_validation"},
+    {"id": "phase_2", "name": "Dynamic Metrics", "starting_status": "implemented_pending_live_validation"},
+    {"id": "phase_3", "name": "Statistical Confidence", "starting_status": "implemented_pending_live_validation"},
+    {"id": "phase_4", "name": "Sticky Routing", "starting_status": "not_implemented"},
+    {"id": "phase_5", "name": "Circuit Breaker Recovery", "starting_status": "not_implemented"},
+    {"id": "fgh", "name": "F/G/H Governance", "starting_status": "not_implemented", "requirement_ids": ["ADV-017", "ADV-018", "ADV-019"]},
+    {"id": "multimodal", "name": "Multimodal Capability Validation", "starting_status": "not_implemented"},
+    {"id": "exploration", "name": "Controlled Exploration", "starting_status": "not_implemented"},
+    {"id": "monitoring", "name": "Monitoring Completion", "starting_status": "not_implemented"},
+    {"id": "formal_agent_skill", "name": "Formal Agent Skill", "starting_status": "not_implemented"},
+    {"id": "benchmark", "name": "Benchmark", "starting_status": "not_implemented"},
+    {"id": "a0_a14", "name": "A0-A14 Ablation", "starting_status": "not_implemented"},
+    {"id": "five_role_acceptance", "name": "Five-role Human Acceptance", "starting_status": "pending"}
+  ],
+  "allowed_final_statuses": [
+    "implemented_and_verified",
+    "implemented_and_live_verified",
+    "implemented_pending_live_validation",
+    "implemented_pending_human_acceptance",
+    "partially_implemented",
+    "not_implemented",
+    "blocked",
+    "invalid_run"
+  ]
+}

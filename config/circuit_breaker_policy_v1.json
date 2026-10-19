@@ -1,0 +1,10 @@
+{
+  "policy_version": "circuit-breaker-policy-v1",
+  "enabled": true,
+  "failure_window_seconds": 60,
+  "failure_threshold": 5,
+  "cooldown_seconds": 30,
+  "half_open_probe_quota": 2,
+  "half_open_success_threshold": 2,
+  "probe_lease_seconds": 15
+}

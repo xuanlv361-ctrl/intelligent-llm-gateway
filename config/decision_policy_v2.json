@@ -1,0 +1,64 @@
+{
+  "policy_version": "decision-policy-v2.0.0",
+  "description": "Versioned deterministic channel decision policy with first-class latency-first and cost-first strategies.",
+  "score_direction": "lower_is_better",
+  "score_precision": 6,
+  "filter_order": [
+    "model_and_capability",
+    "request_type_and_streaming",
+    "availability",
+    "required_metrics",
+    "currency",
+    "freshness"
+  ],
+  "filters": {
+    "required_availability_status": "available",
+    "missing_metric_action": "exclude",
+    "stale_metric_action": "exclude",
+    "max_metric_age_hours": 168,
+    "minimum_sample_size": 5,
+    "small_sample_action": "penalize",
+    "low_confidence_action": "penalize",
+    "unknown_stream_action": "exclude_when_stream_required",
+    "currency_mismatch_action": "exclude"
+  },
+  "normalization": {
+    "latency_reference_ms": 3000,
+    "cost_reference_cny": 0.01,
+    "latency_formula": "min(latency_ms / latency_reference_ms, 1.0)",
+    "cost_formula": "min(estimated_cost_cny / cost_reference_cny, 1.0)",
+    "failure_risk_formula": "1.0 - success_rate"
+  },
+  "penalties": {
+    "small_sample_penalty": 0.1,
+    "low_confidence_penalty": 0.15,
+    "medium_confidence_penalty": 0.0,
+    "high_confidence_penalty": 0.0
+  },
+  "strategies": {
+    "latency_first": {
+      "strategy_version": "latency-first-v2.0.0",
+      "purpose": "Prefer lower latency while retaining explicit cost and failure-risk contributions.",
+      "weights": {"latency": 0.65, "cost": 0.2, "failure_risk": 0.15}
+    },
+    "cost_first": {
+      "strategy_version": "cost-first-v2.0.0",
+      "purpose": "Prefer lower estimated cost while retaining explicit latency and failure-risk contributions.",
+      "weights": {"latency": 0.2, "cost": 0.65, "failure_risk": 0.15}
+    }
+  },
+  "tie_breakers": ["priority_ascending", "channel_id_ascending"],
+  "compatibility": {
+    "legacy_strategies_retained": [
+      "fastest_first", "cheapest_first", "reliability_first", "weighted_v1",
+      "confidence_aware_v2", "confidence_aware_v3", "random_baseline", "round_robin"
+    ],
+    "latency_first_is_alias_of_fastest_first": false,
+    "cost_first_is_alias_of_cheapest_first": false
+  },
+  "mock_policy": {
+    "allow_mock_for_offline_testing": true,
+    "allow_mock_as_real_evidence": false,
+    "require_is_mock_field": true
+  }
+}

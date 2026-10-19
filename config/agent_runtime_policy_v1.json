@@ -1,0 +1,15 @@
+{
+  "policy_version": "agent_runtime_policy_v1",
+  "max_agents": 5,
+  "execution_order": [
+    "research_agent",
+    "coding_agent",
+    "reasoning_agent",
+    "writer_agent",
+    "review_agent"
+  ],
+  "failure_policy": "continue_and_report",
+  "aggregation_method": "ordered_sections",
+  "execution_mode": "offline_deterministic_mock",
+  "real_api_calls_allowed": false
+}

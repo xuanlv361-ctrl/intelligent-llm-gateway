@@ -1,0 +1,32 @@
+{
+  "policy_version": "capability_evidence_policy_v1",
+  "registry_version": "1",
+  "maximum_evidence_age_seconds": 2592000,
+  "allowed_evidence_types": ["measured", "provider_documentation", "contract_test", "legacy_assumption"],
+  "allowed_sources": ["live", "mock", "local"],
+  "require_live_evidence_for_live_decisions": true,
+  "legacy_assumptions_unverified": true,
+  "requirements": [
+    "text", "stream", "image_in", "image_out", "audio", "video_in", "tool", "context"
+  ],
+  "states": ["supported", "unsupported", "unknown", "conflicting"],
+  "fixed_scenarios": {
+    "text_generation": ["text"],
+    "streaming_text": ["text", "stream"],
+    "image_understanding": ["text", "image_in"],
+    "image_generation": ["text", "image_out"],
+    "audio_understanding": ["text", "audio"],
+    "video_understanding": ["text", "video_in"],
+    "tool_calling": ["text", "tool"],
+    "long_context": ["text", "context"]
+  },
+  "media_bounds": {
+    "allowed_image_input_mime_types": ["image/jpeg", "image/png", "image/webp"],
+    "allowed_image_output_mime_types": ["image/png", "image/webp"],
+    "allowed_audio_mime_types": ["audio/mpeg", "audio/wav", "audio/ogg"],
+    "allowed_video_input_mime_types": ["video/mp4", "video/webm", "video/quicktime"],
+    "maximum_input_bytes": 20971520,
+    "maximum_output_bytes": 20971520,
+    "maximum_context_tokens": 200000
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "health_version": "v1.0.0",
+  "estimation_type": "offline health estimation based on configured metrics",
+  "weights": {
+    "reliability": 0.4,
+    "latency": 0.3,
+    "cost": 0.2,
+    "confidence": 0.1
+  },
+  "confidence": {
+    "sample_threshold": 100
+  },
+  "normalization": {
+    "latency_reference_ms": 3000,
+    "cost_reference": 0.01,
+    "latency_score_formula": "max(0, 1 - avg_latency_ms / latency_reference_ms)",
+    "cost_score_formula": "max(0, 1 - avg_cost / cost_reference)"
+  }
+}

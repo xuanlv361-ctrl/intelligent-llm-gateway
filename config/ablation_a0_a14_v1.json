@@ -1,0 +1,45 @@
+{
+  "schema_version": "full-scheduler-ablation-v2",
+  "definition_version": "A0-A14-authoritative-repository-v2",
+  "definition_status": "authoritative_repository_baseline_v2",
+  "benchmark_config": "config/full_scheduler_benchmark_v1.json",
+  "execution_boundary": {
+    "offline_only": true,
+    "mock_only": true,
+    "network_allowed": false,
+    "real_execution_allowed": false
+  },
+  "baseline": {
+    "id": "A0",
+    "meaning": "all production Scheduler.route component hooks enabled",
+    "parity_requirement": "byte-stable observation digest equals full benchmark confidence_aware_v2 baseline"
+  },
+  "variants": [
+    {"id":"A0","hook":null,"label":"full_scheduler_baseline","safety_bypass":false},
+    {"id":"A1","hook":"dynamic_metrics","label":"without_dynamic_metrics","safety_bypass":false},
+    {"id":"A2","hook":"capability_evidence","label":"without_capability_evidence","safety_bypass":false},
+    {"id":"A3","hook":"circuit_preselection","label":"without_circuit_preselection","safety_bypass":false},
+    {"id":"A4","hook":"sticky_routing","label":"without_sticky_routing","safety_bypass":false},
+    {"id":"A5","hook":"strategy_ranking","label":"without_production_strategy_ranking","safety_bypass":false},
+    {"id":"A6","hook":"exploration_shadow","label":"without_exploration_shadow","safety_bypass":false},
+    {"id":"A7","hook":"decision_logging","label":"without_decision_logging","safety_bypass":false},
+    {"id":"A8","hook":"fallback","label":"without_fallback","safety_bypass":false},
+    {"id":"A9","hook":"sticky_interruption","label":"without_sticky_interruption","safety_bypass":false},
+    {"id":"A10","hook":"circuit_admission","label":"without_circuit_admission","safety_bypass":false},
+    {"id":"A11","hook":"circuit_outcome","label":"without_circuit_outcome_recording","safety_bypass":false},
+    {"id":"A12","hook":"attribution","label":"without_scheduler_attribution","safety_bypass":false},
+    {"id":"A13","hook":"execution_guard","label":"execution_guard_bypass_probe","safety_bypass":true,"restriction":"offline_mock_only_counterfactual"},
+    {"id":"A14","hook":"mock_candidate_isolation","label":"mock_isolation_bypass_probe","safety_bypass":true,"restriction":"offline_mock_only_counterfactual"}
+  ],
+  "statistics": {
+    "metrics": ["quality", "reliability", "latency_ms", "cost_cny"],
+    "confidence_level": 0.95,
+    "multiple_testing": "benjamini_hochberg",
+    "effect_size": "paired_cohens_dz",
+    "alpha": 0.05
+  },
+  "supersedes": {
+    "definition": "scheduler-ablation-v1 synthetic loop",
+    "preservation": "retain prior output directory unchanged as superseded prototype"
+  }
+}

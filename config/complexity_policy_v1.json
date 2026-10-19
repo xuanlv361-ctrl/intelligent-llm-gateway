@@ -1,0 +1,25 @@
+{
+  "policy_version": "complexity_policy_v1",
+  "description": "Offline deterministic engineering thresholds; not a measured model benchmark.",
+  "level_thresholds": {
+    "low": {
+      "minimum": 0.0,
+      "maximum_exclusive": 0.2
+    },
+    "medium": {
+      "minimum": 0.2,
+      "maximum_exclusive": 0.5
+    },
+    "high": {
+      "minimum": 0.5,
+      "maximum_inclusive": 1.0
+    }
+  },
+  "aggregate_weights": {
+    "reasoning": 0.25,
+    "context": 0.2,
+    "coding": 0.2,
+    "output": 0.2,
+    "tool_need": 0.15
+  }
+}

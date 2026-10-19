@@ -1,0 +1,84 @@
+{
+  "schema_version": "enterprise_ingress_policy_v1",
+  "policy_version": "enterprise-ingress-v1",
+  "default_profile": "development",
+  "external_configuration_status": {
+    "enterprise_idp": "pending_external_configuration",
+    "dns": "pending_external_configuration",
+    "production_certificate": "pending_external_configuration",
+    "firewall": "pending_external_configuration",
+    "external_secret_manager": "pending_external_configuration"
+  },
+  "profiles": {
+    "development": {
+      "bind_host": "127.0.0.1",
+      "tls_mode": "disabled",
+      "allowed_hosts": [
+        "127.0.0.1:5174",
+        "localhost:5174",
+        "127.0.0.1:8000",
+        "localhost:8000"
+      ],
+      "allowed_origins": [
+        "http://127.0.0.1:5174",
+        "http://localhost:5174",
+        "http://127.0.0.1:5173",
+        "http://localhost:5173"
+      ],
+      "trusted_proxy_cidrs": [],
+      "reject_untrusted_forwarding": true,
+      "limits": {
+        "maximum_request_body_bytes": 8388608,
+        "maximum_header_count": 64,
+        "maximum_header_bytes": 32768,
+        "request_timeout_seconds": 60,
+        "global_concurrency": 64,
+        "scoped_concurrency": 16,
+        "global_requests_per_window": 5000,
+        "scoped_requests_per_window": 2000,
+        "sensitive_requests_per_window": 300,
+        "rate_window_seconds": 60
+      }
+    },
+    "lan": {
+      "bind_host": "0.0.0.0",
+      "tls_mode": "trusted_proxy",
+      "allowed_hosts": [],
+      "allowed_origins": [],
+      "trusted_proxy_cidrs": [],
+      "reject_untrusted_forwarding": true,
+      "limits": {
+        "maximum_request_body_bytes": 4194304,
+        "maximum_header_count": 64,
+        "maximum_header_bytes": 32768,
+        "request_timeout_seconds": 45,
+        "global_concurrency": 128,
+        "scoped_concurrency": 16,
+        "global_requests_per_window": 3000,
+        "scoped_requests_per_window": 300,
+        "sensitive_requests_per_window": 20,
+        "rate_window_seconds": 60
+      }
+    },
+    "production": {
+      "bind_host": "0.0.0.0",
+      "tls_mode": "trusted_proxy",
+      "allowed_hosts": [],
+      "allowed_origins": [],
+      "trusted_proxy_cidrs": [],
+      "reject_untrusted_forwarding": true,
+      "limits": {
+        "maximum_request_body_bytes": 4194304,
+        "maximum_header_count": 64,
+        "maximum_header_bytes": 32768,
+        "request_timeout_seconds": 30,
+        "global_concurrency": 256,
+        "scoped_concurrency": 16,
+        "global_requests_per_window": 6000,
+        "scoped_requests_per_window": 300,
+        "sensitive_requests_per_window": 15,
+        "rate_window_seconds": 60
+      }
+    }
+  }
+}

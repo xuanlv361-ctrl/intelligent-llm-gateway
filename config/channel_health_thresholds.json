@@ -1,0 +1,5 @@
+{
+  "threshold_version": "v1.0.0",
+  "healthy": 0.85,
+  "warning": 0.60
+}

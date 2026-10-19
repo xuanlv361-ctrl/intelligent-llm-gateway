@@ -1,0 +1,26 @@
+{
+  "config_version": "enterprise_identity_v1",
+  "deployment_mode": "development",
+  "development_identity_enabled": true,
+  "default_development_tenant_id": "tenant_local_dev_v1",
+  "default_development_workspace_id": "workspace_local_dev_v1",
+  "development_roles": [
+    "security_engineering_owner",
+    "domestic_uat_operator",
+    "operations_admin"
+  ],
+  "oidc": {
+    "issuer": null,
+    "audience": null,
+    "client_id": null,
+    "jwks_uri": null,
+    "allowed_algorithms": ["RS256", "ES256"],
+    "clock_skew_seconds": 60,
+    "required_claims": ["sub", "iss", "aud", "exp", "iat"],
+    "role_claim": "roles",
+    "tenant_claim": "tenant_id",
+    "workspace_claim": "workspace_id",
+    "status": "pending_external_configuration"
+  },
+  "external_secret_manager_status": "pending_external_configuration"
+}

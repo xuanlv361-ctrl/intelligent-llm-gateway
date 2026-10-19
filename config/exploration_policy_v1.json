@@ -1,0 +1,33 @@
+{
+  "policy_version": "exploration_policy_v1",
+  "feature_flag_env": "SCHEDULER_CONTROLLED_EXPLORATION_ENABLED",
+  "enabled_value": "1",
+  "mode": "shadow_only",
+  "allowed_environments": [],
+  "allowed_channels": [],
+  "allowed_models": [],
+  "selector": {
+    "algorithm": "deterministic_epsilon_ucb_v1",
+    "epsilon": 0.05,
+    "ucb_exploration_weight": 1.0,
+    "seed": "exploration-policy-v1"
+  },
+  "approval": {
+    "required": true,
+    "maximum_ttl_seconds": 3600
+  },
+  "budgets": {
+    "per_run": {"requests": 0, "cost": 0.0},
+    "per_environment": {"requests": 0, "cost": 0.0},
+    "per_channel": {"requests": 0, "cost": 0.0},
+    "per_model": {"requests": 0, "cost": 0.0}
+  },
+  "stops": {
+    "maximum_failure_rate": 0.0,
+    "minimum_samples_for_failure_stop": 1,
+    "maximum_latency_ms": 0.0,
+    "allowed_health_states": ["healthy"]
+  },
+  "allowed_circuit_states": ["CLOSED"],
+  "real_execution_allowed": false
+}

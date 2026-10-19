@@ -1,0 +1,65 @@
+{
+  "registry_version": "domestic_uat_log_schema_registry_v1",
+  "fingerprint_algorithm": "uat_billing_shape_v1",
+  "adapters": [
+    {
+      "environment_id": "china_uat",
+      "schema_adapter_id": "china_uat_billing_empty_envelope",
+      "adapter_version": "1.0.0",
+      "adapter_mode": "empty_envelope_only",
+      "safe_source_path": "https://uat.weimeta.cn/api/log/self",
+      "accepted_schema_fingerprints": [
+        "6dfe81cfce092b5342527ad94ee2e3017ebd1aef64baa54178720d4b84500a2b"
+      ],
+      "accepted_envelope_shape": {
+        "root": "object",
+        "data": "object",
+        "records_path": "data.items",
+        "records_type": "empty_array",
+        "pagination_fields": {
+          "page": "integer",
+          "page_size": "integer",
+          "total": "integer"
+        },
+        "success": "boolean",
+        "message": "string"
+      },
+      "required_fields": [
+        "success",
+        "message",
+        "data.items",
+        "data.page",
+        "data.page_size",
+        "data.total"
+      ],
+      "optional_fields": [],
+      "field_mappings": {},
+      "source_reliability_classification": "measured_uat_empty_envelope_only",
+      "provenance_contract": "bounded_shape_only_no_record_projection",
+      "reviewed_at": "2026-07-30T07:08:36Z",
+      "review_evidence_sha256": "b7be05c9abe61f8c60b035073c52cffc6767aff9428967d798d9c840bcd6c9ea",
+      "record_mapping_status": "pending_operator_authorized_shape_capture"
+    },
+    {
+      "environment_id": "china_uat",
+      "schema_adapter_id": "china_uat_billing_records",
+      "adapter_version": "1.0.0",
+      "adapter_mode": "reviewed_billing_records_v1",
+      "safe_source_path": "https://uat.weimeta.cn/api/log/self",
+      "accepted_schema_fingerprints": [],
+      "required_record_fields": ["id", "created_at", "model_name", "quota", "prompt_tokens", "completion_tokens"],
+      "allowed_record_fields": [
+        "id", "user_id", "created_at", "type", "content", "username",
+        "token_name", "token_id", "model_name", "quota", "prompt_tokens",
+        "completion_tokens", "channel_id", "request_id", "elapsed_time",
+        "use_time", "is_stream", "other", "ip", "multiplier", "group",
+        "channel", "channel_name", "user_uid", "response_id", "status_code"
+      ],
+      "source_reliability_classification": "measured_uat_provider_billing_log",
+      "provenance_contract": "bounded_reviewed_field_projection_no_secret_values",
+      "reviewed_at": "2026-08-06T05:00:00Z",
+      "review_evidence_sha256": "18bbbd7a7549a003009b1422a3b001f772cfad44887163cf3673d9bce7884c7e",
+      "record_mapping_status": "reviewed"
+    }
+  ]
+}

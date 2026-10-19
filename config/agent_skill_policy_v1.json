@@ -1,0 +1,21 @@
+{
+  "policy_version": "agent_skill_policy_v1",
+  "role_preferences": {
+    "research_agent": ["search_mock_tool", "file_analyzer_tool"],
+    "coding_agent": ["code_analyzer_tool", "python_executor_tool"],
+    "reasoning_agent": ["calculator_tool"],
+    "writer_agent": ["file_analyzer_tool"],
+    "review_agent": []
+  },
+  "always_select_first_preference": [
+    "research_agent",
+    "coding_agent"
+  ],
+  "tool_keywords": {
+    "calculator_tool": ["calculate", "math", "equation", "计算", "数学"],
+    "code_analyzer_tool": ["code", "source", "function", "代码", "源码", "函数"],
+    "python_executor_tool": ["execute", "run", "test", "python", "执行", "运行", "测试"],
+    "file_analyzer_tool": ["file", "document", "upload", "文件", "文档", "上传"],
+    "search_mock_tool": ["research", "search", "information", "研究", "搜索", "信息"]
+  }
+}

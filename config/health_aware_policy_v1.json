@@ -1,0 +1,19 @@
+{
+  "strategy": "health_aware_v1",
+  "policy_version": "health-aware-v1.0.0",
+  "score_direction": "higher_is_better",
+  "weights": {
+    "health": 0.35,
+    "reliability": 0.25,
+    "latency": 0.20,
+    "cost": 0.20
+  },
+  "component_semantics": {
+    "health_score": "higher_is_better",
+    "reliability": "failure_risk_penalty; lower_is_better",
+    "latency_score": "normalized_latency_penalty; lower_is_better",
+    "cost_score": "normalized_cost_penalty; lower_is_better"
+  },
+  "tie_breakers": ["priority_ascending", "channel_id_ascending"],
+  "validation_scope": "offline_demonstration_only"
+}

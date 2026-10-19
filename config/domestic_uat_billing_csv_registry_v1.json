@@ -1,0 +1,56 @@
+{
+  "registry_version": "domestic_uat_billing_csv_registry_v1",
+  "schemas": [
+    {
+      "schema_id": "domestic_uat_billing_csv_v1",
+      "encoding": "utf-8-sig",
+      "timezone": "Asia/Shanghai",
+      "timestamp_format": "%Y-%m-%d %H:%M:%S",
+      "headers": [
+        "时间",
+        "API Key",
+        "类型",
+        "模型",
+        "用时/首字",
+        "输入",
+        "输出",
+        "花费",
+        "IP",
+        "详情"
+      ],
+      "event_type_mapping": {
+        "消费": "consumption",
+        "错误": "error"
+      },
+      "stream_mode_mapping": {
+        "流": true,
+        "非流": false
+      },
+      "currency_symbol_mapping": {
+        "¥": "CNY"
+      },
+      "reviewed_model_aliases": {
+        "deepseek-ai/DeepSeek-V4-Flash": "deepseek-v4-flash",
+        "deepseek-v4-flash": "deepseek-v4-flash",
+        "gemini-2.5-flash-image": "gemini-2.5-flash-image",
+        "glm-5.1": "glm-5.1",
+        "glm-5.2": "glm-5.2",
+        "gpt-image-2": "gpt-image-2",
+        "请求并计费模型: gpt-image-2; 实际模型: gpt-image-2-t": "gpt-image-2-t",
+        "kimi-k2.6": "kimi-k2.6",
+        "qwen3-vl-plus": "qwen3-vl-plus"
+      },
+      "sensitive_columns": [
+        "API Key",
+        "IP"
+      ],
+      "discarded_content_columns": [
+        "详情"
+      ],
+      "unknown_event_action": "reject",
+      "unknown_model_action": "reject",
+      "review_status": "reviewed_against_export_20260730_172539",
+      "reviewed_at": "2026-07-30T10:30:00Z"
+    }
+  ]
+}

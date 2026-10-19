@@ -1,0 +1,10 @@
+{
+  "policy_version": "budget-policy-v1.0.0",
+  "formula_version": "observed-cost-sum-v1",
+  "warning_usage_percentage": "80",
+  "environments": {
+    "demo": {"currency": "CNY", "daily_limit": "0.2000", "limit_source": "demo_policy"},
+    "china_uat": {"currency": "CNY", "daily_limit": null, "limit_source": "local_limit_disabled"},
+    "overseas": {"currency": null, "daily_limit": null, "limit_source": "pending_confirmation"}
+  }
+}
