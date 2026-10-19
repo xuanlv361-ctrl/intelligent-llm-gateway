@@ -1,0 +1,18 @@
+{
+  "feedback_version": "user-feedback-v1.0.0",
+  "source_type": "offline_synthetic_feedback_demo",
+  "records": [
+    {"feedback_id":"FB-001","request_id":"REQ-FB-001","task_type":"coding","selected_model":"gpt-4o-4-1","selected_channel":"MOCK-GPT-001","success":true,"latency_ms":820,"cost":0.008,"user_rating":5,"timestamp":"2026-07-24T13:00:00+08:00"},
+    {"feedback_id":"FB-002","request_id":"REQ-FB-002","task_type":"coding","selected_model":"gpt-4o-4-1","selected_channel":"MOCK-GPT-001","success":true,"latency_ms":910,"cost":0.009,"user_rating":4,"timestamp":"2026-07-24T13:01:00+08:00"},
+    {"feedback_id":"FB-003","request_id":"REQ-FB-003","task_type":"agent","selected_model":"gpt-4o-4-1","selected_channel":"MOCK-GPT-001","success":true,"latency_ms":990,"cost":0.011,"user_rating":5,"timestamp":"2026-07-24T13:02:00+08:00"},
+    {"feedback_id":"FB-004","request_id":"REQ-FB-004","task_type":"reasoning","selected_model":"gpt-4o-4-1","selected_channel":"MOCK-GPT-001","success":false,"latency_ms":1500,"cost":0.012,"user_rating":2,"timestamp":"2026-07-24T13:03:00+08:00"},
+    {"feedback_id":"FB-005","request_id":"REQ-FB-005","task_type":"writing","selected_model":"gpt-4o-4-1","selected_channel":"MOCK-GPT-001","success":true,"latency_ms":760,"cost":0.007,"user_rating":4,"timestamp":"2026-07-24T13:04:00+08:00"},
+    {"feedback_id":"FB-006","request_id":"REQ-FB-006","task_type":"writing","selected_model":"qwen","selected_channel":"MOCK-QWEN-001","success":true,"latency_ms":640,"cost":0.001,"user_rating":5,"timestamp":"2026-07-24T13:05:00+08:00"},
+    {"feedback_id":"FB-007","request_id":"REQ-FB-007","task_type":"writing","selected_model":"qwen","selected_channel":"MOCK-QWEN-001","success":true,"latency_ms":670,"cost":0.001,"user_rating":4,"timestamp":"2026-07-24T13:06:00+08:00"},
+    {"feedback_id":"FB-008","request_id":"REQ-FB-008","task_type":"reasoning","selected_model":"deepseek-reasoner","selected_channel":"MOCK-DEEPSEEK-001","success":true,"latency_ms":1100,"cost":0.002,"user_rating":4,"timestamp":"2026-07-24T13:07:00+08:00"}
+  ],
+  "limitations": [
+    "Records are synthetic offline dashboard fixtures, not real user feedback.",
+    "Feedback analysis never updates model weights automatically."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "campaign_version": "unified-routing-v3.0.0",
+  "experiment_type": "observational_unified_routing",
+  "endpoint": "/v1/chat/completions",
+  "endpoint_url": "https://api-uat.weimeta.cn/v1/chat/completions",
+  "requested_model": "deepseek-v4-flash",
+  "source_type": "planned_unified_uat",
+  "execution_status": "not_executed",
+  "planned_request_count": 60,
+  "target_channel_control": "unavailable",
+  "planned_channel_id": null,
+  "actual_channel_source": "backend_log",
+  "environment": "uat",
+  "real_execution_mode": "human_operated_apifox",
+  "scheduler_execution": false,
+  "predecessor_campaign_status": "blocked_target_channel_capability",
+  "sessions": [
+    {"session_id": "SESSION-V3-D1-MORNING", "session_sequence": 1, "day_label": "D1", "time_window": "09:00-11:00", "profile_order": ["P01", "P02", "P03", "P04"]},
+    {"session_id": "SESSION-V3-D2-AFTERNOON", "session_sequence": 2, "day_label": "D2", "time_window": "14:00-17:00", "profile_order": ["P04", "P03", "P02", "P01"]},
+    {"session_id": "SESSION-V3-D3-EVENING", "session_sequence": 3, "day_label": "D3", "time_window": "19:00-22:00", "profile_order": ["P02", "P04", "P01", "P03"]}
+  ]
+}

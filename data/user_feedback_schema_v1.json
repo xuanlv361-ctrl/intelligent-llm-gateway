@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": "user-feedback-v1.0.0",
+  "title": "Offline Model Selection Feedback",
+  "type": "object",
+  "required": [
+    "feedback_id", "request_id", "task_type", "selected_model",
+    "selected_channel", "success", "latency_ms", "cost",
+    "user_rating", "timestamp"
+  ],
+  "properties": {
+    "feedback_id": {"type": "string", "minLength": 1},
+    "request_id": {"type": "string", "minLength": 1},
+    "task_type": {"type": "string", "enum": ["coding", "reasoning", "mathematics", "writing", "long_document", "multimodal", "agent"]},
+    "selected_model": {"type": "string", "minLength": 1},
+    "selected_channel": {"type": "string", "minLength": 1},
+    "success": {"type": "boolean"},
+    "latency_ms": {"type": "number", "minimum": 0},
+    "cost": {"type": "number", "minimum": 0},
+    "user_rating": {"type": "number", "minimum": 1, "maximum": 5},
+    "timestamp": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false,
+  "storage_scope": "offline_json_only"
+}

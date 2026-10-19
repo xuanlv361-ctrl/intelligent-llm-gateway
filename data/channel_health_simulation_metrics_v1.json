@@ -1,0 +1,113 @@
+{
+  "source_type": "offline_simulation",
+  "validation_type": "offline simulation based health validation",
+  "metrics_version": "simulation-v1.0.0",
+  "updated_at": "2026-07-24T12:00:00+08:00",
+  "simulation_version": "health-simulation-v1.0.0",
+  "channels": [
+    {
+      "channel_id": "SIM-HEALTHY-001",
+      "sample_count": 5000,
+      "metrics": {
+        "success_rate": 0.99,
+        "avg_latency_ms": 500,
+        "p95_latency_ms": 900,
+        "avg_cost": 0.001
+      },
+      "simulation_condition": "healthy"
+    },
+    {
+      "channel_id": "SIM-HIGH-LATENCY-001",
+      "sample_count": 5000,
+      "metrics": {
+        "success_rate": 0.98,
+        "avg_latency_ms": 2500,
+        "p95_latency_ms": 2900,
+        "avg_cost": 0.002
+      },
+      "simulation_condition": "high_latency"
+    },
+    {
+      "channel_id": "SIM-LOW-RELIABILITY-001",
+      "sample_count": 5000,
+      "metrics": {
+        "success_rate": 0.9,
+        "avg_latency_ms": 1000,
+        "p95_latency_ms": 1600,
+        "avg_cost": 0.003
+      },
+      "simulation_condition": "low_reliability"
+    },
+    {
+      "channel_id": "SIM-EXPENSIVE-001",
+      "sample_count": 5000,
+      "metrics": {
+        "success_rate": 0.98,
+        "avg_latency_ms": 700,
+        "p95_latency_ms": 1200,
+        "avg_cost": 0.009
+      },
+      "simulation_condition": "expensive"
+    },
+    {
+      "channel_id": "SIM-SMALL-001",
+      "sample_count": 5,
+      "metrics": {
+        "success_rate": 1.0,
+        "avg_latency_ms": 500,
+        "p95_latency_ms": 800,
+        "avg_cost": 0.001
+      },
+      "simulation_condition": "small_sample_optimistic"
+    },
+    {
+      "channel_id": "SIM-BALANCED-001",
+      "sample_count": 5000,
+      "metrics": {
+        "success_rate": 0.95,
+        "avg_latency_ms": 1000,
+        "p95_latency_ms": 1500,
+        "avg_cost": 0.003
+      },
+      "simulation_condition": "balanced"
+    },
+    {
+      "channel_id": "SIM-DEGRADED-001",
+      "sample_count": 5000,
+      "metrics": {
+        "success_rate": 0.65,
+        "avg_latency_ms": 2600,
+        "p95_latency_ms": 2950,
+        "avg_cost": 0.008
+      },
+      "simulation_condition": "combined_degradation"
+    },
+    {
+      "channel_id": "SIM-HEALTHY-002",
+      "sample_count": 5000,
+      "metrics": {
+        "success_rate": 0.995,
+        "avg_latency_ms": 800,
+        "p95_latency_ms": 1300,
+        "avg_cost": 0.0015
+      },
+      "simulation_condition": "healthy_alternative"
+    }
+  ],
+  "generation_rules": {
+    "method": "deterministic_configured_scenarios",
+    "random_sampling": false,
+    "success_rate_range": [
+      0.0,
+      1.0
+    ],
+    "latency_unit": "milliseconds",
+    "cost_unit": "configured_cost_per_reference_request",
+    "p95_must_be_at_least_average": true
+  },
+  "limitations": [
+    "All channel conditions are deterministic engineering assumptions.",
+    "No real API calls or production measurements are used.",
+    "Expected statuses validate configured mechanics, not channel performance."
+  ]
+}

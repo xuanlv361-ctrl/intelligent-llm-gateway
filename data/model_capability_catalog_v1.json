@@ -1,0 +1,103 @@
+{
+  "catalog_version": "model-capability-v1.0.0",
+  "source_type": "offline_configured_capability_assumptions",
+  "is_benchmark_data": false,
+  "score_range": [0.0, 1.0],
+  "models": [
+    {
+      "model_id": "claude-sonnet",
+      "model_name": "Claude Sonnet",
+      "provider": "Anthropic",
+      "capabilities": {
+        "reasoning_score": 0.92,
+        "coding_score": 0.90,
+        "math_score": 0.82,
+        "writing_score": 0.88,
+        "long_context_score": 0.95,
+        "multimodal_score": 0.70,
+        "agent_score": 0.82,
+        "chinese_score": 0.80
+      },
+      "supported_tasks": ["reasoning", "coding", "writing", "long_document", "agent"],
+      "cost_level": "high",
+      "latency_level": "medium"
+    },
+    {
+      "model_id": "deepseek-reasoner",
+      "model_name": "DeepSeek Reasoner",
+      "provider": "DeepSeek",
+      "capabilities": {
+        "reasoning_score": 0.94,
+        "coding_score": 0.92,
+        "math_score": 0.95,
+        "writing_score": 0.72,
+        "long_context_score": 0.78,
+        "multimodal_score": 0.20,
+        "agent_score": 0.68,
+        "chinese_score": 0.90
+      },
+      "supported_tasks": ["reasoning", "coding", "mathematics"],
+      "cost_level": "low",
+      "latency_level": "medium"
+    },
+    {
+      "model_id": "gpt-4o-4-1",
+      "model_name": "GPT-4o / GPT-4.1",
+      "provider": "OpenAI",
+      "capabilities": {
+        "reasoning_score": 0.90,
+        "coding_score": 0.91,
+        "math_score": 0.86,
+        "writing_score": 0.90,
+        "long_context_score": 0.88,
+        "multimodal_score": 0.92,
+        "agent_score": 0.95,
+        "chinese_score": 0.86
+      },
+      "supported_tasks": ["coding", "reasoning", "writing", "multimodal", "agent"],
+      "cost_level": "high",
+      "latency_level": "medium"
+    },
+    {
+      "model_id": "gemini-flash",
+      "model_name": "Gemini Flash",
+      "provider": "Google",
+      "capabilities": {
+        "reasoning_score": 0.80,
+        "coding_score": 0.78,
+        "math_score": 0.76,
+        "writing_score": 0.82,
+        "long_context_score": 0.96,
+        "multimodal_score": 0.94,
+        "agent_score": 0.78,
+        "chinese_score": 0.84
+      },
+      "supported_tasks": ["long_document", "multimodal", "writing"],
+      "cost_level": "low",
+      "latency_level": "low"
+    },
+    {
+      "model_id": "qwen",
+      "model_name": "Qwen",
+      "provider": "Alibaba Cloud",
+      "capabilities": {
+        "reasoning_score": 0.80,
+        "coding_score": 0.82,
+        "math_score": 0.80,
+        "writing_score": 0.88,
+        "long_context_score": 0.84,
+        "multimodal_score": 0.68,
+        "agent_score": 0.72,
+        "chinese_score": 0.96
+      },
+      "supported_tasks": ["writing", "coding", "reasoning", "chinese_language"],
+      "cost_level": "low",
+      "latency_level": "low"
+    }
+  ],
+  "limitations": [
+    "Scores are configurable engineering assumptions, not real benchmark results.",
+    "The catalog is used only for deterministic offline routing demonstrations.",
+    "Provider availability, pricing, and live model behavior are not verified."
+  ]
+}

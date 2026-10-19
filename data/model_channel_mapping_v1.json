@@ -1,0 +1,27 @@
+{
+  "mapping_version": "model-channel-mapping-v1.0.0",
+  "source_type": "offline_configured_mapping",
+  "models": {
+    "claude-sonnet": [
+      {"candidate_id": "MOCK-CLAUDE-001", "channel_id": "MOCK-CLAUDE-001", "priority": 10, "availability_status": "available", "is_mock": true},
+      {"candidate_id": "MOCK-CLAUDE-002", "channel_id": "MOCK-CLAUDE-002", "priority": 20, "availability_status": "available", "is_mock": true}
+    ],
+    "deepseek-reasoner": [
+      {"candidate_id": "MOCK-DEEPSEEK-001", "channel_id": "MOCK-DEEPSEEK-001", "priority": 10, "availability_status": "available", "is_mock": true},
+      {"candidate_id": "MOCK-DEEPSEEK-002", "channel_id": "MOCK-DEEPSEEK-002", "priority": 20, "availability_status": "available", "is_mock": true}
+    ],
+    "gpt-4o-4-1": [
+      {"candidate_id": "MOCK-GPT-001", "channel_id": "MOCK-GPT-001", "priority": 10, "availability_status": "available", "is_mock": true}
+    ],
+    "gemini-flash": [
+      {"candidate_id": "MOCK-GEMINI-001", "channel_id": "MOCK-GEMINI-001", "priority": 10, "availability_status": "available", "is_mock": true}
+    ],
+    "qwen": [
+      {"candidate_id": "MOCK-QWEN-001", "channel_id": "MOCK-QWEN-001", "priority": 10, "availability_status": "available", "is_mock": true}
+    ]
+  },
+  "limitations": [
+    "Mappings are offline demonstration candidates and do not represent live provider routes.",
+    "No entry authorizes real channel execution."
+  ]
+}

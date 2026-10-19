@@ -1,0 +1,16 @@
+scenario_id,scenario_name,strategy,requested_model,stream_required,input_tokens,output_tokens,currency,decision_time,expected_status,expected_selected_candidate,primary_rule,scenario_data_type,notes
+S001,基础延迟优先,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-FAST,basic_latency_scoring,mixed,验证延迟优先策略选择最快合格渠道
+S002,基础成本优先,cost_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-CHEAP,basic_cost_scoring,mixed,验证成本优先策略选择最低成本合格渠道
+S003,流式请求能力过滤,latency_first,deepseek-v4-flash,TRUE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-FAST,stream_capability_filter,mixed,流式能力未知或不支持的渠道应被排除
+S004,全部不支持流式,latency_first,deepseek-v4-flash,TRUE,1000,500,CNY,2026-07-21 12:00:00,unroutable,,no_stream_candidate,mock,所有候选均无法满足流式要求
+S005,最快渠道不可用,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-CHEAP,availability_filter,mock,最快渠道不可用后选择下一名合格渠道
+S006,最快渠道缺少延迟,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-CHEAP,missing_latency_filter,mock,缺少延迟指标的候选应被排除
+S007,最便宜渠道缺少价格,cost_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-FAST,missing_price_filter,mock,成本优先时缺少价格的候选应被排除
+S008,最快渠道指标过期,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-CHEAP,stale_metric_filter,mock,指标超过168小时的渠道应被排除
+S009,小样本惩罚,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-FAST,small_sample_penalty,mixed,样本量少于5时增加0.10惩罚
+S010,低置信度惩罚,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-FAST,low_confidence_penalty,mixed,低置信度候选增加0.15惩罚
+S011,综合分同分,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,TIE-A,priority_tie_breaker,mock,综合分相同时选择priority数值较小者
+S012,分数和优先级同时相同,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,TIE-001,channel_id_tie_breaker,mock,分数和priority相同时选择channel_id较小者
+S013,币种不匹配,cost_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,MOCK-DS-FAST,currency_filter,mock,请求为CNY时排除使用其他币种的候选
+S014,所有候选均不可用,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,unroutable,,all_candidates_filtered,mock,所有候选均被过滤时返回不可调度
+S015,请求模型不匹配,latency_first,deepseek-v4-flash,FALSE,1000,500,CNY,2026-07-21 12:00:00,selected,REAL-DS-48,model_match_filter,mixed,排除模型不匹配候选后选择模型匹配的真实渠道

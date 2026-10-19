@@ -1,0 +1,32 @@
+{
+  "policy_version": "uat-fault-injection-v1.0.0",
+  "allowed_environment": "china_uat",
+  "default_enabled": false,
+  "provider_modification_allowed": false,
+  "secrets_allowed": false,
+  "maximum_trigger_count": 10000,
+  "maximum_delay_ms": 120000,
+  "maximum_ttl_seconds": 86400,
+  "allowed_error_layers": [
+    "pre_request",
+    "post_response",
+    "stream"
+  ],
+  "allowed_error_types": [
+    "400",
+    "401",
+    "429",
+    "500",
+    "502",
+    "503",
+    "524",
+    "connection_timeout",
+    "connection_reset",
+    "delayed_response",
+    "empty_response",
+    "sse_malformed",
+    "stream_interrupted",
+    "usage_missing",
+    "usage_mismatch"
+  ]
+}

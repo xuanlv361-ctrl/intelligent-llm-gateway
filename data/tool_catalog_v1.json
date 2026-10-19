@@ -1,0 +1,93 @@
+{
+  "catalog_version": "tool-catalog-v1.0.0",
+  "source_type": "offline_mock_tool_catalog",
+  "real_api_calls_allowed": false,
+  "tools": [
+    {
+      "tool_id": "calculator_tool",
+      "tool_name": "Calculator Tool",
+      "description": "Evaluate a restricted arithmetic expression offline.",
+      "input_schema": {
+        "type": "object",
+        "required": ["expression"],
+        "properties": {"expression": {"type": "string"}}
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {"value": {"type": "number"}}
+      },
+      "supported_tasks": ["math"],
+      "risk_level": "low",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "tool_id": "code_analyzer_tool",
+      "tool_name": "Code Analyzer Tool",
+      "description": "Analyze source-code structure without executing it.",
+      "input_schema": {
+        "type": "object",
+        "required": ["source_code"],
+        "properties": {"source_code": {"type": "string"}}
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["language", "file_count", "complexity_estimate"]
+      },
+      "supported_tasks": ["coding"],
+      "risk_level": "low",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "tool_id": "python_executor_tool",
+      "tool_name": "Python Executor Tool",
+      "description": "Simulate a tightly restricted Python print snippet without exec.",
+      "input_schema": {
+        "type": "object",
+        "required": ["python_code"],
+        "properties": {"python_code": {"type": "string"}}
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["stdout", "success"]
+      },
+      "supported_tasks": ["coding", "testing"],
+      "risk_level": "medium",
+      "execution_mode": "sandboxed_simulation_only"
+    },
+    {
+      "tool_id": "file_analyzer_tool",
+      "tool_name": "File Analyzer Tool",
+      "description": "Summarize supplied in-memory file content.",
+      "input_schema": {
+        "type": "object",
+        "required": ["file_content"],
+        "properties": {"file_content": {"type": "string"}}
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["character_count", "word_count", "line_count", "summary"]
+      },
+      "supported_tasks": ["document_analysis"],
+      "risk_level": "low",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "tool_id": "search_mock_tool",
+      "tool_name": "Search Mock Tool",
+      "description": "Return deterministic synthetic offline retrieval results.",
+      "input_schema": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {"query": {"type": "string"}}
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["query", "results"]
+      },
+      "supported_tasks": ["research"],
+      "risk_level": "low",
+      "execution_mode": "offline_mock"
+    }
+  ]
+}

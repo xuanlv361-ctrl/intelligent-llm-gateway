@@ -1,0 +1,19 @@
+{
+  "policy_version": "uat-execution-v1.1.0",
+  "allowed_environment": "uat",
+  "allowed_base_host": "api-uat.weimeta.cn",
+  "model_access_mode": "uat_discovered_models",
+  "fallback_allowed_models": [],
+  "model_catalog_cache_seconds": 60,
+  "maximum_input_characters": 8000,
+  "maximum_max_tokens": null,
+  "timeout_seconds": 30,
+  "daily_request_limit": null,
+  "daily_budget_cny": null,
+  "maximum_estimated_request_cost_cny": 0.20,
+  "confirmation_required": true,
+  "streaming_enabled": false,
+  "automatic_retry_enabled": false,
+  "maximum_total_attempts": 1,
+  "stop_rules": ["credential_detected", "private_data_detected", "budget_exceeded", "duplicate_execution", "unexpected_host", "repeated_5xx"]
+}
